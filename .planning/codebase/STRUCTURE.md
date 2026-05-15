@@ -1,0 +1,164 @@
+# Codebase Structure
+
+Directory layout, key locations, and naming conventions for the `twosides` Laravel + Inertia React application.
+
+## Top-Level Layout
+
+```
+twosides/
+├── app/              # PHP application code (Laravel)
+├── bootstrap/        # Framework bootstrap + cached files
+├── config/           # Configuration files
+├── database/         # Migrations, factories, seeders, sqlite db
+├── public/           # Web root, compiled assets
+├── resources/        # Frontend source (js, css, views)
+├── routes/           # Route definitions
+├── storage/          # Logs, compiled views, file uploads
+├── tests/            # Pest test suites
+├── vendor/           # Composer dependencies (not edited)
+├── node_modules/     # npm dependencies (not edited)
+└── .planning/        # GSD planning artifacts
+```
+
+## Backend (`app/`)
+
+Standard Laravel structure, lean — this is a starter-kit-derived app with auth scaffolding only.
+
+```
+app/
+├── Actions/Fortify/          # Fortify action classes
+│   ├── CreateNewUser.php
+│   └── ResetUserPassword.php
+├── Concerns/                 # Reusable traits
+│   ├── PasswordValidationRules.php
+│   └── ProfileValidationRules.php
+├── Http/
+│   ├── Controllers/
+│   │   ├── Controller.php             # Base controller
+│   │   └── Settings/                  # Profile + Security controllers
+│   │       ├── ProfileController.php
+│   │       └── SecurityController.php
+│   ├── Middleware/
+│   │   ├── HandleAppearance.php       # Light/dark theme cookie
+│   │   └── HandleInertiaRequests.php  # Inertia shared props
+│   └── Requests/Settings/             # FormRequest validation classes
+│       ├── PasswordUpdateRequest.php
+│       ├── ProfileDeleteRequest.php
+│       ├── ProfileUpdateRequest.php
+│       └── TwoFactorAuthenticationRequest.php
+├── Models/
+│   └── User.php                       # Only model
+└── Providers/
+    ├── AppServiceProvider.php
+    └── FortifyServiceProvider.php      # Fortify view bindings
+```
+
+**Key locations:**
+- New domain models → `app/Models/`
+- New controllers → `app/Http/Controllers/` (group in subdirectory by feature, e.g. `Settings/`)
+- Request validation → `app/Http/Requests/<Feature>/`
+- Shared validation rules → `app/Concerns/` traits
+
+## Routes (`routes/`)
+
+```
+routes/
+├── web.php        # Public + dashboard routes, requires include of settings.php
+├── settings.php   # Authenticated settings routes (profile, security, appearance)
+└── console.php    # Artisan console commands
+```
+
+Auth routes (login, register, password reset, 2FA, email verification) are registered by **Laravel Fortify** automatically — not in these files.
+
+## Database (`database/`)
+
+```
+database/
+├── database.sqlite                                          # Dev database
+├── factories/UserFactory.php
+├── migrations/
+│   ├── 0001_01_01_000000_create_users_table.php
+│   ├── 0001_01_01_000001_create_cache_table.php
+│   ├── 0001_01_01_000002_create_jobs_table.php
+│   └── 2025_08_14_170933_add_two_factor_columns_to_users_table.php
+└── seeders/DatabaseSeeder.php
+```
+
+## Frontend (`resources/js/`)
+
+React 19 + TypeScript, organized by responsibility:
+
+```
+resources/js/
+├── app.tsx               # Inertia app entry point
+├── actions/              # Wayfinder-generated controller bindings (DO NOT hand-edit)
+├── routes/               # Wayfinder-generated named-route helpers (DO NOT hand-edit)
+├── wayfinder/            # Wayfinder runtime helpers
+├── pages/                # Inertia page components (server renders these)
+│   ├── auth/             # login, register, forgot/reset password, 2FA, verify-email
+│   ├── settings/         # profile, security, appearance
+│   ├── dashboard.tsx
+│   └── welcome.tsx
+├── layouts/              # Page layout wrappers
+│   ├── app/              # app-header-layout, app-sidebar-layout
+│   ├── auth/             # auth-card, auth-simple, auth-split layouts
+│   └── settings/         # settings layout
+├── components/           # Shared React components
+│   └── ui/               # shadcn/ui primitives (button, dialog, input, etc.)
+├── hooks/                # Custom React hooks (use-appearance, use-two-factor-auth, etc.)
+├── lib/utils.ts          # Utility helpers (cn class merger)
+└── types/                # TypeScript type definitions
+```
+
+**Key locations:**
+- New page → `resources/js/pages/<feature>/` (matched to an `Inertia::render()` call)
+- New shared component → `resources/js/components/`
+- New UI primitive → `resources/js/components/ui/` (shadcn/ui convention)
+- New hook → `resources/js/hooks/`
+- `actions/` and `routes/` are **auto-generated by Wayfinder** — never edit by hand; regenerate via Vite build.
+
+## Configuration (`config/`)
+
+```
+config/  app.php  auth.php  cache.php  database.php  filesystems.php
+         fortify.php  inertia.php  logging.php  mail.php  queue.php
+         services.php  session.php
+```
+
+## Tests (`tests/`)
+
+```
+tests/
+├── Feature/
+│   ├── Auth/          # Authentication, registration, password, 2FA, email verification
+│   ├── Settings/      # Profile update, security
+│   ├── DashboardTest.php
+│   └── ExampleTest.php
+├── Unit/ExampleTest.php
+├── Pest.php           # Pest config + helpers
+└── TestCase.php       # Base test case
+```
+
+Test directory mirrors `app/` structure.
+
+## Naming Conventions
+
+| Concern | Convention | Example |
+|---------|-----------|---------|
+| PHP classes / files | PascalCase | `ProfileController.php` |
+| PHP methods / variables | camelCase | `isRegisteredForDiscounts` |
+| TypeScript / React files | kebab-case | `two-factor-setup-modal.tsx` |
+| React component names | PascalCase | `TwoFactorSetupModal` |
+| TS functions / variables | camelCase | `canManageTwoFactor` |
+| Migration files | timestamped snake_case | `2025_08_14_170933_add_two_factor_columns...` |
+| Inertia pages | kebab-case, grouped by feature | `pages/settings/profile.tsx` |
+
+## Entry Points
+
+- **HTTP:** `public/index.php` → `bootstrap/app.php` → routes
+- **Frontend:** `resources/js/app.tsx` (Inertia SPA mount)
+- **CLI:** `artisan` → `routes/console.php`
+- **Build:** `vite.config.ts` (Vite + React + Wayfinder + Tailwind plugins)
+
+---
+*Mapped: 2026-05-16*
