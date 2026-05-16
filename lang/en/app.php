@@ -12,6 +12,7 @@ return [
         'empty_heading' => 'No users found',
         'empty_body' => 'No users match your search. Try a different name or email.',
         'toast_role_changed' => 'Role updated — :name is now a :role.',
+        'toast_activated' => ":name's account has been reactivated.",
         'toast_deactivated' => ":name's account has been deactivated.",
         'toast_deleted' => ":name's account has been deleted.",
         'toast_error' => 'Something went wrong. Please try again.',
