@@ -80,7 +80,7 @@ export function RecipeCard({ recipe, className }: RecipeCardProps) {
                         )}
                     </div>
 
-                    {/* Metrics row: cost + calories */}
+                    {/* Metrics row: cost + calories (kcal per portion) */}
                     <div className="flex items-center gap-3 text-[14px] text-muted-foreground">
                         {recipe.cost_per_portion !== null && (
                             <span>
