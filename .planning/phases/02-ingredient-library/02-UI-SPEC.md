@@ -105,6 +105,8 @@ All values are the warm-minimal OKLCH tokens from Phase 1 `app.css`. Referenced 
 
 ### Search & Browse Page (`ingredients/index.tsx`)
 
+**Focal point:** The live search input is the primary visual anchor — full-width, prominent, positioned above all results and filters. Every other element on the page is subordinate to it; the page reads as a search tool first.
+
 | Component | shadcn primitive | Notes |
 |-----------|-----------------|-------|
 | Search input | `Input` | Leading `SearchIcon` (lucide), 300ms debounce |
@@ -166,7 +168,7 @@ Null/missing nutrients display as `—` (em dash), not 0. Label size (14px) for 
 | Allergen section | Collapsible `Collapsible` | 14 rows, each with 3-state `Select` (None / Contains / May Contain) |
 | Conversion rows | Repeatable row | `Input` (amount) + `Command` (unit) + gram weight computed display; Add Row button |
 | Submit | `Button` variant="default" | "Save Ingredient" |
-| Cancel | `Button` variant="outline" | Returns to list |
+| Cancel | `Button` variant="outline" | "Back to Library" — returns to list |
 
 ---
 
@@ -196,7 +198,7 @@ Null/missing nutrients display as `—` (em dash), not 0. Label size (14px) for 
 ### Verify action (Mod/Admin)
 
 - Button label: "Mark as Verified" when unverified; "Verified — Revoke" is NOT available (one-way; re-import can reset)
-- On confirm: inline `Dialog` with body: "Confirm that all stored data for this ingredient is correct." + "Confirm Verification" button
+- On confirm: inline `Dialog` with body: "Confirm that all stored data for this ingredient is correct." + "Confirm Verification" and "Keep Unverified" buttons
 - On success: badge appears, button disappears (permission gate remains but verified state is now true), sonner toast: "Ingredient verified."
 
 ### Price recording
@@ -206,7 +208,7 @@ Null/missing nutrients display as `—` (em dash), not 0. Label size (14px) for 
 
 ### Private ingredient deletion
 
-- `Dialog` confirmation: "Delete [Ingredient Name]? This cannot be undone." with "Delete" (destructive) and "Cancel" buttons
+- `Dialog` confirmation: "Delete [Ingredient Name]? This cannot be undone." with "Delete" (destructive) and "Keep Ingredient" buttons
 - On confirm: redirect to ingredient library index, sonner toast: "Ingredient deleted."
 
 ---
@@ -254,7 +256,7 @@ All copy must be available in both EN (English) and EL (Greek) via the i18n syst
 | Verify action button | "Mark as Verified" |
 | Verify dialog body | "Confirm that all stored data for this ingredient is correct." |
 | Verify dialog confirm | "Confirm Verification" |
-| Verify dialog cancel | "Cancel" |
+| Verify dialog cancel | "Keep Unverified" |
 | Verify success toast | "Ingredient verified." |
 | Verify already verified | "Verified on {date} by {name}" |
 | Create form: blank option | "Start blank" |
@@ -265,15 +267,17 @@ All copy must be available in both EN (English) and EL (Greek) via the i18n syst
 | Create form: name EL label | "Name (Greek)" |
 | Create form: category label | "Category" |
 | Create form submit | "Save Ingredient" |
-| Create form cancel | "Cancel" |
+| Create form cancel | "Back to Library" |
 | Create success toast | "Ingredient created." |
 | Edit form submit | "Save Changes" |
 | Edit success toast | "Changes saved." |
 | Delete dialog body | "Delete {name}? This cannot be undone." |
 | Delete confirm | "Delete" |
-| Delete cancel | "Cancel" |
+| Delete cancel | "Keep Ingredient" |
 | Delete success toast | "Ingredient deleted." |
 | Nav entry | "Ingredients" |
+
+> EL translations for all rows — including the three revised dismiss labels ("Keep Unverified", "Back to Library", "Keep Ingredient") — must be added to `lang/el.json` during implementation. Each dismiss label must name what the user returns to or abandons, not the generic "Cancel".
 
 ---
 
