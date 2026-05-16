@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import { MoreHorizontalIcon } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import { ConfirmActionDialog } from '@/components/admin/confirm-action-dialog';
 import { Button } from '@/components/ui/button';
@@ -69,7 +70,20 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
         router.put(
             roleRoute(user.id).url,
             { role: newRole },
-            { preserveScroll: true },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.success(
+                        t('app.admin.toast_role_changed', {
+                            name: user.name,
+                            role: newRole,
+                        }),
+                    );
+                },
+                onError: () => {
+                    toast.error(t('app.admin.toast_error'));
+                },
+            },
         );
     };
 
@@ -80,6 +94,16 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
             {},
             {
                 preserveScroll: true,
+                onSuccess: () => {
+                    toast.success(
+                        t('app.admin.toast_deactivated', {
+                            name: user.name,
+                        }),
+                    );
+                },
+                onError: () => {
+                    toast.error(t('app.admin.toast_error'));
+                },
                 onFinish: () => {
                     setIsLoading(false);
                     setActiveDialog(null);
@@ -92,6 +116,14 @@ export function UserActionsMenu({ user }: UserActionsMenuProps) {
         setIsLoading(true);
         router.delete(destroyRoute(user.id).url, {
             preserveScroll: true,
+            onSuccess: () => {
+                toast.success(
+                    t('app.admin.toast_deleted', { name: user.name }),
+                );
+            },
+            onError: () => {
+                toast.error(t('app.admin.toast_error'));
+            },
             onFinish: () => {
                 setIsLoading(false);
                 setActiveDialog(null);

@@ -1,5 +1,7 @@
+import { usePage } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { BookOpen, FolderGit2, LayoutGrid, Users } from 'lucide-react';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 import AppLogo from '@/components/app-logo';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { NavFooter } from '@/components/nav-footer';
@@ -15,15 +17,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import type { NavItem } from '@/types';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
+import { index as adminUsersIndex } from '@/routes/admin/users';
+import type { Auth, NavItem } from '@/types';
 
 const footerNavItems: NavItem[] = [
     {
@@ -39,6 +34,28 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { t } = useLaravelReactI18n();
+    const auth = usePage().props.auth as Auth;
+    const permissions = auth.permissions ?? [];
+    const canManageUsers = permissions.includes('manage-users');
+
+    const mainNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+            icon: LayoutGrid,
+        },
+        ...(canManageUsers
+            ? [
+                  {
+                      title: t('app.nav.users'),
+                      href: adminUsersIndex().url,
+                      icon: Users,
+                  },
+              ]
+            : []),
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
