@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Ingredients;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\IngredientDetailResource;
 use App\Http\Resources\IngredientListResource;
 use App\Models\Allergen;
 use App\Models\Ingredient;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -52,6 +54,35 @@ class IngredientController extends Controller
                 'allergen_free' => (array) $allergenFree,
             ],
             'allergens' => Allergen::orderBy('name')->get(['id', 'name', 'slug']),
+        ]);
+    }
+
+    /**
+     * Display the detail page for a single ingredient.
+     */
+    public function show(Request $request, Ingredient $ingredient): Response
+    {
+        // Private ingredients of other users must not be viewable.
+        if ($ingredient->user_id !== null && $ingredient->user_id !== auth()->id()) {
+            abort(404);
+        }
+
+        $ingredient->load([
+            'translations',
+            'allergens',
+            'conversions.unit',
+            'category.parent',
+            'verifiedBy',
+            'prices' => fn ($q) => $q->where('user_id', auth()->id())->orderByDesc('recorded_at'),
+        ]);
+
+        return Inertia::render('ingredients/show', [
+            'ingredient' => (new IngredientDetailResource($ingredient))->resolve(),
+            'can' => [
+                'verify' => $request->user()->can('verify-ingredients'),
+                'manage' => $request->user()->can('update', $ingredient),
+            ],
+            'units' => Unit::orderBy('type')->orderBy('name')->get(['id', 'name', 'symbol', 'type']),
         ]);
     }
 }

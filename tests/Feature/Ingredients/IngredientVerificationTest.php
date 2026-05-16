@@ -48,13 +48,15 @@ test('re-importing changed data resets verification to false', function () {
     $moderator = User::factory()->create();
     $moderator->assignRole('Moderator');
 
+    // Use a source_id that exists in the fixture (alim_code=2001) with a hash
+    // that will differ from the computed hash once the import runs.
     $ingredient = Ingredient::factory()->verified($moderator)->create([
         'source' => 'ciqual',
-        'source_id' => 'sample-001',
+        'source_id' => '2001',
         'data_hash' => md5('original-payload'),
     ]);
 
-    $fixture = base_path('tests/fixtures/ciqual-sample.xml');
+    $fixture = base_path('tests/fixtures/ingredients/ciqual-sample.xml');
     $this->artisan('ingredients:import-ciqual', ['--source-file' => $fixture]);
 
     expect($ingredient->fresh()->verified)->toBeFalse();

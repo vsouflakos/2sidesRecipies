@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\IngredientReviewController;
+use App\Http\Controllers\Admin\IngredientVerificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\StyleguideController;
 use App\Http\Controllers\Ingredients\IngredientController;
@@ -21,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('ingredients/{ingredient}/edit', [PrivateIngredientController::class, 'edit'])->name('ingredients.edit');
     Route::put('ingredients/{ingredient}', [PrivateIngredientController::class, 'update'])->name('ingredients.update');
     Route::delete('ingredients/{ingredient}', [PrivateIngredientController::class, 'destroy'])->name('ingredients.destroy');
+    Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
 });
 
 Route::middleware('auth')
@@ -42,6 +44,13 @@ Route::middleware(['auth', 'verified', 'permission:review-ingredients'])
     ->name('admin.')
     ->group(function () {
         Route::get('ingredients', [IngredientReviewController::class, 'index'])->name('ingredients.index');
+    });
+
+Route::middleware(['auth', 'verified', 'permission:verify-ingredients'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::post('ingredients/{ingredient}/verify', [IngredientVerificationController::class, 'store'])->name('ingredients.verify');
     });
 
 require __DIR__.'/settings.php';
