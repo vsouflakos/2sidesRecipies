@@ -34,20 +34,20 @@ including the AI agent. Each maps to a roadmap phase.
 - [ ] **RECIPE-01**: User can create a recipe with structured ingredient lines (quantity, unit, ingredient)
 - [ ] **RECIPE-02**: User can add ordered preparation steps to a recipe
 - [ ] **RECIPE-03**: An ingredient line can use any unit — weight, volume, or count
-- [ ] **RECIPE-04**: User can set recipe yield, portion size, time, difficulty, cuisine/category, and tags
+- [x] **RECIPE-04**: User can set recipe yield, portion size, time, difficulty, cuisine/category, and tags
 - [ ] **RECIPE-05**: A recipe can include another recipe as a nested sub-recipe component
 - [ ] **RECIPE-06**: Circular sub-recipe references are detected and rejected
-- [ ] **RECIPE-07**: User can scale a recipe up or down and see quantities and metrics recompute
+- [x] **RECIPE-07**: User can scale a recipe up or down and see quantities and metrics recompute
 - [ ] **RECIPE-08**: User can adjust portion count while viewing a recipe without creating a new version
 - [ ] **RECIPE-09**: User can duplicate a recipe to create a new editable copy
 - [ ] **RECIPE-10**: User can attach a hero image and optional step images to a recipe
 - [ ] **RECIPE-11**: User can write free-text chef notes on a recipe
 - [ ] **RECIPE-12**: User can search and filter recipes by tag, cuisine, allergen, ingredient, difficulty, and time
-- [ ] **RECIPE-13**: An ingredient line can carry a prep action and a yield/loss percentage
+- [x] **RECIPE-13**: An ingredient line can carry a prep action and a yield/loss percentage
 
 ### Versioning & Working Draft
 
-- [ ] **VERSION-01**: Every recipe keeps an immutable history of saved versions
+- [x] **VERSION-01**: Every recipe keeps an immutable history of saved versions
 - [ ] **VERSION-02**: Edits accumulate in a mutable working draft, separate from saved versions
 - [ ] **VERSION-03**: User can Save the working draft, committing it as a new version
 - [ ] **VERSION-04**: User can Recall to undo the last applied edit on the working draft
@@ -59,7 +59,7 @@ including the AI agent. Each maps to a roadmap phase.
 - [ ] **METRIC-01**: App computes nutrition per portion and per 100 g for a recipe
 - [ ] **METRIC-02**: App computes cost per portion and total recipe cost from ingredient prices
 - [ ] **METRIC-03**: App computes food cost % from cost and a user-entered selling price per portion
-- [ ] **METRIC-04**: App computes recipe yield and supports scaling calculations
+- [x] **METRIC-04**: App computes recipe yield and supports scaling calculations
 - [ ] **METRIC-05**: App computes cooking loss / shrinkage from per-ingredient yield percentages
 - [ ] **METRIC-06**: App computes baker's percentages and hydration ratio for baking recipes
 - [ ] **METRIC-07**: App computes calorie / nutrient density
@@ -183,17 +183,17 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | RECIPE-01 | Phase 3 | Pending |
 | RECIPE-02 | Phase 3 | Pending |
 | RECIPE-03 | Phase 3 | Pending |
-| RECIPE-04 | Phase 3 | Pending |
+| RECIPE-04 | Phase 3 | Complete |
 | RECIPE-05 | Phase 3 | Pending |
 | RECIPE-06 | Phase 3 | Pending |
-| RECIPE-07 | Phase 3 | Pending |
+| RECIPE-07 | Phase 3 | Complete |
 | RECIPE-08 | Phase 3 | Pending |
 | RECIPE-09 | Phase 3 | Pending |
 | RECIPE-10 | Phase 3 | Pending |
 | RECIPE-11 | Phase 3 | Pending |
 | RECIPE-12 | Phase 3 | Pending |
-| RECIPE-13 | Phase 3 | Pending |
-| VERSION-01 | Phase 3 | Pending |
+| RECIPE-13 | Phase 3 | Complete |
+| VERSION-01 | Phase 3 | Complete |
 | VERSION-02 | Phase 3 | Pending |
 | VERSION-03 | Phase 3 | Pending |
 | VERSION-04 | Phase 3 | Pending |
@@ -202,7 +202,7 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | METRIC-01 | Phase 3 | Pending |
 | METRIC-02 | Phase 3 | Pending |
 | METRIC-03 | Phase 3 | Pending |
-| METRIC-04 | Phase 3 | Pending |
+| METRIC-04 | Phase 3 | Complete |
 | METRIC-05 | Phase 3 | Pending |
 | METRIC-06 | Phase 3 | Pending |
 | METRIC-07 | Phase 3 | Pending |
