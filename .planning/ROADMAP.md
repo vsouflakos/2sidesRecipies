@@ -49,7 +49,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. An Artisan import command can be run for each of CIQUAL, USDA FDC, and Open Food Facts independently and idempotently
   4. User can create a private ingredient with nutrition, allergen, and conversion data that only they can see
   5. User can record a price for any ingredient (private or official) with date and currency
-**Plans**: TBD
+**Plans**: 6 plans
+- [ ] 02-01-PLAN.md — Ingredient schema: six tables, five models, factories, category tree, verify permission, test scaffold
+- [ ] 02-02-PLAN.md — Import pipeline: idempotent CIQUAL / USDA FDC / Open Food Facts Artisan commands
+- [ ] 02-03-PLAN.md — Search & browse: live debounced search, three filters, compact rows, nav entry, i18n
+- [ ] 02-04-PLAN.md — Private ingredients: CRUD, owner-only policy, blank + duplicate-from-official create form
+- [ ] 02-05-PLAN.md — Detail page: tabbed nutrition/allergen/conversion view, moderator verification flow
+- [ ] 02-06-PLAN.md — Pricing: per-user price recording with brick/math per-gram cost, dated history
 
 ### Phase 3: Recipe Core & Metrics
 **Goal**: A chef can build a fully structured, versioned recipe and trust the computed professional metrics — nutrition, cost, yield, allergens, and baker's percentages — including correct roll-up through nested sub-recipes
@@ -114,7 +120,7 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 6/6 | Complete   | 2026-05-16 |
-| 2. Ingredient Library | 0/TBD | Not started | - |
+| 2. Ingredient Library | 0/6 | Not started | - |
 | 3. Recipe Core & Metrics | 0/TBD | Not started | - |
 | 4. Recipe Tests | 0/TBD | Not started | - |
 | 5. AI Agent | 0/TBD | Not started | - |
