@@ -13,7 +13,7 @@ Build a professional recipe management platform from the existing Laravel 13 Rea
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Role system, unit/allergen lookup tables, design system, and localization scaffolding
-- [ ] **Phase 2: Ingredient Library** - Official ingredient library with CIQUAL/USDA/OFF import pipeline and private ingredient creation
+- [x] **Phase 2: Ingredient Library** - Official ingredient library with CIQUAL/USDA/OFF import pipeline and private ingredient creation (completed 2026-05-16)
 - [ ] **Phase 3: Recipe Core & Metrics** - Structured recipes, versioning/draft layer, nested sub-recipes, and the full metrics engine
 - [ ] **Phase 4: Recipe Tests** - Trial run and structured experiment recording against recipe versions
 - [ ] **Phase 5: AI Agent** - Per-recipe conversational AI agent with scoped draft-editing tools
@@ -120,7 +120,7 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 6/6 | Complete   | 2026-05-16 |
-| 2. Ingredient Library | 4/6 | In Progress|  |
+| 2. Ingredient Library | 6/6 | Complete   | 2026-05-16 |
 | 3. Recipe Core & Metrics | 0/TBD | Not started | - |
 | 4. Recipe Tests | 0/TBD | Not started | - |
 | 5. AI Agent | 0/TBD | Not started | - |

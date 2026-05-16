@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 02-05-PLAN.md
-last_updated: "2026-05-16T19:24:53.741Z"
+status: completed
+stopped_at: Completed 02-06-PLAN.md
+last_updated: "2026-05-16T19:47:26.902Z"
 last_activity: "2026-05-16 — Phase 2 Plan 05 complete: ingredient detail page, verification flow, human-verify checkpoint passed"
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 12
   completed_plans: 12
   percent: 35
@@ -60,6 +60,7 @@ Progress: [████░░░░░░] 35%
 | Phase 02-ingredient-library PP02 | 60 | 3 tasks | 13 files |
 | Phase 02-ingredient-library P04 | 45 | 2 tasks | 13 files |
 | Phase 02-ingredient-library P05 | 50 | 3 tasks | 11 files |
+| Phase 02-ingredient-library P06 | 13 | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,8 @@ Recent decisions affecting current work:
 - [Phase 02-ingredient-library]: ingredients.show route placed AFTER ingredients/create and ingredients/{ingredient}/edit so the {ingredient} wildcard does not shadow the static-segment routes
 - [Phase 02-ingredient-library]: verify-ingredients route given its own permission-gated group, separate from review-ingredients, to keep the two moderation permissions explicit
 - [Phase 02-ingredient-library]: IngredientVerificationTest fixture reference corrected — source_id 'sample-001' had no fixture match; changed to alim_code '2001' with path tests/fixtures/ingredients/ciqual-sample.xml
+- [Phase 02-ingredient-library]: PerGramCostCalculator newed directly in controller — simple stateless calculator with no swappable dependencies; injection adds no value
+- [Phase 02-ingredient-library]: prices.unit normalized to {name, symbol} in IngredientDetailResource — consistent with conversions pattern, avoids leaking Unit model columns
 
 ### Pending Todos
 
@@ -109,6 +112,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T19:24:53.741Z
-Stopped at: Completed 02-05-PLAN.md
+Last session: 2026-05-16T19:47:26.893Z
+Stopped at: Completed 02-06-PLAN.md
 Resume file: None
