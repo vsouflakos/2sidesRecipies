@@ -1,0 +1,29 @@
+id,name,unit_name
+1008,Energy,KCAL
+1003,Protein,G
+1004,Total lipid (fat),G
+1005,Carbohydrate by difference,G
+1079,Fiber total dietary,G
+2000,Sugars total including NLEA,G
+1093,Sodium Na,MG
+1087,Calcium Ca,MG
+1089,Iron Fe,MG
+1090,Magnesium Mg,MG
+1091,Phosphorus P,MG
+1092,Potassium K,MG
+1095,Zinc Zn,MG
+1106,Vitamin A RAE,UG
+1165,Thiamin,MG
+1166,Riboflavin,MG
+1167,Niacin,MG
+1175,Vitamin B6,MG
+1177,Folate total,UG
+1178,Vitamin B12,UG
+1162,Vitamin C total ascorbic acid,MG
+1114,Vitamin D D2 plus D3,UG
+1109,Vitamin E alpha-tocopherol,MG
+1185,Vitamin K phylloquinone,UG
+1253,Cholesterol,MG
+1258,Fatty acids total saturated,G
+1292,Fatty acids total monounsaturated,G
+1293,Fatty acids total polyunsaturated,G

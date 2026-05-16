@@ -1,0 +1,8 @@
+id,fdc_id,seq_num,amount,measure_unit_id,portion_description,modifier,gram_weight
+1,167512,1,0.25,1,cup,,46
+2,167512,2,1,2,tbsp,,15
+3,173168,1,1,4,piece,,85
+4,173168,2,0.5,4,piece,,42
+5,169291,1,1,4,piece (2-1/2" dia),,123
+6,168917,1,1,2,tbsp,,13.5
+7,174215,1,0.5,4,fillet,,198

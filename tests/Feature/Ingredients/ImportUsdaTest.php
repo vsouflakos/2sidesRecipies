@@ -1,29 +1,73 @@
 <?php
 
 use App\Models\Ingredient;
+use App\Models\IngredientConversion;
 
 /**
- * Covers INGR-02 (USDA) — idempotent USDA FoodData Central import command.
+ * Covers INGR-02 (USDA) and INGR-05 — idempotent USDA FoodData Central import command.
  *
- * RED until Plan 02-02 ships the `ingredients:import-usda` command.
+ * The command accepts individual --*-file options so the suite can run against
+ * small bundled fixtures instead of the full USDA download.
  */
-test('the usda import command creates new ingredient rows from a fixture', function () {
-    $fixture = base_path('tests/fixtures/usda-sample');
+test('the usda import command creates new ingredient rows from fixtures', function () {
+    $dir = base_path('tests/fixtures/ingredients');
 
-    $this->artisan('ingredients:import-usda', ['--source-file' => $fixture])
-        ->assertExitCode(0);
+    $this->artisan('ingredients:import-usda', [
+        '--food-file' => $dir.'/usda-food.csv',
+        '--nutrient-file' => $dir.'/usda-nutrient.csv',
+        '--food-nutrient-file' => $dir.'/usda-food-nutrient.csv',
+        '--portion-file' => $dir.'/usda-food-portion.csv',
+        '--measure-unit-file' => $dir.'/usda-measure-unit.csv',
+    ])->assertExitCode(0);
 
     expect(Ingredient::where('source', 'usda')->count())->toBeGreaterThan(0);
 });
 
 test('re-running the usda import is idempotent', function () {
-    $fixture = base_path('tests/fixtures/usda-sample');
+    $dir = base_path('tests/fixtures/ingredients');
+    $args = [
+        '--food-file' => $dir.'/usda-food.csv',
+        '--nutrient-file' => $dir.'/usda-nutrient.csv',
+        '--food-nutrient-file' => $dir.'/usda-food-nutrient.csv',
+        '--portion-file' => $dir.'/usda-food-portion.csv',
+        '--measure-unit-file' => $dir.'/usda-measure-unit.csv',
+    ];
 
-    $this->artisan('ingredients:import-usda', ['--source-file' => $fixture]);
+    $this->artisan('ingredients:import-usda', $args);
     $countAfterFirst = Ingredient::where('source', 'usda')->count();
 
-    $this->artisan('ingredients:import-usda', ['--source-file' => $fixture]);
+    $this->artisan('ingredients:import-usda', $args);
     $countAfterSecond = Ingredient::where('source', 'usda')->count();
 
     expect($countAfterSecond)->toBe($countAfterFirst);
+});
+
+test('usda import creates ingredient_conversions rows from food_portion data', function () {
+    $dir = base_path('tests/fixtures/ingredients');
+
+    $this->artisan('ingredients:import-usda', [
+        '--food-file' => $dir.'/usda-food.csv',
+        '--nutrient-file' => $dir.'/usda-nutrient.csv',
+        '--food-nutrient-file' => $dir.'/usda-food-nutrient.csv',
+        '--portion-file' => $dir.'/usda-food-portion.csv',
+        '--measure-unit-file' => $dir.'/usda-measure-unit.csv',
+    ]);
+
+    expect(IngredientConversion::where('source', 'usda')->count())->toBeGreaterThan(0);
+});
+
+test('newly imported usda ingredients are unverified', function () {
+    $dir = base_path('tests/fixtures/ingredients');
+
+    $this->artisan('ingredients:import-usda', [
+        '--food-file' => $dir.'/usda-food.csv',
+        '--nutrient-file' => $dir.'/usda-nutrient.csv',
+        '--food-nutrient-file' => $dir.'/usda-food-nutrient.csv',
+        '--portion-file' => $dir.'/usda-food-portion.csv',
+        '--measure-unit-file' => $dir.'/usda-measure-unit.csv',
+    ]);
+
+    $verifiedCount = Ingredient::where('source', 'usda')->where('verified', true)->count();
+
+    expect($verifiedCount)->toBe(0);
 });
