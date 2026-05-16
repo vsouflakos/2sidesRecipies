@@ -136,15 +136,18 @@ export interface IngredientAllergenDetail {
     };
 }
 
+/** Full detail shape from IngredientDetailResource. */
 export interface IngredientDetail {
     id: number;
-    name_cache: string;
-    category_id: number;
-    user_id: number | null;
-    verified: boolean;
-    translations: IngredientTranslation[];
-    allergens: IngredientAllergenDetail[];
-    conversions: IngredientConversionDetail[];
+    name: string;
+    name_en: string;
+    name_el: string;
+    is_private: boolean;
+    category: {
+        name: string;
+        parent: string | null;
+    } | null;
+    // Nutrition columns (decimal strings from Laravel cast)
     energy_kcal: string | null;
     protein_g: string | null;
     fat_g: string | null;
@@ -174,4 +177,38 @@ export interface IngredientDetail {
     vitamin_e_mg: string | null;
     vitamin_k_ug: string | null;
     cholesterol_mg: string | null;
+    // Allergens
+    allergens: Array<{
+        slug: string;
+        name: string;
+        state: 'contains' | 'may_contain';
+    }>;
+    // Conversions
+    conversions: Array<{
+        from_amount: string;
+        unit: { name: string; symbol: string } | null;
+        gram_weight: string;
+        modifier: string | null;
+        source: string;
+    }>;
+    // Verification
+    verified: boolean;
+    verified_at: string | null;
+    verified_by: string | null;
+    // Prices (scoped to current user)
+    prices: Array<{
+        id: number;
+        amount: string;
+        currency: string;
+        quantity: string | null;
+        unit: string | null;
+        per_gram_cost: string | null;
+        recorded_at: string;
+        notes: string | null;
+    }>;
+}
+
+export interface CanFlags {
+    verify: boolean;
+    manage: boolean;
 }
