@@ -131,7 +131,7 @@ class RecipeController extends Controller
                 'notes' => $recipe->notes,
                 'selling_price' => $validated['selling_price'] ?? null,
                 'sections' => [
-                    ['name' => 'Main', 'order' => 1, 'lines' => []],
+                    ['name' => 'Main', 'order' => 1, 'lines' => [], 'steps' => []],
                 ],
             ];
 
@@ -183,11 +183,50 @@ class RecipeController extends Controller
             unset($metrics['_raw_nutrition'], $metrics['_raw_cost_per_gram'], $metrics['_raw_allergen_slugs']);
         }
 
+        // Normalize draft data so the frontend always receives sections with steps and lines arrays,
+        // and includes edit_sequence from the draft model (stored as a separate DB column, not in data).
+        $draftData = null;
+
+        if ($draft !== null) {
+            $data = $draft->data ?? [];
+
+            // Ensure each section has both a lines and a steps array, and an id field.
+            if (isset($data['sections']) && is_array($data['sections'])) {
+                $data['sections'] = array_map(function (array $section) {
+                    $section['lines'] = is_array($section['lines'] ?? null) ? $section['lines'] : [];
+                    $section['steps'] = is_array($section['steps'] ?? null) ? $section['steps'] : [];
+
+                    return $section;
+                }, $data['sections']);
+            }
+
+            // Inject edit_sequence from the draft model row into the data payload
+            // so the frontend RecipeDraft type can access it for Recall sequence guard.
+            $data['edit_sequence'] = $draft->edit_sequence;
+
+            $draftData = $data;
+        }
+
+        $currentVersion = $recipe->currentVersion;
+
+        $versions = $recipe->versions()
+            ->orderByDesc('version_number')
+            ->get(['id', 'version_number', 'change_note', 'committed_at'])
+            ->map(fn ($v) => [
+                'id' => $v->id,
+                'version_number' => $v->version_number,
+                'change_note' => $v->change_note,
+                // Frontend RecipeVersion type uses created_at; map committed_at to created_at.
+                'created_at' => $v->committed_at,
+                'is_current' => $currentVersion !== null && $v->id === $currentVersion->id,
+            ])
+            ->toArray();
+
         return Inertia::render('recipes/show', [
             'recipe' => (new RecipeBuilderResource($recipe))->resolve(),
-            'draft' => $draft?->data,
+            'draft' => $draftData,
             'metrics' => $metrics,
-            'versions' => $recipe->versions()->orderByDesc('version_number')->get(['id', 'version_number', 'change_note', 'committed_at'])->toArray(),
+            'versions' => $versions,
             'cuisines' => Cuisine::orderBy('name')->get(['id', 'name', 'slug']),
             'units' => Unit::orderBy('type')->orderBy('name')->get(['id', 'name', 'symbol', 'type']),
             'tags' => Tag::orderBy('name')->get(['id', 'name']),

@@ -66,6 +66,40 @@ test('POST /recipes with only a name defaults yield_amount and portions and crea
         ->and($draft->data['portions'])->not->toBeNull();
 });
 
+test('GET /recipes/{recipe} renders the builder page with normalized draft data for a fresh recipe', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    // Create a fresh recipe (the path that was crashing)
+    $response = $this->actingAs($user)->post('/recipes', ['name' => 'Empty New Recipe']);
+    $response->assertRedirect();
+
+    $recipe = \App\Models\Recipe::where('user_id', $user->id)->first();
+    expect($recipe)->not->toBeNull();
+
+    // Visit the builder page
+    $showResponse = $this->actingAs($user)->get("/recipes/{$recipe->id}");
+    $showResponse->assertOk();
+    $showResponse->assertInertia(function ($page) {
+        $page->component('recipes/show');
+
+        // draft must be present and each section must have a steps array
+        $page->has('draft');
+        $page->has('draft.sections');
+        $page->has('draft.edit_sequence');
+
+        $page->where('draft.sections.0.steps', []);
+        $page->where('draft.sections.0.lines', []);
+
+        // versions must have created_at and is_current fields
+        $page->has('versions.0.created_at');
+        $page->has('versions.0.is_current');
+
+        // metrics must be present (non-null — empty recipe still computes zeros)
+        $page->has('metrics');
+    });
+});
+
 test('ingredient lines accept weight, volume, and count units', function () {
     $user = User::factory()->create();
     $user->assignRole('User');

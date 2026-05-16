@@ -85,7 +85,9 @@ export function SectionBlock({
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [headerHovered, setHeaderHovered] = useState(false);
 
-    const hasContent = section.lines.length > 0 || section.steps.length > 0;
+    const steps = section.steps ?? [];
+    const lines = section.lines ?? [];
+    const hasContent = lines.length > 0 || steps.length > 0;
 
     function handleDeleteRequest() {
         if (hasContent) {
@@ -164,7 +166,7 @@ export function SectionBlock({
 
                 {/* Ingredient lines */}
                 <div className="px-3">
-                    {section.lines.map((line) => (
+                    {lines.map((line) => (
                         <IngredientLineRow
                             key={line.id}
                             line={line}
@@ -185,14 +187,14 @@ export function SectionBlock({
                 </div>
 
                 {/* Steps */}
-                {section.steps.length > 0 && (
+                {steps.length > 0 && (
                     <div className="border-t border-border px-3">
-                        {section.steps.map((step, idx) => (
+                        {steps.map((step, idx) => (
                             <StepRow
                                 key={step.id}
                                 step={step}
                                 isFirst={idx === 0}
-                                isLast={idx === section.steps.length - 1}
+                                isLast={idx === steps.length - 1}
                                 onChange={(updated) => onStepChange(step.id, updated)}
                                 onMoveUp={() => onMoveStep(step.id, 'up')}
                                 onMoveDown={() => onMoveStep(step.id, 'down')}
