@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-recipe-core-metrics-05-PLAN.md
-last_updated: "2026-05-16T22:44:46.289Z"
+stopped_at: Completed 03-recipe-core-metrics-06-PLAN.md
+last_updated: "2026-05-16T23:01:08.826Z"
 last_activity: "2026-05-16 — Phase 2 Plan 05 complete: ingredient detail page, verification flow, human-verify checkpoint passed"
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 20
-  completed_plans: 17
+  completed_plans: 18
   percent: 35
 ---
 
@@ -66,6 +66,7 @@ Progress: [████░░░░░░] 35%
 | Phase 03-recipe-core-metrics P03 | 9 | 2 tasks | 7 files |
 | Phase 03-recipe-core-metrics PP04 | 23 | 3 tasks | 21 files |
 | Phase 03-recipe-core-metrics P05 | 13 | 3 tasks | 13 files |
+| Phase 03-recipe-core-metrics P06 | 35 | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -118,6 +119,8 @@ Recent decisions affecting current work:
 - [Phase 03-recipe-core-metrics]: Circular reference validation returns JSON directly not ValidationException — PUT request without Accept:application/json would redirect instead of returning 422 JSON
 - [Phase 03-recipe-core-metrics]: Auto-save hook uses router.put with only:['draft','metrics'] and 600ms debounce per UI-SPEC; Saved indicator clears after 2s
 - [Phase 03-recipe-core-metrics]: metrics-panel-mount div reserved as data-slot attribute so Plan 06 can slot in metrics panel without modifying show.tsx layout
+- [Phase 03-recipe-core-metrics]: RecipeMetrics TS types corrected to match PHP service output: allergens as slug arrays, bakers as percentages map, missing_data as string[], selling_price added to RecipeBuilderData
+- [Phase 03-recipe-core-metrics]: Allergen display names resolved client-side via slugToName() — no extra server call needed; Apply to Draft uses integer rational (numerator/denominator=1000) not pre-rounded float
 
 ### Pending Todos
 
@@ -129,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T22:44:46.284Z
-Stopped at: Completed 03-recipe-core-metrics-05-PLAN.md
+Last session: 2026-05-16T23:01:08.820Z
+Stopped at: Completed 03-recipe-core-metrics-06-PLAN.md
 Resume file: None
