@@ -213,7 +213,7 @@ Two-column layout side by side. Left = version A, right = version B. Diffs highl
 - Trigger: any change to ingredient lines, steps, section structure, metadata fields, chef notes
 - Debounce: 600ms after the last keystroke / interaction
 - Mechanism: `router.put(updateDraft(...), draftData, { preserveState: true, preserveScroll: true, only: ['draft', 'metrics'] })`
-- Visual indicator: subtle "Saving…" / "Saved" label at 12px/400 in `text-muted-foreground` next to the builder header — disappears 2s after "Saved"
+- Visual indicator: subtle "Saving…" / "Saved" label at Label size (14px/400) in `text-muted-foreground` next to the builder header — disappears 2s after "Saved"; implement with Tailwind utility `text-sm` (no new design-system size declared)
 - No toast on auto-save (silent background operation)
 
 ### Save Version
