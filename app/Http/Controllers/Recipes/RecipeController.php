@@ -102,7 +102,7 @@ class RecipeController extends Controller
                 'user_id' => auth()->id(),
                 'name' => $validated['name'],
                 'slug' => Str::slug($validated['name']).'-'.Str::random(6),
-                'yield_amount' => $validated['yield_amount'] ?? null,
+                'yield_amount' => $validated['yield_amount'] ?? 1000,
                 'portions' => $validated['portions'] ?? 1,
                 'prep_time_minutes' => $validated['prep_time_minutes'] ?? null,
                 'cook_time_minutes' => $validated['cook_time_minutes'] ?? null,

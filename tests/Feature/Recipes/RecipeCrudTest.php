@@ -37,6 +37,35 @@ test('POST /recipes creates a recipe and commits v1', function () {
     expect($version->version_number)->toBe(1);
 });
 
+test('POST /recipes with only a name defaults yield_amount and portions and creates draft', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    $response = $this->actingAs($user)->post('/recipes', [
+        'name' => 'Quick Test Recipe',
+    ]);
+
+    $response->assertRedirect();
+
+    $recipe = Recipe::where('user_id', $user->id)->first();
+
+    expect($recipe)->not->toBeNull()
+        ->and($recipe->name)->toBe('Quick Test Recipe')
+        ->and($recipe->yield_amount)->not->toBeNull()
+        ->and((float) $recipe->yield_amount)->toBeGreaterThan(0)
+        ->and($recipe->portions)->not->toBeNull()
+        ->and((float) $recipe->portions)->toBeGreaterThan(0);
+
+    $version = RecipeVersion::where('recipe_id', $recipe->id)->first();
+    expect($version)->not->toBeNull()
+        ->and($version->version_number)->toBe(1);
+
+    $draft = $recipe->draft;
+    expect($draft)->not->toBeNull()
+        ->and($draft->data['yield_amount'])->not->toBeNull()
+        ->and($draft->data['portions'])->not->toBeNull();
+});
+
 test('ingredient lines accept weight, volume, and count units', function () {
     $user = User::factory()->create();
     $user->assignRole('User');
