@@ -17,7 +17,7 @@ including the AI agent. Each maps to a roadmap phase.
 
 ### Ingredient Library
 
-- [ ] **INGR-01**: User can search the official ingredient library by name
+- [x] **INGR-01**: User can search the official ingredient library by name
 - [ ] **INGR-02**: Official ingredient library is seeded from CIQUAL, USDA FDC, and Open Food Facts
 - [x] **INGR-03**: Each ingredient stores nutrition values (calories, macros, sugars, sodium, fiber, micronutrients)
 - [x] **INGR-04**: Each ingredient stores allergen information using the EU 14-allergen model
@@ -172,7 +172,7 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | UI-01 | Phase 1 | Complete |
 | UI-02 | Phase 1 | Complete |
 | UI-03 | Phase 1 | Complete |
-| INGR-01 | Phase 2 | Pending |
+| INGR-01 | Phase 2 | Complete |
 | INGR-02 | Phase 2 | Pending |
 | INGR-03 | Phase 2 | Complete |
 | INGR-04 | Phase 2 | Complete |

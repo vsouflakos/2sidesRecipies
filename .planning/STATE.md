@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-05-16T14:30:00.000Z"
-last_activity: "2026-05-16 — Phase 2 Plan 01 complete: ingredient schema, models, factories, category seeder, test scaffold"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-05-16T16:00:00.000Z"
+last_activity: "2026-05-16 — Phase 2 Plan 03 complete: ingredient search UI, controller, nav entry, EN+EL i18n"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 12
-  completed_plans: 7
-  percent: 22
+  completed_plans: 9
+  percent: 30
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 2 of 7 (Ingredient Library) — IN PROGRESS
-Plan: 1 of 6 complete (02-01 ingredient schema)
-Status: Plan 02-01 complete — ready to begin Plan 02-02 (import pipeline)
-Last activity: 2026-05-16 — Phase 2 Plan 01 complete: ingredient schema, models, factories, category seeder, test scaffold
+Plan: 3 of 6 complete (02-03 ingredient search UI)
+Status: Plan 02-03 complete — ready to begin Plan 02-04 (create/edit private ingredient)
+Last activity: 2026-05-16 — Phase 2 Plan 03 complete: ingredient search UI, controller, nav entry, EN+EL i18n
 
-Progress: [██░░░░░░░░] 22%
+Progress: [███░░░░░░░] 30%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [██░░░░░░░░] 22%
 | Phase 01-foundation P02 | 13 | 3 tasks | 10 files |
 | Phase 01-foundation P05 | 30 | 3 tasks | 5 files |
 | Phase 02-ingredient-library P01 | 40 | 3 tasks | 28 files |
+| Phase 02-ingredient-library P03 | 45 | 3 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 02-ingredient-library]: Added HasFactory + AllergenFactory to the Phase 1 Allergen model so ingredient tests can build individual allergen rows without seeding all 14
 - [Phase 02-ingredient-library]: ingredients table uses a (source, source_id) unique index — required for DB::upsert idempotency in the Plan 02-02 import pipeline; data_hash column gates the verified-reset on re-import
 - [Phase 02-ingredient-library]: MySQL-only FULLTEXT index on ingredient_translations.name guarded by DB::getDriverName() so SQLite test runs do not error
+- [Phase 02-ingredient-library]: Private ingredient visibility scope applied as base constraint — all ingredient queries exclude other users' private ingredients regardless of source filter
+- [Phase 02-ingredient-library]: Allergen-free filter fires on Popover close (not per checkbox tick) per UI-SPEC interaction contract to avoid multiple reloads
+- [Phase 02-ingredient-library]: EL dismiss labels are context-specific per UI-SPEC: Διατήρηση Ανεπιβεβαίωτου / Επιστροφή στη Βιβλιοθήκη / Διατήρηση Συστατικού
 
 ### Pending Todos
 
@@ -94,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T14:30:00.000Z
-Stopped at: Completed 02-01-PLAN.md
-Resume file: .planning/phases/02-ingredient-library/02-02-PLAN.md
+Last session: 2026-05-16T16:00:00.000Z
+Stopped at: Completed 02-03-PLAN.md
+Resume file: .planning/phases/02-ingredient-library/02-04-PLAN.md
