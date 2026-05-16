@@ -1,4 +1,5 @@
 import { createInertiaApp } from '@inertiajs/react';
+import { LaravelReactI18nProvider } from 'laravel-react-i18n';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { initializeTheme } from '@/hooks/use-appearance';
@@ -25,10 +26,16 @@ createInertiaApp({
     strictMode: true,
     withApp(app) {
         return (
-            <TooltipProvider delayDuration={0}>
-                {app}
-                <Toaster />
-            </TooltipProvider>
+            <LaravelReactI18nProvider
+                locale={document.documentElement.lang || 'en'}
+                fallbackLocale="en"
+                files={import.meta.glob('/lang/php_*.json')}
+            >
+                <TooltipProvider delayDuration={0}>
+                    {app}
+                    <Toaster />
+                </TooltipProvider>
+            </LaravelReactI18nProvider>
         );
     },
     progress: {
