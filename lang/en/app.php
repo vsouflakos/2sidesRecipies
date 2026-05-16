@@ -42,6 +42,8 @@ return [
         'price_notes_label' => 'Notes (optional)',
         'price_cta' => 'Record Price',
         'price_toast' => 'Price recorded.',
+        'price_recorded' => 'Price recorded.',
+        'price_no_conversion' => 'This unit has no conversion defined for this ingredient. Add a conversion row first.',
         'verify_btn' => 'Mark as Verified',
         'verify_dialog_body' => 'Confirm that all stored data for this ingredient is correct.',
         'verify_dialog_confirm' => 'Confirm Verification',

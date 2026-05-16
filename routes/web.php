@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\IngredientVerificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\StyleguideController;
 use App\Http\Controllers\Ingredients\IngredientController;
+use App\Http\Controllers\Ingredients\IngredientPriceController;
 use App\Http\Controllers\Ingredients\PrivateIngredientController;
 use App\Http\Controllers\Settings\UpdateLocaleController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('ingredients/{ingredient}/edit', [PrivateIngredientController::class, 'edit'])->name('ingredients.edit');
     Route::put('ingredients/{ingredient}', [PrivateIngredientController::class, 'update'])->name('ingredients.update');
     Route::delete('ingredients/{ingredient}', [PrivateIngredientController::class, 'destroy'])->name('ingredients.destroy');
+    Route::post('ingredients/{ingredient}/prices', [IngredientPriceController::class, 'store'])->name('ingredients.prices.store');
     Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
 });
 
