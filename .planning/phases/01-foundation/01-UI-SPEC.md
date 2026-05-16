@@ -256,8 +256,8 @@ Accent is NOT used for: primary buttons, nav active states, links, badges, or an
 **Dialog content:**
 - Title: "Deactivate account?"
 - Body: "Deactivating [Name]'s account will prevent them from logging in. You can reactivate it at any time."
-- Actions: [Cancel] (secondary button) + [Deactivate] (destructive button)
-- Loading state: Deactivate button shows Spinner, is disabled.
+- Actions: [Keep account active] (secondary button) + [Deactivate account] (destructive button)
+- Loading state: Deactivate account button shows Spinner, is disabled.
 
 ---
 
@@ -268,8 +268,8 @@ Accent is NOT used for: primary buttons, nav active states, links, badges, or an
 **Dialog content:**
 - Title: "Delete account?"
 - Body: "This will permanently delete [Name]'s account and all their data. This action cannot be undone."
-- Actions: [Cancel] (secondary button) + [Delete account] (destructive button)
-- Loading state: Delete button shows Spinner, is disabled.
+- Actions: [Keep account] (secondary button) + [Delete account] (destructive button)
+- Loading state: Delete account button shows Spinner, is disabled.
 
 *Note: SoftDeletes means data is soft-deleted; the copy says "cannot be undone" from the user's perspective — recoverable only via database. Do not surface recovery in this dialog.*
 
@@ -362,9 +362,11 @@ Accent is NOT used for: primary buttons, nav active states, links, badges, or an
 | Server error toast | "Something went wrong. Please try again." | Sonner error |
 | Deactivate dialog title | "Deactivate account?" | |
 | Deactivate dialog body | "Deactivating {Name}'s account will prevent them from logging in. You can reactivate it at any time." | |
-| Deactivate confirm button | "Deactivate" | Destructive variant |
+| Deactivate dismiss button | "Keep account active" | Secondary variant |
+| Deactivate confirm button | "Deactivate account" | Destructive variant |
 | Delete dialog title | "Delete account?" | |
 | Delete dialog body | "This will permanently delete {Name}'s account and all their data. This action cannot be undone." | |
+| Delete dismiss button | "Keep account" | Secondary variant |
 | Delete confirm button | "Delete account" | Destructive variant |
 | Self-protection tooltip | "You cannot change your own role" / "You cannot deactivate your own account" / "You cannot delete your own account" | Tooltip on disabled dropdown item |
 | Last-admin tooltip | "Cannot remove the last Admin role" / "Cannot deactivate the last Admin" / "Cannot delete the last Admin" | Tooltip on disabled dropdown item |
@@ -413,7 +415,7 @@ Accent is NOT used for: primary buttons, nav active states, links, badges, or an
 | State | Visual |
 |-------|--------|
 | Open | Dialog rendered via Radix Dialog; backdrop `bg-black/50` |
-| Confirm loading | Confirm button shows Spinner, `disabled` prop set, Cancel button enabled |
+| Confirm loading | Confirm button shows Spinner, `disabled` prop set, dismiss button enabled |
 | Confirm success | Dialog closes; toast fires |
 | Confirm error | Dialog stays open; error toast fires |
 
@@ -430,6 +432,7 @@ Accent is NOT used for: primary buttons, nav active states, links, badges, or an
 - Dialogs use Radix Dialog's built-in focus trap and `aria-modal`.
 - Language switcher Toggle pair uses `role="group"` and `aria-label="Language"`.
 - Admin table uses semantic `<table>` / `<thead>` / `<tbody>` / `<th scope="col">` via the shadcn Table component.
+- Admin table actions column: the ellipsis/kebab menu trigger button must carry `aria-label="Actions for {user full name}"` (e.g. `aria-label="Actions for Maria Papadopoulou"`). This label is set dynamically per row using the user's full name so screen-reader users can distinguish triggers across rows.
 
 ---
 
