@@ -31,6 +31,7 @@ import { Input } from '@/components/ui/input';
 import { SectionBlock } from '@/components/recipes/recipe-builder/section-block';
 import { RecipeMetadataBlock } from '@/components/recipes/recipe-builder/recipe-metadata-block';
 import { QuickCreateIngredientModal } from '@/components/recipes/recipe-builder/quick-create-ingredient-modal';
+import { MetricsPanel } from '@/components/recipes/metrics-panel/metrics-panel';
 import { useRecipeAutosave } from '@/hooks/use-recipe-autosave';
 import { destroy as destroyRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
 import { index as recipesIndex } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
@@ -472,12 +473,27 @@ export default function RecipeShow({
                         </Button>
                     </div>
 
-                    {/* RIGHT: metrics panel mount point — slotted in by Plan 06 */}
-                    <div
-                        data-slot="metrics-panel-mount"
-                        className="hidden bg-muted/30 lg:block lg:overflow-y-auto lg:border-l lg:border-border"
-                    >
-                        {/* Plan 06 will render the metrics panel here */}
+                    {/* RIGHT: metrics panel */}
+                    <div className="hidden lg:block lg:overflow-y-auto lg:border-l lg:border-border">
+                        <MetricsPanel
+                            metrics={metrics}
+                            draftSellingPrice={draft.selling_price ?? null}
+                            draftPortions={draft.portions ?? null}
+                            onSellingPriceChange={(value) =>
+                                updateDraft('update_selling_price', (prev) => ({
+                                    ...prev,
+                                    selling_price: value,
+                                }))
+                            }
+                            onApplyScale={({ scale_numerator, scale_denominator, portions }) =>
+                                updateDraft('apply_scale', (prev) => ({
+                                    ...prev,
+                                    scale_numerator,
+                                    scale_denominator,
+                                    portions,
+                                }))
+                            }
+                        />
                     </div>
                 </div>
             </div>
