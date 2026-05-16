@@ -10,10 +10,10 @@ including the AI agent. Each maps to a roadmap phase.
 
 ### Access & Roles
 
-- [ ] **ACCESS-01**: User account is assigned one of three roles — User, Moderator, or Admin
-- [ ] **ACCESS-02**: Moderator can access the ingredient submission review queue
-- [ ] **ACCESS-03**: Admin can manage user accounts and assign roles
-- [ ] **ACCESS-04**: Each role's permitted actions are enforced consistently across the app
+- [x] **ACCESS-01**: User account is assigned one of three roles — User, Moderator, or Admin
+- [x] **ACCESS-02**: Moderator can access the ingredient submission review queue
+- [x] **ACCESS-03**: Admin can manage user accounts and assign roles
+- [x] **ACCESS-04**: Each role's permitted actions are enforced consistently across the app
 
 ### Ingredient Library
 
@@ -99,14 +99,14 @@ including the AI agent. Each maps to a roadmap phase.
 
 ### Localization
 
-- [ ] **I18N-01**: UI is translatable and the user can switch language (Greek and English at minimum)
-- [ ] **I18N-02**: Ingredient names display in the user's selected language
+- [x] **I18N-01**: UI is translatable and the user can switch language (Greek and English at minimum)
+- [x] **I18N-02**: Ingredient names display in the user's selected language
 
 ### Design System
 
-- [ ] **UI-01**: Interface is built with shadcn/ui components on Tailwind v4
+- [x] **UI-01**: Interface is built with shadcn/ui components on Tailwind v4
 - [ ] **UI-02**: Interface follows a warm-minimal aesthetic consistently across light and dark themes
-- [ ] **UI-03**: Interface is responsive and usable on desktop, tablet, and mobile browsers
+- [x] **UI-03**: Interface is responsive and usable on desktop, tablet, and mobile browsers
 
 ## v2 Requirements
 
@@ -163,15 +163,15 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ACCESS-01 | Phase 1 | Pending |
-| ACCESS-02 | Phase 1 | Pending |
-| ACCESS-03 | Phase 1 | Pending |
-| ACCESS-04 | Phase 1 | Pending |
-| I18N-01 | Phase 1 | Pending |
-| I18N-02 | Phase 1 | Pending |
-| UI-01 | Phase 1 | Pending |
+| ACCESS-01 | Phase 1 | Complete |
+| ACCESS-02 | Phase 1 | Complete |
+| ACCESS-03 | Phase 1 | Complete |
+| ACCESS-04 | Phase 1 | Complete |
+| I18N-01 | Phase 1 | Complete |
+| I18N-02 | Phase 1 | Complete |
+| UI-01 | Phase 1 | Complete |
 | UI-02 | Phase 1 | Pending |
-| UI-03 | Phase 1 | Pending |
+| UI-03 | Phase 1 | Complete |
 | INGR-01 | Phase 2 | Pending |
 | INGR-02 | Phase 2 | Pending |
 | INGR-03 | Phase 2 | Pending |
