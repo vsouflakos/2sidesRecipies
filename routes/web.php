@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\IngredientReviewController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\StyleguideController;
 use App\Http\Controllers\Ingredients\IngredientController;
+use App\Http\Controllers\Ingredients\PrivateIngredientController;
 use App\Http\Controllers\Settings\UpdateLocaleController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -15,6 +16,11 @@ Route::inertia('/', 'welcome', [
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::get('ingredients', [IngredientController::class, 'index'])->name('ingredients.index');
+    Route::get('ingredients/create', [PrivateIngredientController::class, 'create'])->name('ingredients.create');
+    Route::post('ingredients', [PrivateIngredientController::class, 'store'])->name('ingredients.store');
+    Route::get('ingredients/{ingredient}/edit', [PrivateIngredientController::class, 'edit'])->name('ingredients.edit');
+    Route::put('ingredients/{ingredient}', [PrivateIngredientController::class, 'update'])->name('ingredients.update');
+    Route::delete('ingredients/{ingredient}', [PrivateIngredientController::class, 'destroy'])->name('ingredients.destroy');
 });
 
 Route::middleware('auth')
