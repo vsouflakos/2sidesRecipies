@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import { Trash2Icon } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -13,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { SubRecipeLineRow } from '@/components/recipes/recipe-builder/sub-recipe-line-row';
 import { cn } from '@/lib/utils';
 import type { RecipeIngredientLine, UnitOption } from '@/types/recipe';
 
@@ -23,77 +23,45 @@ interface IngredientLineRowProps {
     onChange: (updated: Partial<RecipeIngredientLine>) => void;
     /** Called when the delete button is pressed. */
     onDelete: () => void;
+    /**
+     * Called when the chef confirms updating a sub-recipe pin.
+     * Only relevant when line.sub_recipe_version_id is set.
+     */
+    onUpdatePin?: (line: RecipeIngredientLine) => void;
+    /** Inline circular-reference error for a sub-recipe row. */
+    circularError?: string | null;
     className?: string;
 }
 
 /**
  * Collapsed ingredient line row with qty, unit, name, prep note, yield%, flour-base toggle, and delete.
- * Sub-recipe lines show the recipe name, pinned version badge, and gram qty.
+ * Sub-recipe lines delegate to SubRecipeLineRow for the full version-pin + update-cue behavior.
  */
 export function IngredientLineRow({
     line,
     units,
     onChange,
     onDelete,
+    onUpdatePin,
+    circularError,
     className,
 }: IngredientLineRowProps) {
     const { t } = useLaravelReactI18n();
     const [hovered, setHovered] = useState(false);
 
     const isSubRecipe = line.sub_recipe_version_id !== null && line.sub_recipe !== undefined;
-    const hasUpdateAvailable =
-        isSubRecipe &&
-        line.sub_recipe &&
-        line.sub_recipe.version_number < line.sub_recipe.latest_version_number;
 
-    if (isSubRecipe && line.sub_recipe) {
-        /** Sub-recipe line variant */
+    if (isSubRecipe) {
+        /** Delegate to the dedicated sub-recipe line component. */
         return (
-            <div
-                className={cn(
-                    'flex min-h-[48px] items-center gap-2 border-b border-border px-2 py-1',
-                    className,
-                )}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
-            >
-                {/* Sub-recipe name */}
-                <span className="flex-1 text-sm">{line.sub_recipe.name}</span>
-
-                {/* Pinned version badge */}
-                <Badge variant="secondary" className="shrink-0 text-xs">
-                    v{line.sub_recipe.version_number}
-                </Badge>
-
-                {/* Update available accent badge */}
-                {hasUpdateAvailable && (
-                    <Badge className="shrink-0 bg-accent text-accent-foreground text-xs">
-                        {t('app.recipes.sub_recipe_update_badge')}
-                    </Badge>
-                )}
-
-                {/* Gram qty input */}
-                <Input
-                    type="number"
-                    value={line.quantity}
-                    onChange={(e) => onChange({ quantity: e.target.value })}
-                    className="w-[100px] shrink-0"
-                    placeholder="g"
-                    min="0"
-                />
-
-                {/* Delete button */}
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="shrink-0 min-h-[44px] text-muted-foreground hover:text-destructive"
-                    onClick={onDelete}
-                    aria-label="Remove ingredient line"
-                >
-                    <Trash2Icon className="size-4" />
-                </Button>
-            </div>
+            <SubRecipeLineRow
+                line={line}
+                onChange={onChange}
+                onDelete={onDelete}
+                onUpdatePin={onUpdatePin ?? (() => {})}
+                circularError={circularError}
+                className={className}
+            />
         );
     }
 
