@@ -34,11 +34,16 @@ class RolesAndPermissionsSeeder extends Seeder
         $moderatorRole->syncPermissions($moderatorPermissions);
         $adminRole->syncPermissions($adminPermissions);
 
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@twosides.test'],
-            ['name' => 'Admin', 'password' => Hash::make('password')]
-        );
+        // Only create the default admin user outside of tests.
+        // In tests, each test manages its own users to avoid polluting counts
+        // (e.g. last-admin guard tests rely on an exact user count).
+        if (! app()->runningUnitTests()) {
+            $admin = User::firstOrCreate(
+                ['email' => 'admin@twosides.test'],
+                ['name' => 'Admin', 'password' => Hash::make('password')]
+            );
 
-        $admin->assignRole('Admin');
+            $admin->assignRole('Admin');
+        }
     }
 }

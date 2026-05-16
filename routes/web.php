@@ -19,11 +19,11 @@ Route::middleware('auth')
     ->put('locale', UpdateLocaleController::class)
     ->name('locale.update');
 
-Route::middleware(['auth', 'verified', 'permission:manage-users'])
+Route::middleware(['auth', 'verified'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::get('users', [UserController::class, 'index'])->name('users.index')->middleware('permission:manage-users');
         Route::put('users/{user}/role', [UserController::class, 'assignRole'])->name('users.role');
         Route::put('users/{user}/status', [UserController::class, 'toggleStatus'])->name('users.status');
         Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
