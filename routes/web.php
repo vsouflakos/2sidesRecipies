@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\IngredientReviewController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\StyleguideController;
+use App\Http\Controllers\Ingredients\IngredientController;
 use App\Http\Controllers\Settings\UpdateLocaleController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -13,6 +14,7 @@ Route::inertia('/', 'welcome', [
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('ingredients', [IngredientController::class, 'index'])->name('ingredients.index');
 });
 
 Route::middleware('auth')
