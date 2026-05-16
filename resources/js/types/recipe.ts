@@ -70,6 +70,11 @@ export interface RecipeBuilderData {
     chef_notes: string | null;
     /** Selling price per portion — stored in draft data; used for food cost % calculation. */
     selling_price: string | null;
+    /**
+     * Current edit sequence number — used by Recall to guard against
+     * concurrent modifications (pitfall 5: sequence mismatch → 409).
+     */
+    edit_sequence: number;
     sections: RecipeSection[];
     tags: TagOption[];
 }

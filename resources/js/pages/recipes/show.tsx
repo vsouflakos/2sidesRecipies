@@ -2,15 +2,12 @@ import { Head, router } from '@inertiajs/react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import { useCallback, useState } from 'react';
 import {
-    ChevronDownIcon,
-    ChevronUpIcon,
     EllipsisVerticalIcon,
     ImageIcon,
     PlusIcon,
-    Trash2Icon,
     XIcon,
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -28,18 +25,24 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { SectionBlock } from '@/components/recipes/recipe-builder/section-block';
 import { RecipeMetadataBlock } from '@/components/recipes/recipe-builder/recipe-metadata-block';
 import { QuickCreateIngredientModal } from '@/components/recipes/recipe-builder/quick-create-ingredient-modal';
+import { SaveVersionDialog } from '@/components/recipes/recipe-builder/save-version-dialog';
+import { VersionHistorySheet } from '@/components/recipes/recipe-builder/version-history-sheet';
 import { MetricsPanel } from '@/components/recipes/metrics-panel/metrics-panel';
 import { useRecipeAutosave } from '@/hooks/use-recipe-autosave';
 import { destroy as destroyRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
-import { index as recipesIndex } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
 import { store as duplicateRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeDuplicateController';
-import { index as ingredientsIndex } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
+import { recall as recallDraft } from '@/actions/App/Http/Controllers/Recipes/RecipeDraftController';
 import type {
     CategoryNode,
-    UnitOption as IngredientUnitOption,
 } from '@/types/ingredient';
 import type {
     ComponentSearchResult,
@@ -83,9 +86,14 @@ export default function RecipeShow({
 
     const [draft, setDraft] = useState<RecipeDraft>(initialDraft);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [saveVersionOpen, setSaveVersionOpen] = useState(false);
+    const [recallDisabled, setRecallDisabled] = useState(false);
     const [quickCreateOpen, setQuickCreateOpen] = useState(false);
     const [quickCreateQuery, setQuickCreateQuery] = useState('');
     const [quickCreateSectionId, setQuickCreateSectionId] = useState<number | null>(null);
+
+    /** The edit log is considered empty when edit_sequence is 0. */
+    const editLogEmpty = draft.edit_sequence === 0;
 
     /** Update draft state and trigger auto-save. */
     const updateDraft = useCallback(
@@ -318,7 +326,38 @@ export default function RecipeShow({
     }
 
     function handleDuplicateRecipe() {
-        router.post(duplicateRecipe({ recipe: recipe.id }).url, {});
+        router.post(duplicateRecipe({ recipe: recipe.id }).url, {}, {
+            onSuccess: () => {
+                toast.success(t('app.recipes.duplicate_toast'));
+            },
+        });
+    }
+
+    /** ---- Recall ---- */
+    function handleRecall() {
+        if (editLogEmpty || recallDisabled) {
+            return;
+        }
+
+        router.post(
+            recallDraft({ recipe: recipe.id }).url,
+            { expected_sequence: draft.edit_sequence },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                only: ['draft', 'metrics'],
+                onSuccess: () => {
+                    toast.success(t('app.recipes.recall_toast'));
+                },
+                onError: (errors) => {
+                    /** HTTP 409 — sequence mismatch from concurrent edit */
+                    if (errors && Object.keys(errors).length > 0) {
+                        toast.error(t('app.recipes.recall_conflict_toast'));
+                        setRecallDisabled(true);
+                    }
+                },
+            },
+        );
     }
 
     const sections = draft.sections ?? [];
@@ -348,6 +387,52 @@ export default function RecipeShow({
                             </span>
                         )}
                     </div>
+
+                    {/* Version history button */}
+                    <VersionHistorySheet
+                        recipeId={recipe.id}
+                        versions={versions}
+                        currentVersionNumber={
+                            versions.find((v) => v.is_current)?.version_number ?? 1
+                        }
+                    />
+
+                    {/* Save Version button */}
+                    <Button
+                        type="button"
+                        variant="default"
+                        size="sm"
+                        onClick={() => setSaveVersionOpen(true)}
+                    >
+                        {t('app.recipes.save_version_btn')}
+                    </Button>
+
+                    {/* Recall button — aria-disabled (not disabled) when edit log is empty */}
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    aria-disabled={editLogEmpty || recallDisabled ? 'true' : undefined}
+                                    onClick={handleRecall}
+                                    className={
+                                        editLogEmpty || recallDisabled
+                                            ? 'pointer-events-none opacity-50'
+                                            : undefined
+                                    }
+                                >
+                                    {t('app.recipes.recall_btn')}
+                                </Button>
+                            </TooltipTrigger>
+                            {(editLogEmpty || recallDisabled) && (
+                                <TooltipContent>
+                                    <p>Nothing to undo</p>
+                                </TooltipContent>
+                            )}
+                        </Tooltip>
+                    </TooltipProvider>
 
                     {/* Recipe actions dropdown */}
                     <DropdownMenu>
@@ -525,6 +610,13 @@ export default function RecipeShow({
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Save Version dialog */}
+            <SaveVersionDialog
+                recipeId={recipe.id}
+                open={saveVersionOpen}
+                onOpenChange={setSaveVersionOpen}
+            />
 
             {/* Quick-create ingredient modal */}
             <QuickCreateIngredientModal
