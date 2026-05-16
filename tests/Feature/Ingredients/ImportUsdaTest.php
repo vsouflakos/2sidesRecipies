@@ -2,6 +2,8 @@
 
 use App\Models\Ingredient;
 use App\Models\IngredientConversion;
+use Database\Seeders\IngredientCategorySeeder;
+use Database\Seeders\UnitSeeder;
 
 /**
  * Covers INGR-02 (USDA) and INGR-05 — idempotent USDA FoodData Central import command.
@@ -9,6 +11,11 @@ use App\Models\IngredientConversion;
  * The command accepts individual --*-file options so the suite can run against
  * small bundled fixtures instead of the full USDA download.
  */
+beforeEach(function () {
+    $this->seed(IngredientCategorySeeder::class);
+    $this->seed(UnitSeeder::class);
+});
+
 test('the usda import command creates new ingredient rows from fixtures', function () {
     $dir = base_path('tests/fixtures/ingredients');
 

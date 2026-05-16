@@ -3,6 +3,7 @@
 use App\Models\Allergen;
 use App\Models\Ingredient;
 use App\Models\IngredientTranslation;
+use Database\Seeders\IngredientCategorySeeder;
 
 /**
  * Covers INGR-02 (OFF) and INGR-04, INGR-06 — idempotent Open Food Facts enrichment import command.
@@ -10,6 +11,10 @@ use App\Models\IngredientTranslation;
  * The command accepts a `--source-file` argument so the suite can run
  * against a small bundled fixture instead of the full OFF CSV download.
  */
+beforeEach(function () {
+    $this->seed(IngredientCategorySeeder::class);
+});
+
 test('the off import command creates ingredient rows from a fixture', function () {
     $fixture = base_path('tests/fixtures/ingredients/off-products.csv');
 
