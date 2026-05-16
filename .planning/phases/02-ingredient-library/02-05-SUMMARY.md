@@ -34,9 +34,9 @@ decisions:
   - "Prices tab extension point: commented slot in Tabs so Plan 02-06 can add it without structural changes"
   - "Wayfinder routes excluded from git (.gitignore) — regenerated at build time via php artisan wayfinder:generate"
 metrics:
-  duration_min: 45
+  duration_min: 50
   completed_date: "2026-05-16"
-  tasks_completed: 2
+  tasks_completed: 3
   files_changed: 11
 ---
 
@@ -50,7 +50,7 @@ Ingredient detail page (`/ingredients/{id}`) with tabbed Nutrition/Allergens/Con
 |---|------|--------|--------|
 | 1 | Show action, detail resource, verify controller + routes (TDD) | 54c731b | Done |
 | 2 | Detail page, nutrition/allergen panels, verify-action component | a96ddbf | Done |
-| 3 | Human verification checkpoint | — | Awaiting |
+| 3 | Human verification checkpoint | — | Passed |
 
 ## What Was Built
 
@@ -100,6 +100,14 @@ Ingredient detail page (`/ingredients/{id}`) with tabbed Nutrition/Allergens/Con
 - FOUND: commit 54c731b (Task 1)
 - FOUND: commit a96ddbf (Task 2)
 
+## Verification
+
+- `php artisan test --compact --filter=IngredientDetailTest` — 2 passed, 19 assertions
+- `php artisan test --compact --filter=IngredientVerificationTest` — 3 passed, 7 assertions
+- `vendor/bin/pint --dirty --format agent` — passed
+- `npm run build` — succeeded
+- Task 3 human-verify checkpoint: APPROVED. User confirmed the ingredient list shows results, the detail page works, and private ingredient management (edit/delete) works.
+
 ## Status
 
-Paused at checkpoint:human-verify (Task 3). Tasks 1 and 2 complete and committed. Awaiting human verification of the end-to-end flow.
+Plan 02-05 complete. All 3 tasks done — backend, frontend, and human verification checkpoint all passed.

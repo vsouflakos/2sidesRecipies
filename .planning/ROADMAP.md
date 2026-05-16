@@ -51,10 +51,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. User can record a price for any ingredient (private or official) with date and currency
 **Plans**: 6 plans
 - [x] 02-01-PLAN.md — Ingredient schema: six tables, five models, factories, category tree, verify permission, test scaffold
-- [ ] 02-02-PLAN.md — Import pipeline: idempotent CIQUAL / USDA FDC / Open Food Facts Artisan commands
-- [ ] 02-03-PLAN.md — Search & browse: live debounced search, three filters, compact rows, nav entry, i18n
-- [ ] 02-04-PLAN.md — Private ingredients: CRUD, owner-only policy, blank + duplicate-from-official create form
-- [ ] 02-05-PLAN.md — Detail page: tabbed nutrition/allergen/conversion view, moderator verification flow
+- [x] 02-02-PLAN.md — Import pipeline: idempotent CIQUAL / USDA FDC / Open Food Facts Artisan commands
+- [x] 02-03-PLAN.md — Search & browse: live debounced search, three filters, compact rows, nav entry, i18n
+- [x] 02-04-PLAN.md — Private ingredients: CRUD, owner-only policy, blank + duplicate-from-official create form
+- [x] 02-05-PLAN.md — Detail page: tabbed nutrition/allergen/conversion view, moderator verification flow
 - [ ] 02-06-PLAN.md — Pricing: per-user price recording with brick/math per-gram cost, dated history
 
 ### Phase 3: Recipe Core & Metrics
