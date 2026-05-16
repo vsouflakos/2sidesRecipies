@@ -31,17 +31,17 @@ including the AI agent. Each maps to a roadmap phase.
 
 ### Recipes
 
-- [ ] **RECIPE-01**: User can create a recipe with structured ingredient lines (quantity, unit, ingredient)
-- [ ] **RECIPE-02**: User can add ordered preparation steps to a recipe
-- [ ] **RECIPE-03**: An ingredient line can use any unit — weight, volume, or count
+- [x] **RECIPE-01**: User can create a recipe with structured ingredient lines (quantity, unit, ingredient)
+- [x] **RECIPE-02**: User can add ordered preparation steps to a recipe
+- [x] **RECIPE-03**: An ingredient line can use any unit — weight, volume, or count
 - [x] **RECIPE-04**: User can set recipe yield, portion size, time, difficulty, cuisine/category, and tags
-- [ ] **RECIPE-05**: A recipe can include another recipe as a nested sub-recipe component
+- [x] **RECIPE-05**: A recipe can include another recipe as a nested sub-recipe component
 - [x] **RECIPE-06**: Circular sub-recipe references are detected and rejected
 - [x] **RECIPE-07**: User can scale a recipe up or down and see quantities and metrics recompute
-- [ ] **RECIPE-08**: User can adjust portion count while viewing a recipe without creating a new version
-- [ ] **RECIPE-09**: User can duplicate a recipe to create a new editable copy
-- [ ] **RECIPE-10**: User can attach a hero image and optional step images to a recipe
-- [ ] **RECIPE-11**: User can write free-text chef notes on a recipe
+- [x] **RECIPE-08**: User can adjust portion count while viewing a recipe without creating a new version
+- [x] **RECIPE-09**: User can duplicate a recipe to create a new editable copy
+- [x] **RECIPE-10**: User can attach a hero image and optional step images to a recipe
+- [x] **RECIPE-11**: User can write free-text chef notes on a recipe
 - [ ] **RECIPE-12**: User can search and filter recipes by tag, cuisine, allergen, ingredient, difficulty, and time
 - [x] **RECIPE-13**: An ingredient line can carry a prep action and a yield/loss percentage
 
@@ -49,10 +49,10 @@ including the AI agent. Each maps to a roadmap phase.
 
 - [x] **VERSION-01**: Every recipe keeps an immutable history of saved versions
 - [x] **VERSION-02**: Edits accumulate in a mutable working draft, separate from saved versions
-- [ ] **VERSION-03**: User can Save the working draft, committing it as a new version
+- [x] **VERSION-03**: User can Save the working draft, committing it as a new version
 - [x] **VERSION-04**: User can Recall to undo the last applied edit on the working draft
-- [ ] **VERSION-05**: User can view and compare past versions of a recipe
-- [ ] **VERSION-06**: A sub-recipe reference pins to a specific version of the component recipe
+- [x] **VERSION-05**: User can view and compare past versions of a recipe
+- [x] **VERSION-06**: A sub-recipe reference pins to a specific version of the component recipe
 
 ### Metrics Engine
 
@@ -180,25 +180,25 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | INGR-06 | Phase 2 | Complete |
 | INGR-07 | Phase 2 | Complete |
 | INGR-08 | Phase 2 | Complete |
-| RECIPE-01 | Phase 3 | Pending |
-| RECIPE-02 | Phase 3 | Pending |
-| RECIPE-03 | Phase 3 | Pending |
+| RECIPE-01 | Phase 3 | Complete |
+| RECIPE-02 | Phase 3 | Complete |
+| RECIPE-03 | Phase 3 | Complete |
 | RECIPE-04 | Phase 3 | Complete |
-| RECIPE-05 | Phase 3 | Pending |
+| RECIPE-05 | Phase 3 | Complete |
 | RECIPE-06 | Phase 3 | Complete |
 | RECIPE-07 | Phase 3 | Complete |
-| RECIPE-08 | Phase 3 | Pending |
-| RECIPE-09 | Phase 3 | Pending |
-| RECIPE-10 | Phase 3 | Pending |
-| RECIPE-11 | Phase 3 | Pending |
+| RECIPE-08 | Phase 3 | Complete |
+| RECIPE-09 | Phase 3 | Complete |
+| RECIPE-10 | Phase 3 | Complete |
+| RECIPE-11 | Phase 3 | Complete |
 | RECIPE-12 | Phase 3 | Pending |
 | RECIPE-13 | Phase 3 | Complete |
 | VERSION-01 | Phase 3 | Complete |
 | VERSION-02 | Phase 3 | Complete |
-| VERSION-03 | Phase 3 | Pending |
+| VERSION-03 | Phase 3 | Complete |
 | VERSION-04 | Phase 3 | Complete |
-| VERSION-05 | Phase 3 | Pending |
-| VERSION-06 | Phase 3 | Pending |
+| VERSION-05 | Phase 3 | Complete |
+| VERSION-06 | Phase 3 | Complete |
 | METRIC-01 | Phase 3 | Complete |
 | METRIC-02 | Phase 3 | Complete |
 | METRIC-03 | Phase 3 | Complete |

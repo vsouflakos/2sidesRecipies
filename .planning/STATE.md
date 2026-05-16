@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-recipe-core-metrics-03-PLAN.md
-last_updated: "2026-05-16T21:57:50.142Z"
+stopped_at: Completed 03-recipe-core-metrics-04-PLAN.md
+last_updated: "2026-05-16T22:26:41.919Z"
 last_activity: "2026-05-16 — Phase 2 Plan 05 complete: ingredient detail page, verification flow, human-verify checkpoint passed"
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 20
-  completed_plans: 15
+  completed_plans: 16
   percent: 35
 ---
 
@@ -64,6 +64,7 @@ Progress: [████░░░░░░] 35%
 | Phase 03-recipe-core-metrics P01 | 16 | 3 tasks | 47 files |
 | Phase 03-recipe-core-metrics P02 | 8 | 2 tasks | 9 files |
 | Phase 03-recipe-core-metrics P03 | 9 | 2 tasks | 7 files |
+| Phase 03-recipe-core-metrics PP04 | 23 | 3 tasks | 21 files |
 
 ## Accumulated Context
 
@@ -111,6 +112,9 @@ Recent decisions affecting current work:
 - [Phase 03-recipe-core-metrics]: AllergenRollupService.compute(Recipe) returns {contains, may_contain} arrays to match test contract
 - [Phase 03-recipe-core-metrics]: MetricsRollupService created separately from MetricsAggregator to match MetricsRollupTest computeForLine contract
 - [Phase 03-recipe-core-metrics]: DraftSequenceMismatchException extends RuntimeException; Plan 04 controller maps it to 409 Conflict
+- [Phase 03-recipe-core-metrics]: RecipeVersionController gains a show method and recipes.versions.show route — Wave 0 test references this route which was not in the plan spec
+- [Phase 03-recipe-core-metrics]: Draft-augmented BFS cycle detection — circular reference detector traverses both committed recipe_ingredient_lines AND draft JSON, so draft-only sub-recipe additions are caught
+- [Phase 03-recipe-core-metrics]: Circular reference validation returns JSON directly not ValidationException — PUT request without Accept:application/json would redirect instead of returning 422 JSON
 
 ### Pending Todos
 
@@ -122,6 +126,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T21:57:50.137Z
-Stopped at: Completed 03-recipe-core-metrics-03-PLAN.md
+Last session: 2026-05-16T22:26:41.914Z
+Stopped at: Completed 03-recipe-core-metrics-04-PLAN.md
 Resume file: None
