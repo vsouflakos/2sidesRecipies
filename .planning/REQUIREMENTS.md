@@ -36,7 +36,7 @@ including the AI agent. Each maps to a roadmap phase.
 - [ ] **RECIPE-03**: An ingredient line can use any unit — weight, volume, or count
 - [x] **RECIPE-04**: User can set recipe yield, portion size, time, difficulty, cuisine/category, and tags
 - [ ] **RECIPE-05**: A recipe can include another recipe as a nested sub-recipe component
-- [ ] **RECIPE-06**: Circular sub-recipe references are detected and rejected
+- [x] **RECIPE-06**: Circular sub-recipe references are detected and rejected
 - [x] **RECIPE-07**: User can scale a recipe up or down and see quantities and metrics recompute
 - [ ] **RECIPE-08**: User can adjust portion count while viewing a recipe without creating a new version
 - [ ] **RECIPE-09**: User can duplicate a recipe to create a new editable copy
@@ -48,9 +48,9 @@ including the AI agent. Each maps to a roadmap phase.
 ### Versioning & Working Draft
 
 - [x] **VERSION-01**: Every recipe keeps an immutable history of saved versions
-- [ ] **VERSION-02**: Edits accumulate in a mutable working draft, separate from saved versions
+- [x] **VERSION-02**: Edits accumulate in a mutable working draft, separate from saved versions
 - [ ] **VERSION-03**: User can Save the working draft, committing it as a new version
-- [ ] **VERSION-04**: User can Recall to undo the last applied edit on the working draft
+- [x] **VERSION-04**: User can Recall to undo the last applied edit on the working draft
 - [ ] **VERSION-05**: User can view and compare past versions of a recipe
 - [ ] **VERSION-06**: A sub-recipe reference pins to a specific version of the component recipe
 
@@ -63,15 +63,15 @@ including the AI agent. Each maps to a roadmap phase.
 - [x] **METRIC-05**: App computes cooking loss / shrinkage from per-ingredient yield percentages
 - [x] **METRIC-06**: App computes baker's percentages and hydration ratio for baking recipes
 - [x] **METRIC-07**: App computes calorie / nutrient density
-- [ ] **METRIC-08**: All metrics roll up correctly through nested sub-recipes
+- [x] **METRIC-08**: All metrics roll up correctly through nested sub-recipes
 - [x] **METRIC-09**: All metric arithmetic uses exact decimal math with no floating-point drift
 - [x] **METRIC-10**: App normalizes every ingredient line quantity to grams via the unit converter
 
 ### Allergens
 
-- [ ] **ALLG-01**: App derives a recipe's allergens from its ingredients using the EU 14-allergen model
-- [ ] **ALLG-02**: App distinguishes "contains" from "may contain" (precautionary) allergens
-- [ ] **ALLG-03**: Allergen information rolls up through nested sub-recipes, preserving both states
+- [x] **ALLG-01**: App derives a recipe's allergens from its ingredients using the EU 14-allergen model
+- [x] **ALLG-02**: App distinguishes "contains" from "may contain" (precautionary) allergens
+- [x] **ALLG-03**: Allergen information rolls up through nested sub-recipes, preserving both states
 
 ### Recipe Tests
 
@@ -185,7 +185,7 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | RECIPE-03 | Phase 3 | Pending |
 | RECIPE-04 | Phase 3 | Complete |
 | RECIPE-05 | Phase 3 | Pending |
-| RECIPE-06 | Phase 3 | Pending |
+| RECIPE-06 | Phase 3 | Complete |
 | RECIPE-07 | Phase 3 | Complete |
 | RECIPE-08 | Phase 3 | Pending |
 | RECIPE-09 | Phase 3 | Pending |
@@ -194,9 +194,9 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | RECIPE-12 | Phase 3 | Pending |
 | RECIPE-13 | Phase 3 | Complete |
 | VERSION-01 | Phase 3 | Complete |
-| VERSION-02 | Phase 3 | Pending |
+| VERSION-02 | Phase 3 | Complete |
 | VERSION-03 | Phase 3 | Pending |
-| VERSION-04 | Phase 3 | Pending |
+| VERSION-04 | Phase 3 | Complete |
 | VERSION-05 | Phase 3 | Pending |
 | VERSION-06 | Phase 3 | Pending |
 | METRIC-01 | Phase 3 | Complete |
@@ -206,12 +206,12 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | METRIC-05 | Phase 3 | Complete |
 | METRIC-06 | Phase 3 | Complete |
 | METRIC-07 | Phase 3 | Complete |
-| METRIC-08 | Phase 3 | Pending |
+| METRIC-08 | Phase 3 | Complete |
 | METRIC-09 | Phase 3 | Complete |
 | METRIC-10 | Phase 3 | Complete |
-| ALLG-01 | Phase 3 | Pending |
-| ALLG-02 | Phase 3 | Pending |
-| ALLG-03 | Phase 3 | Pending |
+| ALLG-01 | Phase 3 | Complete |
+| ALLG-02 | Phase 3 | Complete |
+| ALLG-03 | Phase 3 | Complete |
 | TEST-01 | Phase 4 | Pending |
 | TEST-02 | Phase 4 | Pending |
 | TEST-03 | Phase 4 | Pending |
