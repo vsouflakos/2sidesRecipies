@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Anses. CIQUAL French food composition table. CC-BY 4.0 — representative sample. -->
+<TABLE>
+   <ALIM>
+      <alim_code> 2001 </alim_code>
+      <alim_nom_fr> Blé tendre, grain entier, cru </alim_nom_fr>
+      <alim_nom_eng> Whole wheat grain, raw </alim_nom_eng>
+      <alim_grp_code> 03 </alim_grp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 2002 </alim_code>
+      <alim_nom_fr> Poulet, blanc (filet), cru </alim_nom_fr>
+      <alim_nom_eng> Chicken breast, raw </alim_nom_eng>
+      <alim_grp_code> 04 </alim_grp_code>
+   </ALIM>
+   <ALIM>
+      <alim_code> 2003 </alim_code>
+      <alim_nom_fr> Tomate, crue </alim_nom_fr>
+      <alim_nom_eng> Tomato, raw </alim_nom_eng>
+      <alim_grp_code> 02 </alim_grp_code>
+   </ALIM>
+</TABLE>

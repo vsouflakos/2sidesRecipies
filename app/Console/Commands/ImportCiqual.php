@@ -14,81 +14,75 @@ class ImportCiqual extends Command
      * The name and signature of the console command.
      */
     protected $signature = 'ingredients:import-ciqual
-                            {--source-file= : Path to a CIQUAL XML file (defaults to the bundled file)}';
+                            {--alim-file= : Path to the CIQUAL alim XML (foods)}
+                            {--compo-file= : Path to the CIQUAL compo XML (composition values)}';
 
     /**
      * The console command description.
      */
-    protected $description = 'Import the CIQUAL French food composition table into the ingredients library.';
+    protected $description = 'Import the CIQUAL French food composition table from the official ANSES alim + compo XML exports.';
 
     /**
      * Map CIQUAL constituent codes to the schema nutrition columns.
-     * Codes from the official ANSES CIQUAL documentation.
+     *
+     * Codes verified against the official ANSES CIQUAL 2025 constituent
+     * table (const XML). Note that code 327 is energy in kJ and 328 is
+     * energy in kcal — only kcal is stored.
      *
      * @var array<int, string>
      */
     private const NUTRIENT_MAP = [
-        327 => 'energy_kcal',      // Énergie, Règlement UE N° 1169/2011 (kcal/100g)
-        328 => 'energy_kcal',      // Énergie, Règlement UE N° 1169/2011 (kcal/100g) alternate
-        25000 => 'protein_g',      // Protéines, N x facteur de Jones (g/100g)
-        40000 => 'fat_g',          // Lipides (g/100g)
-        31000 => 'carbs_g',        // Glucides (g/100g)
-        32100 => 'sugars_g',       // Sucres (g/100g)
-        32200 => 'starch_g',       // Amidon (g/100g)
-        34100 => 'saturated_fat_g',        // AG saturés (g/100g)
-        34400 => 'monounsaturated_fat_g',  // AG monoinsaturés (g/100g)
-        34500 => 'polyunsaturated_fat_g',  // AG polyinsaturés (g/100g)
-        51200 => 'fibre_g',        // Fibres alimentaires (g/100g)
-        10110 => 'sodium_mg',      // Sodium (mg/100g)
-        10120 => 'calcium_mg',     // Calcium (mg/100g)
-        10190 => 'iron_mg',        // Fer (mg/100g)
-        10153 => 'magnesium_mg',   // Magnésium (mg/100g)
-        10170 => 'phosphorus_mg',  // Phosphore (mg/100g)
-        10165 => 'potassium_mg',   // Potassium (mg/100g)
-        10210 => 'zinc_mg',        // Zinc (mg/100g)
-        51330 => 'cholesterol_mg', // Cholestérol (mg/100g)
-        55100 => 'vitamin_a_ug',   // Rétinol (µg/100g)
-        56310 => 'vitamin_b1_mg',  // Thiamine B1 (mg/100g)
-        56320 => 'vitamin_b2_mg',  // Riboflavine B2 (mg/100g)
-        56330 => 'vitamin_b3_mg',  // Niacine PP (mg/100g)
-        56500 => 'vitamin_b6_mg',  // Vitamine B6 (mg/100g)
-        56600 => 'vitamin_b9_ug',  // Folates totaux (µg/100g)
-        56700 => 'vitamin_b12_ug', // Vitamine B12 (µg/100g)
-        56200 => 'vitamin_c_mg',   // Vitamine C (mg/100g)
-        55400 => 'vitamin_d_ug',   // Vitamine D (µg/100g)
-        56100 => 'vitamin_e_mg',   // Tocophérols totaux (mg/100g)
-        55700 => 'vitamin_k_ug',   // Vitamine K (µg/100g)
+        328 => 'energy_kcal',             // Energy, Regulation EU No 1169/2011 (kcal/100g)
+        25000 => 'protein_g',             // Protein
+        40000 => 'fat_g',                 // Fat
+        40302 => 'saturated_fat_g',       // FA saturated
+        40303 => 'monounsaturated_fat_g', // FA mono
+        40304 => 'polyunsaturated_fat_g', // FA poly
+        31000 => 'carbs_g',               // Carbohydrate
+        32000 => 'sugars_g',              // Sugars
+        33110 => 'starch_g',              // Starch
+        34100 => 'fibre_g',               // Fibres
+        10110 => 'sodium_mg',             // Sodium
+        10200 => 'calcium_mg',            // Calcium
+        10260 => 'iron_mg',               // Iron
+        10120 => 'magnesium_mg',          // Magnesium
+        10150 => 'phosphorus_mg',         // Phosphorus
+        10190 => 'potassium_mg',          // Potassium
+        10300 => 'zinc_mg',               // Zinc
+        51104 => 'vitamin_a_ug',          // Vitamin A activity, retinol equivalent
+        56100 => 'vitamin_b1_mg',         // Vitamin B1 (Thiamin)
+        56200 => 'vitamin_b2_mg',         // Vitamin B2 (Riboflavin)
+        56310 => 'vitamin_b3_mg',         // Vitamin B3 (Niacin)
+        56500 => 'vitamin_b6_mg',         // Vitamin B6
+        56700 => 'vitamin_b9_ug',         // Vitamin B9 (total folates)
+        56600 => 'vitamin_b12_ug',        // Vitamin B12
+        55100 => 'vitamin_c_mg',          // Vitamin C
+        52100 => 'vitamin_d_ug',          // Vitamin D
+        53100 => 'vitamin_e_mg',          // Vitamin E
+        54101 => 'vitamin_k_ug',          // Vitamin K1
+        75100 => 'cholesterol_mg',        // Cholesterol
     ];
 
     /**
-     * Map CIQUAL alim_grp_code values to seeded category slugs.
+     * Map CIQUAL top-level food group codes to seeded category slugs.
      *
-     * CIQUAL group codes are formatted as G01–G20 and correspond to the food
-     * groups documented in the official ANSES CIQUAL nomenclature.
+     * Group codes are the official ANSES CIQUAL `alim_grp_code` values
+     * (01–11).
      *
      * @var array<string, string>
      */
     private const GROUP_CATEGORY_MAP = [
-        'G01' => 'grains-starches',
-        'G02' => 'vegetables',
-        'G03' => 'fruits',
-        'G04' => 'dairy-eggs',
-        'G05' => 'meat-poultry',
-        'G06' => 'fish-seafood',
-        'G07' => 'oils-fats-condiments',
-        'G08' => 'herbs-spices',
-        'G09' => 'nuts-seeds',
-        'G10' => 'sweeteners-sugar-products',
-        'G11' => 'vegetables',
-        'G12' => 'beverages',
-        'G13' => 'prepared-convenience-foods',
-        'G14' => 'prepared-convenience-foods',
-        'G15' => 'prepared-convenience-foods',
-        'G16' => 'other-uncategorised',
-        'G17' => 'other-uncategorised',
-        'G18' => 'other-uncategorised',
-        'G19' => 'other-uncategorised',
-        'G20' => 'other-uncategorised',
+        '01' => 'prepared-convenience-foods', // starters and dishes
+        '02' => 'vegetables',                 // fruits, vegetables, legumes and nuts
+        '03' => 'grains-starches',            // cereal products
+        '04' => 'meat-poultry',               // meat, egg and fish
+        '05' => 'dairy-eggs',                 // milk and milk products
+        '06' => 'beverages',                  // beverages
+        '07' => 'sweeteners-sugar-products',  // sugar and confectionery
+        '08' => 'sweeteners-sugar-products',  // ice cream and sorbet
+        '09' => 'oils-fats-condiments',       // fats and oils
+        '10' => 'other-uncategorised',        // miscellaneous
+        '11' => 'prepared-convenience-foods', // baby food
     ];
 
     /**
@@ -96,34 +90,52 @@ class ImportCiqual extends Command
      */
     public function handle(IngredientImporter $importer): int
     {
-        $sourcePath = $this->option('source-file') ?? database_path('data/ciqual-2025.xml');
+        $alimFile = $this->option('alim-file');
+        $compoFile = $this->option('compo-file');
 
-        if (! file_exists($sourcePath)) {
-            $this->error("CIQUAL XML file not found: {$sourcePath}");
-
-            return self::FAILURE;
-        }
-
-        $this->info("Parsing CIQUAL XML: {$sourcePath}");
-
-        $rows = $this->parseXml($sourcePath);
-
-        if (empty($rows)) {
-            $this->warn('No ALIM nodes found in the XML file.');
+        if (! $alimFile || ! $compoFile) {
+            $this->error('Both --alim-file and --compo-file are required (official ANSES CIQUAL XML exports).');
 
             return self::FAILURE;
         }
 
-        $this->info(sprintf('Parsed %d ingredients. Upserting…', count($rows)));
+        if (! file_exists($alimFile)) {
+            $this->error("CIQUAL alim file not found: {$alimFile}");
 
-        // Strip private translation keys before upsert (prefixed with _ to distinguish).
+            return self::FAILURE;
+        }
+
+        if (! file_exists($compoFile)) {
+            $this->error("CIQUAL compo file not found: {$compoFile}");
+
+            return self::FAILURE;
+        }
+
+        $this->info("Parsing CIQUAL foods: {$alimFile}");
+        $foods = $this->parseAlimFile($alimFile);
+
+        if ($foods === []) {
+            $this->warn('No ALIM nodes found in the alim file.');
+
+            return self::FAILURE;
+        }
+
+        $this->info(sprintf('Found %d foods. Parsing composition values…', count($foods)));
+        $nutritionByCode = $this->parseCompoFile($compoFile);
+
+        $rows = $this->buildRows($foods, $nutritionByCode, $importer);
+
+        $this->info(sprintf('Upserting %d ingredients…', count($rows)));
+
+        // Strip private translation keys before upsert.
         $upsertRows = array_map(function (array $row): array {
             unset($row['_name_en'], $row['_name_fr']);
 
             return $row;
         }, $rows);
 
-        // Two-pass ordering: reset verified BEFORE upsert so comparison uses old hashes.
+        // Two-pass ordering: reset verified BEFORE upsert so the comparison
+        // uses the previously stored data hashes.
         $importer->resetVerifiedForChangedRows($upsertRows);
 
         $count = 0;
@@ -135,7 +147,6 @@ class ImportCiqual extends Command
 
         $this->newLine();
 
-        // Sync translations after upsert by re-fetching each ingredient id.
         $this->syncTranslations($rows, $importer);
 
         $this->info("CIQUAL import complete: {$count} ingredients.");
@@ -144,18 +155,16 @@ class ImportCiqual extends Command
     }
 
     /**
-     * Parse the CIQUAL XML file using XMLReader streaming (low memory).
+     * Parse the CIQUAL alim XML into a map keyed by alim_code.
      *
-     * Uses XMLReader node-by-node streaming to avoid loading the entire 3–5 MB
-     * XML into memory at once (SimpleXML anti-pattern documented in RESEARCH.md).
+     * Uses XMLReader streaming so the parser stays low-memory regardless of
+     * file size.
      *
-     * @return array<int, array<string, mixed>>
+     * @return array<string, array{name_cache: string, name_en: string, name_fr: string, grp: string}>
      */
-    private function parseXml(string $path): array
+    private function parseAlimFile(string $path): array
     {
-        $defaultCategoryId = $this->resolveDefaultCategoryId();
-        $categoryCache = [];
-        $rows = [];
+        $foods = [];
 
         $reader = new XMLReader;
         $reader->open($path);
@@ -165,37 +174,106 @@ class ImportCiqual extends Command
                 continue;
             }
 
-            $alimXml = $reader->readOuterXml();
-            $alim = simplexml_load_string($alimXml);
+            $alim = simplexml_load_string($reader->readOuterXml());
 
             if ($alim === false) {
                 continue;
             }
 
-            $alimCode = (string) ($alim->alim_code ?? '');
-            $alimNomFr = trim((string) ($alim->alim_nom_fr ?? ''));
-            $alimNomEng = trim((string) ($alim->alim_nom_eng ?? ''));
-            $alimGrpCode = trim((string) ($alim->alim_grp_code ?? ''));
+            $code = trim((string) ($alim->alim_code ?? ''));
+
+            if ($code === '') {
+                continue;
+            }
+
+            $nameFr = trim((string) ($alim->alim_nom_fr ?? ''));
+            $nameEn = trim((string) ($alim->alim_nom_eng ?? ''));
+            $grp = trim((string) ($alim->alim_grp_code ?? ''));
+
+            $foods[$code] = [
+                'name_cache' => $nameEn !== '' ? $nameEn : $nameFr,
+                'name_en' => $nameEn !== '' ? $nameEn : $nameFr,
+                'name_fr' => $nameFr,
+                'grp' => $grp,
+            ];
+        }
+
+        $reader->close();
+
+        return $foods;
+    }
+
+    /**
+     * Parse the CIQUAL compo XML into a map: alim_code → [column => value].
+     *
+     * The compo file is large (tens of MB / hundreds of thousands of nodes);
+     * XMLReader streaming keeps memory flat.
+     *
+     * @return array<string, array<string, float|null>>
+     */
+    private function parseCompoFile(string $path): array
+    {
+        $nutrition = [];
+
+        $reader = new XMLReader;
+        $reader->open($path);
+
+        while ($reader->read()) {
+            if ($reader->nodeType !== XMLReader::ELEMENT || $reader->localName !== 'COMPO') {
+                continue;
+            }
+
+            $compo = simplexml_load_string($reader->readOuterXml());
+
+            if ($compo === false) {
+                continue;
+            }
+
+            $constCode = (int) trim((string) ($compo->const_code ?? '0'));
+            $column = self::NUTRIENT_MAP[$constCode] ?? null;
+
+            if ($column === null) {
+                continue;
+            }
+
+            $alimCode = trim((string) ($compo->alim_code ?? ''));
 
             if ($alimCode === '') {
                 continue;
             }
 
-            $nameCache = $alimNomEng !== '' ? $alimNomEng : $alimNomFr;
-            $nameEn = $alimNomEng !== '' ? $alimNomEng : $alimNomFr;
+            $nutrition[$alimCode][$column] = $this->parseTeneurValue((string) ($compo->teneur ?? ''));
+        }
 
-            $nutrition = $this->parseNutrition($alim);
-            $dataHash = app(IngredientImporter::class)->dataHash($nutrition);
-            $categoryId = $this->resolveCategoryId($alimGrpCode, $defaultCategoryId, $categoryCache);
+        $reader->close();
 
-            $now = now()->toDateTimeString();
+        return $nutrition;
+    }
 
-            $row = array_merge([
+    /**
+     * Merge parsed foods and composition values into upsertable rows.
+     *
+     * @param  array<string, array{name_cache: string, name_en: string, name_fr: string, grp: string}>  $foods
+     * @param  array<string, array<string, float|null>>  $nutritionByCode
+     * @return array<int, array<string, mixed>>
+     */
+    private function buildRows(array $foods, array $nutritionByCode, IngredientImporter $importer): array
+    {
+        $defaultCategoryId = $this->resolveDefaultCategoryId();
+        $categoryCache = [];
+        $now = now()->toDateTimeString();
+        $emptyNutrition = array_fill_keys(array_values(self::NUTRIENT_MAP), null);
+        $rows = [];
+
+        foreach ($foods as $code => $food) {
+            $nutrition = array_merge($emptyNutrition, $nutritionByCode[$code] ?? []);
+
+            $rows[] = array_merge($nutrition, [
                 'source' => 'ciqual',
-                'source_id' => $alimCode,
-                'name_cache' => $nameCache,
-                'category_id' => $categoryId,
-                'data_hash' => $dataHash,
+                'source_id' => $code,
+                'name_cache' => $food['name_cache'],
+                'category_id' => $this->resolveCategoryId($food['grp'], $defaultCategoryId, $categoryCache),
+                'data_hash' => $importer->dataHash($nutrition),
                 'verified' => false,
                 'verified_by' => null,
                 'verified_at' => null,
@@ -203,56 +281,27 @@ class ImportCiqual extends Command
                 'usda_fdc_id' => null,
                 'created_at' => $now,
                 'updated_at' => $now,
-                // Private keys for translation sync (stripped before upsert)
-                '_name_en' => $nameEn,
-                '_name_fr' => $alimNomFr,
-            ], $nutrition);
-
-            $rows[] = $row;
+                // Private keys for translation sync (stripped before upsert).
+                '_name_en' => $food['name_en'],
+                '_name_fr' => $food['name_fr'],
+            ]);
         }
-
-        $reader->close();
 
         return $rows;
     }
 
     /**
-     * Parse nutrient values from an ALIM SimpleXML node.
-     *
-     * Converts `teneur` strings: values starting with `<` or equal to `traces`
-     * are stored as 0; empty or `-` values become null.
-     *
-     * @return array<string, float|null>
-     */
-    private function parseNutrition(\SimpleXMLElement $alim): array
-    {
-        $nutrition = array_fill_keys(array_values(self::NUTRIENT_MAP), null);
-
-        foreach ($alim->COMPO ?? [] as $compo) {
-            $constCode = (int) ($compo->const_code ?? 0);
-            $teneurRaw = trim((string) ($compo->teneur ?? ''));
-
-            if (! isset(self::NUTRIENT_MAP[$constCode])) {
-                continue;
-            }
-
-            $column = self::NUTRIENT_MAP[$constCode];
-            $nutrition[$column] = $this->parseTeneurValue($teneurRaw);
-        }
-
-        return $nutrition;
-    }
-
-    /**
      * Convert a CIQUAL `teneur` string to a float or null.
      *
-     * CIQUAL uses several special markers:
+     * CIQUAL uses French decimal commas and several special markers:
      * - `< N` (less than N): stored as 0 (trace-level)
      * - `traces`: stored as 0
      * - `-` or empty: stored as null (not measured)
      */
     private function parseTeneurValue(string $teneur): ?float
     {
+        $teneur = trim($teneur);
+
         if ($teneur === '' || $teneur === '-') {
             return null;
         }
@@ -265,7 +314,9 @@ class ImportCiqual extends Command
             return 0.0;
         }
 
-        $value = filter_var($teneur, FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+        // CIQUAL uses a comma as the decimal separator.
+        $normalised = str_replace(',', '.', $teneur);
+        $value = filter_var($normalised, FILTER_VALIDATE_FLOAT);
 
         return $value !== false ? $value : null;
     }
@@ -311,10 +362,10 @@ class ImportCiqual extends Command
     }
 
     /**
-     * Sync English (and optionally French) translations after upsert.
+     * Sync English and French translations after upsert.
      *
-     * Re-fetches each ingredient by (source, source_id) to get the database id,
-     * then calls syncTranslation for the 'en' locale (and 'fr' if a French name exists).
+     * Re-fetches each ingredient by (source, source_id) to resolve the
+     * database id, then syncs the 'en' locale (and 'fr' when present).
      *
      * @param  array<int, array<string, mixed>>  $rows
      */

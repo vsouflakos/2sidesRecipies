@@ -56,8 +56,11 @@ test('re-importing changed data resets verification to false', function () {
         'data_hash' => md5('original-payload'),
     ]);
 
-    $fixture = base_path('tests/fixtures/ingredients/ciqual-sample.xml');
-    $this->artisan('ingredients:import-ciqual', ['--source-file' => $fixture]);
+    $dir = base_path('tests/fixtures/ingredients');
+    $this->artisan('ingredients:import-ciqual', [
+        '--alim-file' => $dir.'/ciqual-alim-sample.xml',
+        '--compo-file' => $dir.'/ciqual-compo-sample.xml',
+    ]);
 
     expect($ingredient->fresh()->verified)->toBeFalse();
 });

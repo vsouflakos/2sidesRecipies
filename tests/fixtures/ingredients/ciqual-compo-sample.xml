@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Anses. CIQUAL composition values. CC-BY 4.0 — representative sample. -->
+<!-- Exercises French decimal commas, the "< N" trace marker and "traces". -->
+<TABLE>
+   <COMPO><alim_code> 2001 </alim_code><const_code> 328 </const_code><teneur> 340 </teneur></COMPO>
+   <COMPO><alim_code> 2001 </alim_code><const_code> 25000 </const_code><teneur> 13,2 </teneur></COMPO>
+   <COMPO><alim_code> 2001 </alim_code><const_code> 40000 </const_code><teneur> 2,47 </teneur></COMPO>
+   <COMPO><alim_code> 2001 </alim_code><const_code> 31000 </const_code><teneur> 60,7 </teneur></COMPO>
+   <COMPO><alim_code> 2001 </alim_code><const_code> 34100 </const_code><teneur> 9,7 </teneur></COMPO>
+   <COMPO><alim_code> 2001 </alim_code><const_code> 10110 </const_code><teneur> 8 </teneur></COMPO>
+   <COMPO><alim_code> 2002 </alim_code><const_code> 328 </const_code><teneur> 110 </teneur></COMPO>
+   <COMPO><alim_code> 2002 </alim_code><const_code> 25000 </const_code><teneur> 23,3 </teneur></COMPO>
+   <COMPO><alim_code> 2002 </alim_code><const_code> 40000 </const_code><teneur> 1,85 </teneur></COMPO>
+   <COMPO><alim_code> 2002 </alim_code><const_code> 31000 </const_code><teneur> 0 </teneur></COMPO>
+   <COMPO><alim_code> 2002 </alim_code><const_code> 10110 </const_code><teneur> 50 </teneur></COMPO>
+   <COMPO><alim_code> 2003 </alim_code><const_code> 328 </const_code><teneur> 18 </teneur></COMPO>
+   <COMPO><alim_code> 2003 </alim_code><const_code> 25000 </const_code><teneur> 0,85 </teneur></COMPO>
+   <COMPO><alim_code> 2003 </alim_code><const_code> 31000 </const_code><teneur> 3,53 </teneur></COMPO>
+   <COMPO><alim_code> 2003 </alim_code><const_code> 55100 </const_code><teneur> &lt; 0,5 </teneur></COMPO>
+   <COMPO><alim_code> 2003 </alim_code><const_code> 10110 </const_code><teneur> traces </teneur></COMPO>
+</TABLE>
