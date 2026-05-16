@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-recipe-core-metrics-01-PLAN.md
-last_updated: "2026-05-16T21:44:19.270Z"
+stopped_at: Completed 03-recipe-core-metrics-02-PLAN.md
+last_updated: "2026-05-16T21:56:10.947Z"
 last_activity: "2026-05-16 — Phase 2 Plan 05 complete: ingredient detail page, verification flow, human-verify checkpoint passed"
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 20
-  completed_plans: 13
+  completed_plans: 14
   percent: 35
 ---
 
@@ -62,6 +62,7 @@ Progress: [████░░░░░░] 35%
 | Phase 02-ingredient-library P05 | 50 | 3 tasks | 11 files |
 | Phase 02-ingredient-library P06 | 13 | 2 tasks | 12 files |
 | Phase 03-recipe-core-metrics P01 | 16 | 3 tasks | 47 files |
+| Phase 03-recipe-core-metrics P02 | 8 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,8 @@ Recent decisions affecting current work:
 - [Phase 02-ingredient-library]: prices.unit normalized to {name, symbol} in IngredientDetailResource — consistent with conversions pattern, avoids leaking Unit model columns
 - [Phase 03-recipe-core-metrics]: Circular FK columns (recipes.current_version_id, recipe_ingredient_lines.sub_recipe_version_id) declared as plain unsignedBigInteger without constrained() to avoid chicken-and-egg ordering failure; deferred FK constraints added in migration 000010
 - [Phase 03-recipe-core-metrics]: Wave 0 test suite: 53 tests execute without parse errors, 12 pass (schema/model), 41 red (routes/services not yet built) — correct RED state
+- [Phase 03-recipe-core-metrics]: Calculators return plain arrays (not typed result objects) — Wave 0 tests use array-key access and are authoritative over plan's behavior block
+- [Phase 03-recipe-core-metrics]: Scale-10 intermediate for per-line nutrition contributions prevents drift when summing many lines; multiply-before-divide for shrinkage_pct preserves full precision into scale-4 final result
 
 ### Pending Todos
 
@@ -115,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T21:44:19.265Z
-Stopped at: Completed 03-recipe-core-metrics-01-PLAN.md
+Last session: 2026-05-16T21:56:10.943Z
+Stopped at: Completed 03-recipe-core-metrics-02-PLAN.md
 Resume file: None

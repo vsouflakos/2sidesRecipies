@@ -56,16 +56,16 @@ including the AI agent. Each maps to a roadmap phase.
 
 ### Metrics Engine
 
-- [ ] **METRIC-01**: App computes nutrition per portion and per 100 g for a recipe
-- [ ] **METRIC-02**: App computes cost per portion and total recipe cost from ingredient prices
-- [ ] **METRIC-03**: App computes food cost % from cost and a user-entered selling price per portion
+- [x] **METRIC-01**: App computes nutrition per portion and per 100 g for a recipe
+- [x] **METRIC-02**: App computes cost per portion and total recipe cost from ingredient prices
+- [x] **METRIC-03**: App computes food cost % from cost and a user-entered selling price per portion
 - [x] **METRIC-04**: App computes recipe yield and supports scaling calculations
-- [ ] **METRIC-05**: App computes cooking loss / shrinkage from per-ingredient yield percentages
-- [ ] **METRIC-06**: App computes baker's percentages and hydration ratio for baking recipes
-- [ ] **METRIC-07**: App computes calorie / nutrient density
+- [x] **METRIC-05**: App computes cooking loss / shrinkage from per-ingredient yield percentages
+- [x] **METRIC-06**: App computes baker's percentages and hydration ratio for baking recipes
+- [x] **METRIC-07**: App computes calorie / nutrient density
 - [ ] **METRIC-08**: All metrics roll up correctly through nested sub-recipes
-- [ ] **METRIC-09**: All metric arithmetic uses exact decimal math with no floating-point drift
-- [ ] **METRIC-10**: App normalizes every ingredient line quantity to grams via the unit converter
+- [x] **METRIC-09**: All metric arithmetic uses exact decimal math with no floating-point drift
+- [x] **METRIC-10**: App normalizes every ingredient line quantity to grams via the unit converter
 
 ### Allergens
 
@@ -199,16 +199,16 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | VERSION-04 | Phase 3 | Pending |
 | VERSION-05 | Phase 3 | Pending |
 | VERSION-06 | Phase 3 | Pending |
-| METRIC-01 | Phase 3 | Pending |
-| METRIC-02 | Phase 3 | Pending |
-| METRIC-03 | Phase 3 | Pending |
+| METRIC-01 | Phase 3 | Complete |
+| METRIC-02 | Phase 3 | Complete |
+| METRIC-03 | Phase 3 | Complete |
 | METRIC-04 | Phase 3 | Complete |
-| METRIC-05 | Phase 3 | Pending |
-| METRIC-06 | Phase 3 | Pending |
-| METRIC-07 | Phase 3 | Pending |
+| METRIC-05 | Phase 3 | Complete |
+| METRIC-06 | Phase 3 | Complete |
+| METRIC-07 | Phase 3 | Complete |
 | METRIC-08 | Phase 3 | Pending |
-| METRIC-09 | Phase 3 | Pending |
-| METRIC-10 | Phase 3 | Pending |
+| METRIC-09 | Phase 3 | Complete |
+| METRIC-10 | Phase 3 | Complete |
 | ALLG-01 | Phase 3 | Pending |
 | ALLG-02 | Phase 3 | Pending |
 | ALLG-03 | Phase 3 | Pending |
