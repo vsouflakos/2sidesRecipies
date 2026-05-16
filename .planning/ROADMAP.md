@@ -13,7 +13,8 @@ Build a professional recipe management platform from the existing Laravel 13 Rea
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Role system, unit/allergen lookup tables, design system, and localization scaffolding
-- [x] **Phase 2: Ingredient Library** - Official ingredient library with CIQUAL/USDA/OFF import pipeline and private ingredient creation (completed 2026-05-16)
+- [x] **Phase 2: Ingredient Library** - Official ingredient library with CIQUAL/USDA/OFF import pipeline and private ingredient creation
+ (completed 2026-05-16)
 - [ ] **Phase 3: Recipe Core & Metrics** - Structured recipes, versioning/draft layer, nested sub-recipes, and the full metrics engine
 - [ ] **Phase 4: Recipe Tests** - Trial run and structured experiment recording against recipe versions
 - [ ] **Phase 5: AI Agent** - Per-recipe conversational AI agent with scoped draft-editing tools
@@ -68,7 +69,15 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Scaling a recipe or adjusting portion count instantly recomputes all quantities and metrics on screen with no floating-point drift
   5. The metrics panel shows nutrition per portion and per 100 g, cost per portion, food cost %, cooking loss/shrinkage, baker's percentages, and allergens — all rolled up correctly through nested sub-recipes
   6. User can search and filter the recipe list by tag, cuisine, allergen, ingredient, difficulty, and time
-**Plans**: TBD
+**Plans**: 8 plans
+- [ ] 03-01-PLAN.md — Schema: 9 recipe-domain tables, models, factories, Difficulty enum, cuisine seeder, Wave 0 test suite
+- [ ] 03-02-PLAN.md — Metric calculators: GramNormalizer + Nutrition/Cost/Shrinkage/Bakers (pure BigDecimal)
+- [ ] 03-03-PLAN.md — Orchestration: allergen roll-up, circular-ref detection, draft manager, metrics aggregator
+- [ ] 03-04-PLAN.md — Recipe backend: routes, policy, FormRequests, 5 controllers, version/duplicate, metrics service
+- [ ] 03-05-PLAN.md — Single-page recipe builder: sections, inline search, quick-create, debounced auto-save
+- [ ] 03-06-PLAN.md — Live metrics panel: nutrition toggle, cost + food cost %, allergens, bakers, scaling, gap banner
+- [ ] 03-07-PLAN.md — Versioning + sub-recipe UI: pin/update cue, Save Version, history, side-by-side compare
+- [ ] 03-08-PLAN.md — Recipe list grid, six-filter panel, Recipes nav entry, end-to-end human-verify checkpoint
 
 ### Phase 4: Recipe Tests
 **Goal**: Users can record and review structured trial runs and experiments against specific recipe versions
@@ -121,7 +130,7 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 |-------|----------------|--------|-----------|
 | 1. Foundation | 6/6 | Complete   | 2026-05-16 |
 | 2. Ingredient Library | 6/6 | Complete   | 2026-05-16 |
-| 3. Recipe Core & Metrics | 0/TBD | Not started | - |
+| 3. Recipe Core & Metrics | 0/8 | Not started | - |
 | 4. Recipe Tests | 0/TBD | Not started | - |
 | 5. AI Agent | 0/TBD | Not started | - |
 | 6. Publishing & Public Library | 0/TBD | Not started | - |
