@@ -8,7 +8,7 @@ use App\Http\Requests\Admin\AssignRoleRequest;
 use App\Http\Requests\Admin\DeactivateUserRequest;
 use App\Http\Requests\Admin\DeleteUserRequest;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -54,31 +54,23 @@ class UserController extends Controller
     /**
      * Assign a new role to a user.
      */
-    public function assignRole(AssignRoleRequest $request, User $user): JsonResponse
+    public function assignRole(AssignRoleRequest $request, User $user): RedirectResponse
     {
         DB::transaction(function () use ($request, $user) {
             User::where('id', $user->id)->lockForUpdate()->first();
             $user->syncRoles([$request->validated('role')]);
         });
 
-        Inertia::flash('toast', [
-            'type' => 'success',
-            'message' => __('app.admin.toast_role_changed', [
-                'name' => $user->name,
-                'role' => $request->validated('role'),
-            ]),
-        ]);
-
-        return response()->json(['message' => __('app.admin.toast_role_changed', [
+        return back()->with('success', __('app.admin.toast_role_changed', [
             'name' => $user->name,
             'role' => $request->validated('role'),
-        ])]);
+        ]));
     }
 
     /**
      * Toggle a user's account status between Active and Deactivated.
      */
-    public function toggleStatus(DeactivateUserRequest $request, User $user): JsonResponse
+    public function toggleStatus(DeactivateUserRequest $request, User $user): RedirectResponse
     {
         $newStatus = $user->account_status === AccountStatus::Active
             ? AccountStatus::Deactivated
@@ -92,24 +84,18 @@ class UserController extends Controller
 
         $message = $newStatus === AccountStatus::Deactivated
             ? __('app.admin.toast_deactivated', ['name' => $user->name])
-            : __('app.admin.toast_role_changed', ['name' => $user->name, 'role' => 'Active']);
+            : __('app.admin.toast_activated', ['name' => $user->name]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
-
-        return response()->json(['message' => $message]);
+        return back()->with('success', $message);
     }
 
     /**
      * Soft-delete a user account.
      */
-    public function destroy(DeleteUserRequest $request, User $user): JsonResponse
+    public function destroy(DeleteUserRequest $request, User $user): RedirectResponse
     {
         DB::transaction(fn () => $user->delete());
 
-        $message = __('app.admin.toast_deleted', ['name' => $user->name]);
-
-        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
-
-        return response()->json(['message' => $message]);
+        return back()->with('success', __('app.admin.toast_deleted', ['name' => $user->name]));
     }
 }

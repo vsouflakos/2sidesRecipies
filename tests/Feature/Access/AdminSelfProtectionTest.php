@@ -48,7 +48,7 @@ test('system refuses to remove the last admin role', function () {
     // Acting admin successfully demotes the other admin (two admins exist)
     $this->actingAs($actingAdmin)
         ->put("/admin/users/{$targetAdmin->id}/role", ['role' => 'User'])
-        ->assertSuccessful();
+        ->assertRedirect();
 
     // Now targetAdmin is the only remaining Admin — demoting the last Admin must fail
     $this->actingAs($targetAdmin->fresh())
