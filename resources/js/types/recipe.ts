@@ -68,6 +68,8 @@ export interface RecipeBuilderData {
     prep_time_minutes: number | null;
     cook_time_minutes: number | null;
     chef_notes: string | null;
+    /** Selling price per portion — stored in draft data; used for food cost % calculation. */
+    selling_price: string | null;
     sections: RecipeSection[];
     tags: TagOption[];
 }
@@ -129,24 +131,12 @@ export interface ShrinkageMetrics {
     shrinkage_pct: string | null;
 }
 
-/** Baker's percentage entry. */
-export interface BakersEntry {
-    ingredient_line_id: number;
-    name: string;
-    pct: string;
-}
-
 /** Baker's percentage metrics (only present when flour base exists). */
 export interface BakersMetrics {
     flour_base_g: string;
+    /** Map of ingredient name to its percentage of the flour base. */
+    percentages: Record<string, string>;
     hydration_pct: string | null;
-    entries: BakersEntry[];
-}
-
-/** Ingredient lines missing price or nutrition data. */
-export interface MissingDataInfo {
-    missing_price: string[];
-    missing_nutrition: string[];
 }
 
 /** Full metrics output from RecipeMetricsService. */
@@ -154,12 +144,15 @@ export interface RecipeMetrics {
     nutrition: NutritionMetrics;
     cost: CostMetrics;
     shrinkage: ShrinkageMetrics;
+    /** Allergen slugs grouped by state; resolved to display names in the UI. */
     allergens: {
-        contains: RecipeAllergen[];
-        may_contain: RecipeAllergen[];
+        contains: string[];
+        may_contain: string[];
     };
+    /** Baker's percentage data; null when no flour-base line exists. */
     bakers: BakersMetrics | null;
-    missing_data: MissingDataInfo;
+    /** Names of ingredient lines missing price or nutrition data. */
+    missing_data: string[];
 }
 
 /** Recipe version summary for version history. */
