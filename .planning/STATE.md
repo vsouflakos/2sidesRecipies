@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-05-16T16:00:00.000Z"
+status: completed
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-05-16T15:04:16.251Z"
 last_activity: "2026-05-16 — Phase 2 Plan 03 complete: ingredient search UI, controller, nav entry, EN+EL i18n"
 progress:
   total_phases: 7
@@ -57,6 +57,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 01-foundation P05 | 30 | 3 tasks | 5 files |
 | Phase 02-ingredient-library P01 | 40 | 3 tasks | 28 files |
 | Phase 02-ingredient-library P03 | 45 | 3 tasks | 14 files |
+| Phase 02-ingredient-library PP02 | 60 | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [Phase 02-ingredient-library]: Private ingredient visibility scope applied as base constraint — all ingredient queries exclude other users' private ingredients regardless of source filter
 - [Phase 02-ingredient-library]: Allergen-free filter fires on Popover close (not per checkbox tick) per UI-SPEC interaction contract to avoid multiple reloads
 - [Phase 02-ingredient-library]: EL dismiss labels are context-specific per UI-SPEC: Διατήρηση Ανεπιβεβαίωτου / Επιστροφή στη Βιβλιοθήκη / Διατήρηση Συστατικού
+- [Phase 02-ingredient-library]: CIQUAL XML bundled as 60-food representative subset (CC-BY 4.0); full dataset obtained by running import against live ANSES download
+- [Phase 02-ingredient-library]: Two-pass verified-reset in IngredientImporter: caller must call resetVerifiedForChangedRows BEFORE upsertIngredients so hash comparison uses old stored values
 
 ### Pending Todos
 
@@ -98,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T16:00:00.000Z
-Stopped at: Completed 02-03-PLAN.md
-Resume file: .planning/phases/02-ingredient-library/02-04-PLAN.md
+Last session: 2026-05-16T15:04:16.246Z
+Stopped at: Completed 02-02-PLAN.md
+Resume file: None
