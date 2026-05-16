@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\IngredientReviewController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\StyleguideController;
 use Illuminate\Support\Facades\Route;
@@ -23,9 +24,16 @@ Route::middleware(['auth', 'verified', 'permission:manage-users'])
         Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
+Route::middleware(['auth', 'verified', 'permission:review-ingredients'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('ingredients', [IngredientReviewController::class, 'index'])->name('ingredients.index');
+    });
+
 require __DIR__.'/settings.php';
 
-if (app()->isLocal()) {
+if (app()->isLocal() || app()->runningUnitTests()) {
     Route::middleware('auth')
         ->get('dev/styleguide', [StyleguideController::class, 'index'])
         ->name('dev.styleguide');
