@@ -19,7 +19,7 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $userPermissions = ['create-recipes', 'manage-own-ingredients'];
-        $moderatorPermissions = array_merge($userPermissions, ['review-ingredients']);
+        $moderatorPermissions = array_merge($userPermissions, ['review-ingredients', 'verify-ingredients']);
         $adminPermissions = array_merge($moderatorPermissions, ['manage-users']);
 
         foreach ($adminPermissions as $perm) {
