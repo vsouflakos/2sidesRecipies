@@ -6,7 +6,8 @@ test('locale switcher persists the choice to the user record', function () {
     $user = User::factory()->create(['locale' => 'en']);
 
     $this->actingAs($user)
-        ->put('/locale', ['locale' => 'el']);
+        ->put('/locale', ['locale' => 'el'])
+        ->assertNoContent();
 
     expect($user->fresh()->locale)->toBe('el');
 });

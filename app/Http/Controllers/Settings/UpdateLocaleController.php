@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\UpdateLocaleRequest;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 
 class UpdateLocaleController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(UpdateLocaleRequest $request): RedirectResponse
+    public function __invoke(UpdateLocaleRequest $request): Response
     {
         $locale = $request->validated('locale');
 
@@ -21,6 +21,6 @@ class UpdateLocaleController extends Controller
 
         $request->session()->put('locale', $locale);
 
-        return back();
+        return response()->noContent();
     }
 }
