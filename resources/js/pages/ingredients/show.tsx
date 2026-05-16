@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { AllergenPanel } from '@/components/ingredients/allergen-panel';
 import { NutritionPanel } from '@/components/ingredients/nutrition-panel';
+import { PriceForm } from '@/components/ingredients/price-form';
+import { PriceHistory } from '@/components/ingredients/price-history';
 import { VerifyAction } from '@/components/ingredients/verify-action';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -46,7 +48,7 @@ interface IngredientShowProps {
     units: UnitOption[];
 }
 
-export default function IngredientShow({ ingredient, can }: IngredientShowProps) {
+export default function IngredientShow({ ingredient, can, units }: IngredientShowProps) {
     const { t } = useLaravelReactI18n();
     const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -139,7 +141,9 @@ export default function IngredientShow({ ingredient, can }: IngredientShowProps)
                         <TabsTrigger value="conversions">
                             {t('app.ingredients.tab_conversions')}
                         </TabsTrigger>
-                        {/* Prices tab — added in Plan 02-06 */}
+                        <TabsTrigger value="prices">
+                            {t('app.ingredients.tab_prices')}
+                        </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="nutrition" className="mt-6">
@@ -181,6 +185,16 @@ export default function IngredientShow({ ingredient, can }: IngredientShowProps)
                                 </TableBody>
                             </Table>
                         )}
+                    </TabsContent>
+
+                    <TabsContent value="prices" className="mt-6">
+                        <div className="space-y-8">
+                            <PriceForm
+                                ingredientId={ingredient.id}
+                                units={units}
+                            />
+                            <PriceHistory prices={ingredient.prices} />
+                        </div>
                     </TabsContent>
                 </Tabs>
             </div>

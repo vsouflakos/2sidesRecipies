@@ -83,9 +83,12 @@ class IngredientDetailResource extends JsonResource
                 'amount' => $p->amount,
                 'currency' => $p->currency,
                 'quantity' => $p->quantity,
-                'unit' => $p->unit,
+                'unit' => $p->unit ? [
+                    'name' => $p->unit->name,
+                    'symbol' => $p->unit->symbol,
+                ] : null,
                 'per_gram_cost' => $p->per_gram_cost,
-                'recorded_at' => $p->recorded_at,
+                'recorded_at' => $p->recorded_at?->toDateString(),
                 'notes' => $p->notes,
             ]),
         ];

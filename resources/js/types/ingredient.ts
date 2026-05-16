@@ -136,6 +136,28 @@ export interface IngredientAllergenDetail {
     };
 }
 
+/** A single price entry scoped to the current user. */
+export interface IngredientPrice {
+    id: number;
+    amount: string;
+    currency: string;
+    quantity: string;
+    unit: { name: string; symbol: string } | null;
+    per_gram_cost: string | null;
+    recorded_at: string;
+    notes: string | null;
+}
+
+/** Form data for recording a new ingredient price. */
+export interface PriceFormData {
+    amount: string;
+    quantity: string;
+    unit_id: number | '';
+    currency: string;
+    recorded_at: string;
+    notes: string;
+}
+
 /** Full detail shape from IngredientDetailResource. */
 export interface IngredientDetail {
     id: number;
@@ -196,16 +218,7 @@ export interface IngredientDetail {
     verified_at: string | null;
     verified_by: string | null;
     // Prices (scoped to current user)
-    prices: Array<{
-        id: number;
-        amount: string;
-        currency: string;
-        quantity: string | null;
-        unit: string | null;
-        per_gram_cost: string | null;
-        recorded_at: string;
-        notes: string | null;
-    }>;
+    prices: IngredientPrice[];
 }
 
 export interface CanFlags {
