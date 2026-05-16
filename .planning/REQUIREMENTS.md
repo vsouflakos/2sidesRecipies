@@ -23,7 +23,7 @@ including the AI agent. Each maps to a roadmap phase.
 - [x] **INGR-04**: Each ingredient stores allergen information using the EU 14-allergen model
 - [x] **INGR-05**: Each ingredient stores unit-conversion data (portion/density) for normalizing quantities to grams
 - [x] **INGR-06**: Ingredient names are stored and displayed in multiple languages (Greek and English at minimum)
-- [ ] **INGR-07**: User can create a private ingredient when the official library lacks one
+- [x] **INGR-07**: User can create a private ingredient when the official library lacks one
 - [x] **INGR-08**: User can record a price for an ingredient with date and currency
 - [ ] **INGR-09**: User can submit a private ingredient for inclusion in the official library
 - [ ] **INGR-10**: Moderator can review a submitted ingredient and approve or reject it
@@ -178,7 +178,7 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | INGR-04 | Phase 2 | Complete |
 | INGR-05 | Phase 2 | Complete |
 | INGR-06 | Phase 2 | Complete |
-| INGR-07 | Phase 2 | Pending |
+| INGR-07 | Phase 2 | Complete |
 | INGR-08 | Phase 2 | Complete |
 | RECIPE-01 | Phase 3 | Pending |
 | RECIPE-02 | Phase 3 | Pending |

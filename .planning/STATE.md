@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-05-16T15:04:16.251Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-05-16T15:26:14.772Z"
 last_activity: "2026-05-16 — Phase 2 Plan 03 complete: ingredient search UI, controller, nav entry, EN+EL i18n"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 12
-  completed_plans: 9
+  completed_plans: 10
   percent: 30
 ---
 
@@ -58,6 +58,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 02-ingredient-library P01 | 40 | 3 tasks | 28 files |
 | Phase 02-ingredient-library P03 | 45 | 3 tasks | 14 files |
 | Phase 02-ingredient-library PP02 | 60 | 3 tasks | 13 files |
+| Phase 02-ingredient-library P04 | 45 | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase 02-ingredient-library]: EL dismiss labels are context-specific per UI-SPEC: Διατήρηση Ανεπιβεβαίωτου / Επιστροφή στη Βιβλιοθήκη / Διατήρηση Συστατικού
 - [Phase 02-ingredient-library]: CIQUAL XML bundled as 60-food representative subset (CC-BY 4.0); full dataset obtained by running import against live ANSES download
 - [Phase 02-ingredient-library]: Two-pass verified-reset in IngredientImporter: caller must call resetVerifiedForChangedRows BEFORE upsertIngredients so hash comparison uses old stored values
+- [Phase 02-ingredient-library]: Gate::authorize() used instead of this->authorize() - base Controller has no AuthorizesRequests trait; Gate facade works identically
+- [Phase 02-ingredient-library]: IngredientValidationRules trait accepts name field as alias for name_en for pre-written test compatibility
 
 ### Pending Todos
 
@@ -101,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T15:04:16.246Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-05-16T15:26:14.764Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
