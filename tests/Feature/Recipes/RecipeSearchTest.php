@@ -5,6 +5,7 @@ use App\Models\Allergen;
 use App\Models\Cuisine;
 use App\Models\Ingredient;
 use App\Models\Recipe;
+use App\Models\RecipeVersion;
 use App\Models\Tag;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -101,6 +102,47 @@ test('GET /recipes filters by difficulty', function () {
     $response->assertInertia(fn ($page) => $page
         ->has('recipes.data', 1)
         ->where('recipes.data.0.name', 'Easy Dish')
+    );
+});
+
+test('GET /recipes returns allergen_slugs as a flat array for recipes without a version', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    // Recipe with no current version (current_version_id is null)
+    Recipe::factory()->create(['user_id' => $user->id, 'name' => 'No Version Recipe']);
+
+    $response = $this->actingAs($user)->get('/recipes');
+
+    $response->assertSuccessful();
+    $response->assertInertia(fn ($page) => $page
+        ->has('recipes.data', 1)
+        ->where('recipes.data.0.allergen_slugs', [])
+    );
+});
+
+test('GET /recipes returns allergen_slugs as a flat array for recipes with a structured version', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    $recipe = Recipe::factory()->create(['user_id' => $user->id, 'name' => 'Allergen Recipe']);
+
+    // Create a version with the {contains, may_contain} structure stored in DB
+    $version = RecipeVersion::factory()->create([
+        'recipe_id' => $recipe->id,
+        'committed_by' => $user->id,
+        'cached_allergen_slugs' => ['contains' => ['gluten', 'eggs'], 'may_contain' => ['nuts']],
+    ]);
+
+    $recipe->current_version_id = $version->id;
+    $recipe->save();
+
+    $response = $this->actingAs($user)->get('/recipes');
+
+    $response->assertSuccessful();
+    $response->assertInertia(fn ($page) => $page
+        ->has('recipes.data', 1)
+        ->has('recipes.data.0.allergen_slugs', 3)
     );
 });
 

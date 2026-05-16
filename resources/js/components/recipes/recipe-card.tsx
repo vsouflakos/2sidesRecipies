@@ -26,7 +26,7 @@ export function RecipeCard({ recipe, className }: RecipeCardProps) {
                 : `${totalTime} min`
             : null;
 
-    const allergenItems = recipe.allergen_slugs.map((slug) => ({
+    const allergenItems = (recipe.allergen_slugs ?? []).map((slug) => ({
         slug,
         name: slug,
         state: 'contains' as const,
