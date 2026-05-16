@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Completed 01-foundation-05-PLAN.md
-last_updated: "2026-05-16T03:19:40.220Z"
-last_activity: 2026-05-16 — Roadmap created; 67 requirements mapped across 7 phases
+status: in_progress
+stopped_at: Completed 01-foundation-06-PLAN.md (all 6 Phase 1 plans complete)
+last_updated: "2026-05-16T12:00:00.000Z"
+last_activity: 2026-05-16 — Phase 1 Foundation complete: all 6 plans executed and human-verified
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 6
-  completed_plans: 4
-  percent: 0
+  completed_plans: 6
+  percent: 14
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 
 ## Current Position
 
-Phase: 1 of 7 (Foundation)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-05-16 — Roadmap created; 67 requirements mapped across 7 phases
+Phase: 1 of 7 (Foundation) — COMPLETE
+Plan: 6 of 6 (all plans executed and human-verified)
+Status: Phase 1 complete — ready to begin Phase 2 (Ingredient Library)
+Last activity: 2026-05-16 — Phase 1 Foundation complete: all 6 plans executed and human-verified
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 14%
 
 ## Performance Metrics
 
@@ -75,6 +75,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: EnsureUserIsActive placed after AttemptToAuthenticate, before PrepareAuthenticatedSession to block deactivated users without writing session
 - [Phase 01-foundation]: Route gated with app()->isLocal() || app()->runningUnitTests() so Pest tests can reach /dev/styleguide in APP_ENV=testing without relaxing the production gate
 - [Phase 01-foundation]: Warm-minimal token correctness for UI-02 is perceptual — human visual verification at the checkpoint is the authoritative artifact, not automated tests
+- [Phase 01-foundation]: Redirect-not-JSON pattern for Inertia mutation endpoints — assignRole/toggleStatus/destroy must return back() redirect so Inertia performs a prop-refresh cycle and the table re-renders (discovered at Plan 04 human-verify checkpoint)
+- [Phase 01-foundation]: React deduplication via vite.config.ts resolve.dedupe required for laravel-react-i18n — the package bundles its own React copy; without dedupe, hook invariant violations cause app-wide white screen (discovered at Plan 06 human-verify checkpoint)
+- [Phase 01-foundation]: Silent fetch() (not router.put()) for fire-and-forget locale persistence — router.put() is always an Inertia visit; fetch() allows optimistic setLocale() with no page reload
 
 ### Pending Todos
 
