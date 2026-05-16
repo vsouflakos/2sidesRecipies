@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Fortify\EnsureUserIsActive;
 use App\Actions\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -11,6 +12,11 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
+use Laravel\Fortify\Actions\AttemptToAuthenticate;
+use Laravel\Fortify\Actions\CanonicalizeUsername;
+use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
+use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 
@@ -41,6 +47,18 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::createUsersUsing(CreateNewUser::class);
+
+        Fortify::authenticateThrough(function (Request $request) {
+            return array_filter([
+                config('fortify.limiters.login') ? EnsureLoginIsNotThrottled::class : null,
+                config('fortify.lowercase_usernames') ? CanonicalizeUsername::class : null,
+                Features::enabled(Features::twoFactorAuthentication())
+                    ? RedirectIfTwoFactorAuthenticatable::class : null,
+                AttemptToAuthenticate::class,
+                EnsureUserIsActive::class,
+                PrepareAuthenticatedSession::class,
+            ]);
+        });
     }
 
     /**
