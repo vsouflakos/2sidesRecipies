@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-foundation-02-PLAN.md
-last_updated: "2026-05-16T03:04:54.097Z"
+stopped_at: Completed 01-foundation-05-PLAN.md
+last_updated: "2026-05-16T03:19:40.220Z"
 last_activity: 2026-05-16 — Roadmap created; 67 requirements mapped across 7 phases
 progress:
   total_phases: 7
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-foundation P03 | 15 | 2 tasks | 7 files |
 | Phase 01-foundation P05 | 25 | 2 tasks | 5 files |
 | Phase 01-foundation P02 | 13 | 3 tasks | 10 files |
+| Phase 01-foundation P05 | 30 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: Route gate uses app()->isLocal() || app()->runningUnitTests() so Pest tests can reach /dev/styleguide in APP_ENV=testing
 - [Phase 01-foundation]: Route declarations for admin.users.* placed in Plan 02 so Plan 04 only adds the controller
 - [Phase 01-foundation]: EnsureUserIsActive placed after AttemptToAuthenticate, before PrepareAuthenticatedSession to block deactivated users without writing session
+- [Phase 01-foundation]: Route gated with app()->isLocal() || app()->runningUnitTests() so Pest tests can reach /dev/styleguide in APP_ENV=testing without relaxing the production gate
+- [Phase 01-foundation]: Warm-minimal token correctness for UI-02 is perceptual — human visual verification at the checkpoint is the authoritative artifact, not automated tests
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T03:04:54.092Z
-Stopped at: Completed 01-foundation-02-PLAN.md
+Last session: 2026-05-16T03:19:40.213Z
+Stopped at: Completed 01-foundation-05-PLAN.md
 Resume file: None
