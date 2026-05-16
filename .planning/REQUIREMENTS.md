@@ -105,7 +105,7 @@ including the AI agent. Each maps to a roadmap phase.
 ### Design System
 
 - [x] **UI-01**: Interface is built with shadcn/ui components on Tailwind v4
-- [ ] **UI-02**: Interface follows a warm-minimal aesthetic consistently across light and dark themes
+- [x] **UI-02**: Interface follows a warm-minimal aesthetic consistently across light and dark themes
 - [x] **UI-03**: Interface is responsive and usable on desktop, tablet, and mobile browsers
 
 ## v2 Requirements
@@ -170,7 +170,7 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | I18N-01 | Phase 1 | Complete |
 | I18N-02 | Phase 1 | Complete |
 | UI-01 | Phase 1 | Complete |
-| UI-02 | Phase 1 | Pending |
+| UI-02 | Phase 1 | Complete |
 | UI-03 | Phase 1 | Complete |
 | INGR-01 | Phase 2 | Pending |
 | INGR-02 | Phase 2 | Pending |

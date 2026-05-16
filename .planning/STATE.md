@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-foundation-03-PLAN.md
-last_updated: "2026-05-16T02:55:14.316Z"
+stopped_at: "Checkpoint: Task 3 human-verify — 01-05-PLAN.md"
+last_updated: "2026-05-16T02:58:43.608Z"
 last_activity: 2026-05-16 — Roadmap created; 67 requirements mapped across 7 phases
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 6
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01-foundation P01 | 11 | 3 tasks | 17 files |
 | Phase 01-foundation P03 | 15 | 2 tasks | 7 files |
+| Phase 01-foundation P05 | 25 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,7 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: Wave 0 test files write real assertions rather than skip(), giving later waves concrete red-to-green targets
 - [Phase 01-foundation]: Allergen slug used as firstOrCreate key (unique per EU regulation) rather than name — slug is stable canonical identifier
 - [Phase 01-foundation]: base_factor cast as decimal:6 to preserve conversion precision without floating-point drift
+- [Phase 01-foundation]: Route gate uses app()->isLocal() || app()->runningUnitTests() so Pest tests can reach /dev/styleguide in APP_ENV=testing
 
 ### Pending Todos
 
@@ -78,6 +80,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T02:55:14.310Z
-Stopped at: Completed 01-foundation-03-PLAN.md
+Last session: 2026-05-16T02:58:28.204Z
+Stopped at: Checkpoint: Task 3 human-verify — 01-05-PLAN.md
 Resume file: None
