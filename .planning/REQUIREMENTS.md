@@ -163,13 +163,79 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| _All v1 requirements_ | _TBD — assigned by roadmapper_ | Pending |
+| ACCESS-01 | Phase 1 | Pending |
+| ACCESS-02 | Phase 1 | Pending |
+| ACCESS-03 | Phase 1 | Pending |
+| ACCESS-04 | Phase 1 | Pending |
+| I18N-01 | Phase 1 | Pending |
+| I18N-02 | Phase 1 | Pending |
+| UI-01 | Phase 1 | Pending |
+| UI-02 | Phase 1 | Pending |
+| UI-03 | Phase 1 | Pending |
+| INGR-01 | Phase 2 | Pending |
+| INGR-02 | Phase 2 | Pending |
+| INGR-03 | Phase 2 | Pending |
+| INGR-04 | Phase 2 | Pending |
+| INGR-05 | Phase 2 | Pending |
+| INGR-06 | Phase 2 | Pending |
+| INGR-07 | Phase 2 | Pending |
+| INGR-08 | Phase 2 | Pending |
+| RECIPE-01 | Phase 3 | Pending |
+| RECIPE-02 | Phase 3 | Pending |
+| RECIPE-03 | Phase 3 | Pending |
+| RECIPE-04 | Phase 3 | Pending |
+| RECIPE-05 | Phase 3 | Pending |
+| RECIPE-06 | Phase 3 | Pending |
+| RECIPE-07 | Phase 3 | Pending |
+| RECIPE-08 | Phase 3 | Pending |
+| RECIPE-09 | Phase 3 | Pending |
+| RECIPE-10 | Phase 3 | Pending |
+| RECIPE-11 | Phase 3 | Pending |
+| RECIPE-12 | Phase 3 | Pending |
+| RECIPE-13 | Phase 3 | Pending |
+| VERSION-01 | Phase 3 | Pending |
+| VERSION-02 | Phase 3 | Pending |
+| VERSION-03 | Phase 3 | Pending |
+| VERSION-04 | Phase 3 | Pending |
+| VERSION-05 | Phase 3 | Pending |
+| VERSION-06 | Phase 3 | Pending |
+| METRIC-01 | Phase 3 | Pending |
+| METRIC-02 | Phase 3 | Pending |
+| METRIC-03 | Phase 3 | Pending |
+| METRIC-04 | Phase 3 | Pending |
+| METRIC-05 | Phase 3 | Pending |
+| METRIC-06 | Phase 3 | Pending |
+| METRIC-07 | Phase 3 | Pending |
+| METRIC-08 | Phase 3 | Pending |
+| METRIC-09 | Phase 3 | Pending |
+| METRIC-10 | Phase 3 | Pending |
+| ALLG-01 | Phase 3 | Pending |
+| ALLG-02 | Phase 3 | Pending |
+| ALLG-03 | Phase 3 | Pending |
+| TEST-01 | Phase 4 | Pending |
+| TEST-02 | Phase 4 | Pending |
+| TEST-03 | Phase 4 | Pending |
+| TEST-04 | Phase 4 | Pending |
+| AI-01 | Phase 5 | Pending |
+| AI-02 | Phase 5 | Pending |
+| AI-03 | Phase 5 | Pending |
+| AI-04 | Phase 5 | Pending |
+| AI-05 | Phase 5 | Pending |
+| AI-06 | Phase 5 | Pending |
+| AI-07 | Phase 5 | Pending |
+| PUB-01 | Phase 6 | Pending |
+| PUB-02 | Phase 6 | Pending |
+| PUB-03 | Phase 6 | Pending |
+| PUB-04 | Phase 6 | Pending |
+| INGR-09 | Phase 7 | Pending |
+| INGR-10 | Phase 7 | Pending |
+| INGR-11 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 67 total
-- Mapped to phases: 0 (roadmap not yet created)
-- Unmapped: 67 ⚠️
+- Mapped to phases: 67
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-16*
-*Last updated: 2026-05-16 after initial definition*
+*Last updated: 2026-05-16 — traceability populated after roadmap creation*
