@@ -2,8 +2,8 @@
 phase: 3
 slug: recipe-core-metrics
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-05-16
 ---
 
@@ -71,21 +71,21 @@ One row per task across all 8 plans. The automated command is pulled verbatim fr
 
 Wave 0 is delivered entirely by Plan 03-01 Task 3 — all 13 Phase 3 test files plus the recipe factories. The task authors real (red) assertions and sets the two flags below to `true` at execution time.
 
-- [ ] `tests/Feature/Recipes/RecipeSchemaTest.php` — RECIPE-04, RECIPE-13, VERSION-01
-- [ ] `tests/Feature/Recipes/RecipeCrudTest.php` — RECIPE-01..03, RECIPE-07..11
-- [ ] `tests/Feature/Recipes/RecipeDraftTest.php` — VERSION-02..04, RECIPE-07, METRIC-04 (includes the Apply-to-Draft scaling test, Blocker 3)
-- [ ] `tests/Feature/Recipes/RecipeVersionTest.php` — VERSION-01, VERSION-05, RECIPE-08
-- [ ] `tests/Feature/Recipes/RecipeSearchTest.php` — RECIPE-12
-- [ ] `tests/Feature/Recipes/SubRecipeTest.php` — RECIPE-05, VERSION-06
-- [ ] `tests/Feature/Recipes/CircularReferenceTest.php` — RECIPE-06
-- [ ] `tests/Feature/Recipes/Metrics/NutritionCalculatorTest.php` — METRIC-01, 04, 07, 09, 10
-- [ ] `tests/Feature/Recipes/Metrics/CostCalculatorTest.php` — METRIC-02, 03
-- [ ] `tests/Feature/Recipes/Metrics/ShrinkageCalculatorTest.php` — METRIC-05
-- [ ] `tests/Feature/Recipes/Metrics/BakersPercentageCalculatorTest.php` — METRIC-06
-- [ ] `tests/Feature/Recipes/Metrics/AllergenRollupTest.php` — ALLG-01..03
-- [ ] `tests/Feature/Recipes/Metrics/MetricsRollupTest.php` — METRIC-08
-- [ ] `database/factories/Recipe*Factory.php` — shared fixtures for all recipe tests
-- [ ] `tests/Pest.php` — shared base test case already covers feature tests (confirm only)
+- [x] `tests/Feature/Recipes/RecipeSchemaTest.php` — RECIPE-04, RECIPE-13, VERSION-01
+- [x] `tests/Feature/Recipes/RecipeCrudTest.php` — RECIPE-01..03, RECIPE-07..11
+- [x] `tests/Feature/Recipes/RecipeDraftTest.php` — VERSION-02..04, RECIPE-07, METRIC-04 (includes the Apply-to-Draft scaling test, Blocker 3)
+- [x] `tests/Feature/Recipes/RecipeVersionTest.php` — VERSION-01, VERSION-05, RECIPE-08
+- [x] `tests/Feature/Recipes/RecipeSearchTest.php` — RECIPE-12
+- [x] `tests/Feature/Recipes/SubRecipeTest.php` — RECIPE-05, VERSION-06
+- [x] `tests/Feature/Recipes/CircularReferenceTest.php` — RECIPE-06
+- [x] `tests/Feature/Recipes/Metrics/NutritionCalculatorTest.php` — METRIC-01, 04, 07, 09, 10
+- [x] `tests/Feature/Recipes/Metrics/CostCalculatorTest.php` — METRIC-02, 03
+- [x] `tests/Feature/Recipes/Metrics/ShrinkageCalculatorTest.php` — METRIC-05
+- [x] `tests/Feature/Recipes/Metrics/BakersPercentageCalculatorTest.php` — METRIC-06
+- [x] `tests/Feature/Recipes/Metrics/AllergenRollupTest.php` — ALLG-01..03
+- [x] `tests/Feature/Recipes/Metrics/MetricsRollupTest.php` — METRIC-08
+- [x] `database/factories/Recipe*Factory.php` — shared fixtures for all recipe tests
+- [x] `tests/Pest.php` — shared base test case already covers feature tests (confirm only)
 
 *`wave_0_complete` and `nyquist_compliant` are set `true` by Plan 03-01 Task 3 once these files exist with real assertions and the suite runs without parse errors.*
 
