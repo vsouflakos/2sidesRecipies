@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Ingredient;
+use App\Models\Recipe;
 use App\Policies\IngredientPolicy;
+use App\Policies\RecipePolicy;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
     protected function registerPolicies(): void
     {
         Gate::policy(Ingredient::class, IngredientPolicy::class);
+        Gate::policy(Recipe::class, RecipePolicy::class);
     }
 
     /**
