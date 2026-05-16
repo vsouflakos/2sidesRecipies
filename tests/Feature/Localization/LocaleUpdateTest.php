@@ -16,5 +16,6 @@ test('locale update rejects an unsupported locale', function () {
 
     $this->actingAs($user)
         ->put('/locale', ['locale' => 'fr'])
-        ->assertUnprocessable();
+        ->assertRedirect()
+        ->assertSessionHasErrors('locale');
 });

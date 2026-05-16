@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\IngredientReviewController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\StyleguideController;
+use App\Http\Controllers\Settings\UpdateLocaleController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -13,6 +14,10 @@ Route::inertia('/', 'welcome', [
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 });
+
+Route::middleware('auth')
+    ->put('locale', UpdateLocaleController::class)
+    ->name('locale.update');
 
 Route::middleware(['auth', 'verified', 'permission:manage-users'])
     ->prefix('admin')
