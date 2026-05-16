@@ -2,6 +2,22 @@ import type { UnitOption } from '@/types/ingredient';
 
 export type { UnitOption };
 
+/** Shape of a single recipe item on the list/grid page (from RecipeListResource). */
+export interface RecipeCardData {
+    id: number;
+    name: string;
+    slug: string;
+    hero_image_path: string | null;
+    cuisine: string | null;
+    total_time: number | null;
+    prep_time_minutes: number | null;
+    cook_time_minutes: number | null;
+    difficulty: 'easy' | 'medium' | 'hard' | 'expert' | null;
+    cost_per_portion: string | null;
+    calories_per_portion: string | null;
+    allergen_slugs: string[];
+}
+
 /** Cuisine option from seeded list. */
 export interface CuisineOption {
     id: number;
