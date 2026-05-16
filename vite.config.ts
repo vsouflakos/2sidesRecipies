@@ -30,4 +30,12 @@ export default defineConfig({
         }),
         i18n(),
     ],
+    resolve: {
+        // laravel-react-i18n declares `react` as a hard dependency (^18),
+        // so the package manager installs a second React copy. Without
+        // dedupe, Vite bundles that copy into laravel-react-i18n and its
+        // hooks run against a different React instance ("Invalid hook
+        // call" -> null dispatcher). Force a single React/ReactDOM.
+        dedupe: ['react', 'react-dom'],
+    },
 });
