@@ -1,7 +1,11 @@
-import { router } from '@inertiajs/react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import { update as localeUpdate } from '@/routes/locale';
 import { cn } from '@/lib/utils';
+
+function getCsrfToken(): string {
+    const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : '';
+}
 
 export function LanguageSwitcher() {
     const { t, currentLocale, setLocale } = useLaravelReactI18n();
@@ -18,7 +22,18 @@ export function LanguageSwitcher() {
 
         setLocale(locale);
 
-        router.put(localeUpdate.url(), { locale }, { preserveScroll: true });
+        fetch(localeUpdate.url(), {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': getCsrfToken(),
+            },
+            body: JSON.stringify({ locale }),
+        }).catch(() => {
+            // Silently swallow network errors — the optimistic setLocale()
+            // already updated the UI; the next page load will re-sync from
+            // the user record.
+        });
     }
 
     return (
