@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 2 context gathered
-last_updated: "2026-05-16T13:02:38.393Z"
-last_activity: "2026-05-16 — Phase 1 Foundation complete: all 6 plans executed and human-verified"
+status: in_progress
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-05-16T14:30:00.000Z"
+last_activity: "2026-05-16 — Phase 2 Plan 01 complete: ingredient schema, models, factories, category seeder, test scaffold"
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 6
-  completed_plans: 6
-  percent: 14
+  total_plans: 12
+  completed_plans: 7
+  percent: 22
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** A chef can build a structured, versioned recipe and trust the professional metrics computed from its ingredients (nutrition, cost, yield, allergens).
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 2 — Ingredient Library
 
 ## Current Position
 
-Phase: 1 of 7 (Foundation) — COMPLETE
-Plan: 6 of 6 (all plans executed and human-verified)
-Status: Phase 1 complete — ready to begin Phase 2 (Ingredient Library)
-Last activity: 2026-05-16 — Phase 1 Foundation complete: all 6 plans executed and human-verified
+Phase: 2 of 7 (Ingredient Library) — IN PROGRESS
+Plan: 1 of 6 complete (02-01 ingredient schema)
+Status: Plan 02-01 complete — ready to begin Plan 02-02 (import pipeline)
+Last activity: 2026-05-16 — Phase 2 Plan 01 complete: ingredient schema, models, factories, category seeder, test scaffold
 
-Progress: [█░░░░░░░░░] 14%
+Progress: [██░░░░░░░░] 22%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [█░░░░░░░░░] 14%
 | Phase 01-foundation P05 | 25 | 2 tasks | 5 files |
 | Phase 01-foundation P02 | 13 | 3 tasks | 10 files |
 | Phase 01-foundation P05 | 30 | 3 tasks | 5 files |
+| Phase 02-ingredient-library P01 | 40 | 3 tasks | 28 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,10 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: Redirect-not-JSON pattern for Inertia mutation endpoints — assignRole/toggleStatus/destroy must return back() redirect so Inertia performs a prop-refresh cycle and the table re-renders (discovered at Plan 04 human-verify checkpoint)
 - [Phase 01-foundation]: React deduplication via vite.config.ts resolve.dedupe required for laravel-react-i18n — the package bundles its own React copy; without dedupe, hook invariant violations cause app-wide white screen (discovered at Plan 06 human-verify checkpoint)
 - [Phase 01-foundation]: Silent fetch() (not router.put()) for fire-and-forget locale persistence — router.put() is always an Inertia visit; fetch() allows optimistic setLocale() with no page reload
+- [Phase 02-ingredient-library]: Seeded 50 ingredient subcategories (the full RESEARCH.md Starter Category Tree) — the enumerated tree is authoritative and counts to 50, not the plan-text figure of 41
+- [Phase 02-ingredient-library]: Added HasFactory + AllergenFactory to the Phase 1 Allergen model so ingredient tests can build individual allergen rows without seeding all 14
+- [Phase 02-ingredient-library]: ingredients table uses a (source, source_id) unique index — required for DB::upsert idempotency in the Plan 02-02 import pipeline; data_hash column gates the verified-reset on re-import
+- [Phase 02-ingredient-library]: MySQL-only FULLTEXT index on ingredient_translations.name guarded by DB::getDriverName() so SQLite test runs do not error
 
 ### Pending Todos
 
@@ -89,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T13:02:38.387Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-ingredient-library/02-CONTEXT.md
+Last session: 2026-05-16T14:30:00.000Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: .planning/phases/02-ingredient-library/02-02-PLAN.md

@@ -19,12 +19,12 @@ including the AI agent. Each maps to a roadmap phase.
 
 - [ ] **INGR-01**: User can search the official ingredient library by name
 - [ ] **INGR-02**: Official ingredient library is seeded from CIQUAL, USDA FDC, and Open Food Facts
-- [ ] **INGR-03**: Each ingredient stores nutrition values (calories, macros, sugars, sodium, fiber, micronutrients)
-- [ ] **INGR-04**: Each ingredient stores allergen information using the EU 14-allergen model
-- [ ] **INGR-05**: Each ingredient stores unit-conversion data (portion/density) for normalizing quantities to grams
-- [ ] **INGR-06**: Ingredient names are stored and displayed in multiple languages (Greek and English at minimum)
+- [x] **INGR-03**: Each ingredient stores nutrition values (calories, macros, sugars, sodium, fiber, micronutrients)
+- [x] **INGR-04**: Each ingredient stores allergen information using the EU 14-allergen model
+- [x] **INGR-05**: Each ingredient stores unit-conversion data (portion/density) for normalizing quantities to grams
+- [x] **INGR-06**: Ingredient names are stored and displayed in multiple languages (Greek and English at minimum)
 - [ ] **INGR-07**: User can create a private ingredient when the official library lacks one
-- [ ] **INGR-08**: User can record a price for an ingredient with date and currency
+- [x] **INGR-08**: User can record a price for an ingredient with date and currency
 - [ ] **INGR-09**: User can submit a private ingredient for inclusion in the official library
 - [ ] **INGR-10**: Moderator can review a submitted ingredient and approve or reject it
 - [ ] **INGR-11**: An approved submitted ingredient is promoted into the official library
@@ -174,12 +174,12 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | UI-03 | Phase 1 | Complete |
 | INGR-01 | Phase 2 | Pending |
 | INGR-02 | Phase 2 | Pending |
-| INGR-03 | Phase 2 | Pending |
-| INGR-04 | Phase 2 | Pending |
-| INGR-05 | Phase 2 | Pending |
-| INGR-06 | Phase 2 | Pending |
+| INGR-03 | Phase 2 | Complete |
+| INGR-04 | Phase 2 | Complete |
+| INGR-05 | Phase 2 | Complete |
+| INGR-06 | Phase 2 | Complete |
 | INGR-07 | Phase 2 | Pending |
-| INGR-08 | Phase 2 | Pending |
+| INGR-08 | Phase 2 | Complete |
 | RECIPE-01 | Phase 3 | Pending |
 | RECIPE-02 | Phase 3 | Pending |
 | RECIPE-03 | Phase 3 | Pending |
