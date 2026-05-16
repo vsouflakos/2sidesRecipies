@@ -20,7 +20,22 @@ class ImportUsdaFdc extends Command
                             {--food-nutrient-file= : Path to food_nutrient.csv}
                             {--portion-file= : Path to food_portion.csv}
                             {--measure-unit-file= : Path to measure_unit.csv}
+                            {--data-type=foundation_food,sr_legacy_food,survey_fndds_food : Comma-separated FDC data_type values to import}
                             {--download : Fetch the SR Legacy dataset on demand}';
+
+    /**
+     * FDC data_type values that represent provenance records rather than
+     * actual food composition entries. Used as the default exclusion set
+     * when food.csv carries no recognised data_type column.
+     *
+     * @var array<int, string>
+     */
+    private const PROVENANCE_DATA_TYPES = [
+        'sub_sample_food',
+        'market_acquisition',
+        'sample_food',
+        'agricultural_acquisition',
+    ];
 
     /**
      * The console command description.
@@ -38,7 +53,9 @@ class ImportUsdaFdc extends Command
      * @var array<int, string>
      */
     private const NUTRIENT_MAP = [
-        1008 => 'energy_kcal',
+        1008 => 'energy_kcal',     // Energy (kcal)
+        2047 => 'energy_kcal',     // Energy, Atwater General Factors (Foundation Foods)
+        2048 => 'energy_kcal',     // Energy, Atwater Specific Factors (Foundation Foods)
         1003 => 'protein_g',
         1004 => 'fat_g',
         1005 => 'carbs_g',
@@ -127,8 +144,13 @@ class ImportUsdaFdc extends Command
         $defaultCategoryId = $this->resolveDefaultCategoryId();
         $categoryCache = [];
 
+        $allowedDataTypes = array_filter(array_map(
+            'trim',
+            explode(',', (string) $this->option('data-type')),
+        ));
+
         $this->info('Parsing USDA foods…');
-        $rows = $this->parseFoods($foodFile, $nutritionByFdcId, $importer, $defaultCategoryId, $categoryCache);
+        $rows = $this->parseFoods($foodFile, $nutritionByFdcId, $importer, $defaultCategoryId, $categoryCache, $allowedDataTypes);
 
         if (empty($rows)) {
             $this->warn('No food rows found in the food CSV.');
@@ -294,6 +316,12 @@ class ImportUsdaFdc extends Command
         // Skip header row.
         fgetcsv($handle);
 
+        // A food may carry energy under several nutrient ids. Prefer the
+        // plain Energy value, then Atwater Specific, then Atwater General,
+        // so the chosen energy_kcal is deterministic regardless of CSV order.
+        $energyPriority = [1008 => 3, 2048 => 2, 2047 => 1];
+        $energyPriorityByFdcId = [];
+
         while (($row = fgetcsv($handle)) !== false) {
             // Columns: id, fdc_id, nutrient_id, amount
             if (count($row) < 4) {
@@ -312,6 +340,16 @@ class ImportUsdaFdc extends Command
 
             if (! isset($nutritionByFdcId[$fdcId])) {
                 $nutritionByFdcId[$fdcId] = [];
+            }
+
+            if ($column === 'energy_kcal') {
+                $priority = $energyPriority[$nutrientId] ?? 0;
+
+                if (($energyPriorityByFdcId[$fdcId] ?? -1) >= $priority) {
+                    continue;
+                }
+
+                $energyPriorityByFdcId[$fdcId] = $priority;
             }
 
             $nutritionByFdcId[$fdcId][$column] = $amount;
@@ -359,8 +397,14 @@ class ImportUsdaFdc extends Command
     /**
      * Parse food.csv and build ingredient rows.
      *
+     * Columns are resolved by header name so the parser works against any
+     * FoodData Central food.csv regardless of column ordering. Rows whose
+     * `data_type` is not an actual food composition entry (e.g.
+     * `sub_sample_food`, `market_acquisition`) are skipped.
+     *
      * @param  array<int, array<string, float|null>>  $nutritionByFdcId
      * @param  array<string, int>  $categoryCache
+     * @param  array<int, string>  $allowedDataTypes
      * @return array<int, array<string, mixed>>
      */
     private function parseFoods(
@@ -369,6 +413,7 @@ class ImportUsdaFdc extends Command
         IngredientImporter $importer,
         int $defaultCategoryId,
         array &$categoryCache,
+        array $allowedDataTypes = [],
     ): array {
         $rows = [];
 
@@ -382,7 +427,14 @@ class ImportUsdaFdc extends Command
             return $rows;
         }
 
-        fgetcsv($handle); // Skip header: fdc_id, description, food_category_id
+        // Resolve column positions from the header: fdc_id, data_type,
+        // description, food_category_id, publication_date.
+        $header = fgetcsv($handle);
+        $cols = $header !== false ? array_flip(array_map('trim', $header)) : [];
+        $fdcIdCol = $cols['fdc_id'] ?? 0;
+        $dataTypeCol = $cols['data_type'] ?? null;
+        $descCol = $cols['description'] ?? 1;
+        $categoryCol = $cols['food_category_id'] ?? 2;
 
         $now = now()->toDateTimeString();
 
@@ -391,9 +443,29 @@ class ImportUsdaFdc extends Command
                 continue;
             }
 
-            $fdcId = (int) $row[0];
-            $description = trim($row[1]);
-            $foodCategoryId = isset($row[2]) ? (int) $row[2] : 0;
+            // Skip provenance rows: FDC food.csv mixes real foods with lab
+            // sub-samples and acquisition records.
+            if ($dataTypeCol !== null) {
+                $dataType = trim($row[$dataTypeCol] ?? '');
+
+                if ($dataType !== '') {
+                    if ($allowedDataTypes !== []) {
+                        if (! in_array($dataType, $allowedDataTypes, true)) {
+                            continue;
+                        }
+                    } elseif (in_array($dataType, self::PROVENANCE_DATA_TYPES, true)) {
+                        continue;
+                    }
+                }
+            }
+
+            $fdcId = (int) ($row[$fdcIdCol] ?? 0);
+            $description = trim($row[$descCol] ?? '');
+            $foodCategoryId = (int) ($row[$categoryCol] ?? 0);
+
+            if ($fdcId === 0 || $description === '') {
+                continue;
+            }
 
             $nutrition = $nutritionByFdcId[$fdcId] ?? [];
             $dataHash = $importer->dataHash($nutrition);

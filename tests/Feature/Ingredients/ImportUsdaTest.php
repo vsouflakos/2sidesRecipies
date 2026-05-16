@@ -27,7 +27,10 @@ test('the usda import command creates new ingredient rows from fixtures', functi
         '--measure-unit-file' => $dir.'/usda-measure-unit.csv',
     ])->assertExitCode(0);
 
-    expect(Ingredient::where('source', 'usda')->count())->toBeGreaterThan(0);
+    // The fixture has 5 real foods plus one sub_sample_food provenance row.
+    expect(Ingredient::where('source', 'usda')->count())->toBe(5);
+    expect(Ingredient::where('source', 'usda')->where('source_id', '900001')->exists())
+        ->toBeFalse();
 });
 
 test('re-running the usda import is idempotent', function () {
