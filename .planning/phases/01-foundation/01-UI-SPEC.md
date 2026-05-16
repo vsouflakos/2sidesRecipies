@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: foundation
-status: draft
+status: approved
 shadcn_initialized: true
 preset: "new-york / neutral / cssVariables"
 created: 2026-05-16
+reviewed_at: 2026-05-16
 ---
 
 # Phase 1 — UI Design Contract
