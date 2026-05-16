@@ -130,7 +130,7 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 |-------|----------------|--------|-----------|
 | 1. Foundation | 6/6 | Complete   | 2026-05-16 |
 | 2. Ingredient Library | 6/6 | Complete   | 2026-05-16 |
-| 3. Recipe Core & Metrics | 6/8 | In Progress|  |
+| 3. Recipe Core & Metrics | 7/8 | In Progress|  |
 | 4. Recipe Tests | 0/TBD | Not started | - |
 | 5. AI Agent | 0/TBD | Not started | - |
 | 6. Publishing & Public Library | 0/TBD | Not started | - |

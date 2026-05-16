@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-recipe-core-metrics-06-PLAN.md
-last_updated: "2026-05-16T23:01:08.826Z"
+stopped_at: Completed 03-recipe-core-metrics-07-PLAN.md
+last_updated: "2026-05-16T23:19:26.072Z"
 last_activity: "2026-05-16 — Phase 2 Plan 05 complete: ingredient detail page, verification flow, human-verify checkpoint passed"
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 20
-  completed_plans: 18
+  completed_plans: 19
   percent: 35
 ---
 
@@ -67,6 +67,7 @@ Progress: [████░░░░░░] 35%
 | Phase 03-recipe-core-metrics PP04 | 23 | 3 tasks | 21 files |
 | Phase 03-recipe-core-metrics P05 | 13 | 3 tasks | 13 files |
 | Phase 03-recipe-core-metrics P06 | 35 | 3 tasks | 10 files |
+| Phase 03-recipe-core-metrics P07 | 13 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -121,6 +122,8 @@ Recent decisions affecting current work:
 - [Phase 03-recipe-core-metrics]: metrics-panel-mount div reserved as data-slot attribute so Plan 06 can slot in metrics panel without modifying show.tsx layout
 - [Phase 03-recipe-core-metrics]: RecipeMetrics TS types corrected to match PHP service output: allergens as slug arrays, bakers as percentages map, missing_data as string[], selling_price added to RecipeBuilderData
 - [Phase 03-recipe-core-metrics]: Allergen display names resolved client-side via slugToName() — no extra server call needed; Apply to Draft uses integer rational (numerator/denominator=1000) not pre-rounded float
+- [Phase 03-recipe-core-metrics]: Sub-recipe update badge is a clickable button element wrapping a Badge for keyboard accessibility
+- [Phase 03-recipe-core-metrics]: edit_sequence added to RecipeBuilderData TS type to support Recall sequence guard client-side
 
 ### Pending Todos
 
@@ -132,6 +135,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T23:01:08.820Z
-Stopped at: Completed 03-recipe-core-metrics-06-PLAN.md
+Last session: 2026-05-16T23:19:26.067Z
+Stopped at: Completed 03-recipe-core-metrics-07-PLAN.md
 Resume file: None
