@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Anses. 2025. Ciqual French food composition table 2025. CC-BY 4.0 -->
+<!-- Representative subset of 60 foods for development purposes. -->
+<!-- Full table: https://ciqual.anses.fr -->
+<Table_CIQUAL>
+  <!-- G01: Grains & Starches -->
+  <ALIM>
+    <alim_code>1001</alim_code>
+    <alim_nom_fr>Blé tendre, grain entier, cru</alim_nom_fr>
+    <alim_nom_eng>Whole wheat grain, raw</alim_nom_eng>
+    <alim_grp_code>G01</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>340</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>13.2</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>2.47</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>60.7</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>2.16</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>9.7</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>8</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>29</teneur></COMPO>
+    <COMPO><const_code>10190</const_code><teneur>3.52</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>0</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>1002</alim_code>
+    <alim_nom_fr>Riz blanc, grain étuvé, cuit</alim_nom_fr>
+    <alim_nom_eng>White rice, parboiled, cooked</alim_nom_eng>
+    <alim_grp_code>G01</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>143</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>2.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.3</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>31.1</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.1</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>0.6</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>1</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>1003</alim_code>
+    <alim_nom_fr>Farine de blé tendre T55</alim_nom_fr>
+    <alim_nom_eng>Wheat flour T55</alim_nom_eng>
+    <alim_grp_code>G01</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>350</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>11.5</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>1.3</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>71.4</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.5</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.5</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>2</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>1004</alim_code>
+    <alim_nom_fr>Pain de mie</alim_nom_fr>
+    <alim_nom_eng>White sandwich bread</alim_nom_eng>
+    <alim_grp_code>G01</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>270</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>8.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>3.9</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>49.7</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>4.2</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.4</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>490</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>1005</alim_code>
+    <alim_nom_fr>Pâtes, sèches, cuites</alim_nom_fr>
+    <alim_nom_eng>Pasta, dried, cooked</alim_nom_eng>
+    <alim_grp_code>G01</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>159</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>5.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.9</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>32.3</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.4</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.4</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>2</teneur></COMPO>
+  </ALIM>
+  <!-- G02: Vegetables -->
+  <ALIM>
+    <alim_code>2001</alim_code>
+    <alim_nom_fr>Tomate, crue</alim_nom_fr>
+    <alim_nom_eng>Tomato, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>18</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.85</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>3.53</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>2.63</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.2</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>3</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>13.7</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>2002</alim_code>
+    <alim_nom_fr>Carotte, crue</alim_nom_fr>
+    <alim_nom_eng>Carrot, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>35</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.87</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>7.3</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>5.0</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.8</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>65</teneur></COMPO>
+    <COMPO><const_code>55100</const_code><teneur>852</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>2003</alim_code>
+    <alim_nom_fr>Épinard, cru</alim_nom_fr>
+    <alim_nom_eng>Spinach, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>23</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>2.86</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.4</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>1.43</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.4</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.2</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>78</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>28</teneur></COMPO>
+    <COMPO><const_code>10190</const_code><teneur>2.71</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>2004</alim_code>
+    <alim_nom_fr>Oignon, cru</alim_nom_fr>
+    <alim_nom_eng>Onion, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>40</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>1.1</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.1</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>8.2</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>4.7</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.4</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>3</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>2005</alim_code>
+    <alim_nom_fr>Poivron, cru</alim_nom_fr>
+    <alim_nom_eng>Bell pepper, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>20</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.9</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>3.7</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>2.5</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.9</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>3</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>128</teneur></COMPO>
+  </ALIM>
+  <!-- G03: Fruits -->
+  <ALIM>
+    <alim_code>3001</alim_code>
+    <alim_nom_fr>Pomme, crue, avec peau</alim_nom_fr>
+    <alim_nom_eng>Apple, raw, with skin</alim_nom_eng>
+    <alim_grp_code>G03</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>52</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.3</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>13.6</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>10.4</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.4</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>4.6</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>3002</alim_code>
+    <alim_nom_fr>Banane, crue</alim_nom_fr>
+    <alim_nom_eng>Banana, raw</alim_nom_eng>
+    <alim_grp_code>G03</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>95</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>1.2</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.3</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>22</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>12</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.6</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>10165</const_code><teneur>358</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>3003</alim_code>
+    <alim_nom_fr>Orange, crue</alim_nom_fr>
+    <alim_nom_eng>Orange, raw</alim_nom_eng>
+    <alim_grp_code>G03</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>47</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.9</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.1</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>11.2</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>9.35</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.4</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>53.2</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>3004</alim_code>
+    <alim_nom_fr>Fraise, crue</alim_nom_fr>
+    <alim_nom_eng>Strawberry, raw</alim_nom_eng>
+    <alim_grp_code>G03</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>32</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.7</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.3</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>7.1</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>5.8</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.8</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>58.8</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>3005</alim_code>
+    <alim_nom_fr>Raisin, cru</alim_nom_fr>
+    <alim_nom_eng>Grapes, raw</alim_nom_eng>
+    <alim_grp_code>G03</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>67</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.6</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.4</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>16.3</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>15.5</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>0.9</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>2</teneur></COMPO>
+  </ALIM>
+  <!-- G04: Dairy & Eggs -->
+  <ALIM>
+    <alim_code>4001</alim_code>
+    <alim_nom_fr>Lait demi-écrémé, UHT</alim_nom_fr>
+    <alim_nom_eng>Semi-skimmed milk, UHT</alim_nom_eng>
+    <alim_grp_code>G04</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>46</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>3.2</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>1.6</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>4.8</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>4.8</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>52</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>117</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>5</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>4002</alim_code>
+    <alim_nom_fr>Fromage, Emmental</alim_nom_fr>
+    <alim_nom_eng>Cheese, Emmental</alim_nom_eng>
+    <alim_grp_code>G04</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>382</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>28.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>29.7</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>337</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>1008</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>93</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>4003</alim_code>
+    <alim_nom_fr>Oeuf de poule entier, cru</alim_nom_fr>
+    <alim_nom_eng>Whole chicken egg, raw</alim_nom_eng>
+    <alim_grp_code>G04</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>143</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>12.6</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>9.5</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0.6</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.6</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>134</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>370</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>4004</alim_code>
+    <alim_nom_fr>Yaourt nature entier</alim_nom_fr>
+    <alim_nom_eng>Plain whole milk yogurt</alim_nom_eng>
+    <alim_grp_code>G04</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>62</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>3.5</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>3.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>5.1</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>5.1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>52</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>120</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>4005</alim_code>
+    <alim_nom_fr>Beurre demi-sel</alim_nom_fr>
+    <alim_nom_eng>Salted butter</alim_nom_eng>
+    <alim_grp_code>G04</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>745</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.6</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>82</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0.6</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.6</teneur></COMPO>
+    <COMPO><const_code>34100</const_code><teneur>52.1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>660</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>215</teneur></COMPO>
+  </ALIM>
+  <!-- G05: Meat & Poultry -->
+  <ALIM>
+    <alim_code>5001</alim_code>
+    <alim_nom_fr>Poulet, blanc (filet), cru</alim_nom_fr>
+    <alim_nom_eng>Chicken breast, raw</alim_nom_eng>
+    <alim_grp_code>G05</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>110</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>23.3</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>1.85</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>50</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>57</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>5002</alim_code>
+    <alim_nom_fr>Boeuf, steak haché, 15% MG, cru</alim_nom_fr>
+    <alim_nom_eng>Ground beef, 15% fat, raw</alim_nom_eng>
+    <alim_grp_code>G05</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>194</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>19</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>13</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>34100</const_code><teneur>5.5</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>60</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>68</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>5003</alim_code>
+    <alim_nom_fr>Agneau, gigot, cru</alim_nom_fr>
+    <alim_nom_eng>Lamb leg, raw</alim_nom_eng>
+    <alim_grp_code>G05</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>184</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>19.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>11.7</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>72</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>79</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>5004</alim_code>
+    <alim_nom_fr>Porc, côtelette, crue</alim_nom_fr>
+    <alim_nom_eng>Pork chop, raw</alim_nom_eng>
+    <alim_grp_code>G05</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>158</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>21.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>7.8</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>60</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>68</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>5005</alim_code>
+    <alim_nom_fr>Jambon cuit, supérieur</alim_nom_fr>
+    <alim_nom_eng>Cooked ham, superior</alim_nom_eng>
+    <alim_grp_code>G05</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>107</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>18.1</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>3.4</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0.5</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>890</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>47</teneur></COMPO>
+  </ALIM>
+  <!-- G06: Fish & Seafood -->
+  <ALIM>
+    <alim_code>6001</alim_code>
+    <alim_nom_fr>Saumon Atlantique, élevage, cru</alim_nom_fr>
+    <alim_nom_eng>Atlantic salmon, farmed, raw</alim_nom_eng>
+    <alim_grp_code>G06</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>208</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>20.4</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>13.4</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>34500</const_code><teneur>4.56</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>50</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>63</teneur></COMPO>
+    <COMPO><const_code>55400</const_code><teneur>11.1</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>6002</alim_code>
+    <alim_nom_fr>Cabillaud, cru</alim_nom_fr>
+    <alim_nom_eng>Cod, raw</alim_nom_eng>
+    <alim_grp_code>G06</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>80</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>17.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.7</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>58</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>43</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>6003</alim_code>
+    <alim_nom_fr>Thon en conserve, à l'huile, égoutté</alim_nom_fr>
+    <alim_nom_eng>Canned tuna in oil, drained</alim_nom_eng>
+    <alim_grp_code>G06</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>221</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>29</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>11.7</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>396</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>65</teneur></COMPO>
+  </ALIM>
+  <!-- G07: Oils, Fats & Condiments -->
+  <ALIM>
+    <alim_code>7001</alim_code>
+    <alim_nom_fr>Huile d'olive</alim_nom_fr>
+    <alim_nom_eng>Olive oil</alim_nom_eng>
+    <alim_grp_code>G07</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>900</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>100</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>34100</const_code><teneur>13.81</teneur></COMPO>
+    <COMPO><const_code>34400</const_code><teneur>72.96</teneur></COMPO>
+    <COMPO><const_code>34500</const_code><teneur>10.52</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>traces</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>56100</const_code><teneur>14.3</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>7002</alim_code>
+    <alim_nom_fr>Huile de tournesol</alim_nom_fr>
+    <alim_nom_eng>Sunflower oil</alim_nom_eng>
+    <alim_grp_code>G07</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>900</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>100</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>34100</const_code><teneur>10.1</teneur></COMPO>
+    <COMPO><const_code>34400</const_code><teneur>19.5</teneur></COMPO>
+    <COMPO><const_code>34500</const_code><teneur>65.7</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>0</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>7003</alim_code>
+    <alim_nom_fr>Vinaigre de vin rouge</alim_nom_fr>
+    <alim_nom_eng>Red wine vinegar</alim_nom_eng>
+    <alim_grp_code>G07</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>18</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.06</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>1.5</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>8</teneur></COMPO>
+  </ALIM>
+  <!-- G08: Herbs & Spices -->
+  <ALIM>
+    <alim_code>8001</alim_code>
+    <alim_nom_fr>Persil, frais</alim_nom_fr>
+    <alim_nom_eng>Parsley, fresh</alim_nom_eng>
+    <alim_grp_code>G08</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>36</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>3</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.8</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>2.7</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>3.3</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>56</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>133</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>8002</alim_code>
+    <alim_nom_fr>Basilic, frais</alim_nom_fr>
+    <alim_nom_eng>Basil, fresh</alim_nom_eng>
+    <alim_grp_code>G08</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>23</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>3.15</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.64</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>2.65</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.6</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>4</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>8003</alim_code>
+    <alim_nom_fr>Origan séché</alim_nom_fr>
+    <alim_nom_eng>Oregano, dried</alim_nom_eng>
+    <alim_grp_code>G08</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>265</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>9</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>4.28</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>64</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>42.5</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>25</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>1576</teneur></COMPO>
+  </ALIM>
+  <!-- G09: Nuts & Seeds -->
+  <ALIM>
+    <alim_code>9001</alim_code>
+    <alim_nom_fr>Noix de Grenoble, sèche</alim_nom_fr>
+    <alim_nom_eng>Walnut, dried</alim_nom_eng>
+    <alim_grp_code>G09</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>672</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>15.2</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>65.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>6.7</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>2.6</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>6.7</teneur></COMPO>
+    <COMPO><const_code>34500</const_code><teneur>47.2</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>2</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>9002</alim_code>
+    <alim_nom_fr>Amande sèche</alim_nom_fr>
+    <alim_nom_eng>Almond, dried</alim_nom_eng>
+    <alim_grp_code>G09</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>575</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>21.2</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>49.4</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>6.9</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>12.5</teneur></COMPO>
+    <COMPO><const_code>34400</const_code><teneur>31.6</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>248</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>9003</alim_code>
+    <alim_nom_fr>Graines de tournesol, nature, sèches</alim_nom_fr>
+    <alim_nom_eng>Sunflower seeds, plain, dried</alim_nom_eng>
+    <alim_grp_code>G09</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>584</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>20.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>51.5</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>11.4</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>9</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>9</teneur></COMPO>
+    <COMPO><const_code>56100</const_code><teneur>35.2</teneur></COMPO>
+  </ALIM>
+  <!-- G10: Sweeteners -->
+  <ALIM>
+    <alim_code>10001</alim_code>
+    <alim_nom_fr>Sucre blanc</alim_nom_fr>
+    <alim_nom_eng>White granulated sugar</alim_nom_eng>
+    <alim_grp_code>G10</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>400</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>100</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>100</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>traces</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>10002</alim_code>
+    <alim_nom_fr>Miel toutes fleurs</alim_nom_fr>
+    <alim_nom_eng>Wildflower honey</alim_nom_eng>
+    <alim_grp_code>G10</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>309</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.3</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>82.4</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>79.7</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>4</teneur></COMPO>
+  </ALIM>
+  <!-- G12: Beverages -->
+  <ALIM>
+    <alim_code>12001</alim_code>
+    <alim_nom_fr>Jus d'orange, pur jus</alim_nom_fr>
+    <alim_nom_eng>Orange juice, 100% pure</alim_nom_eng>
+    <alim_grp_code>G12</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>45</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.7</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>10.4</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>9.2</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>39</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>12002</alim_code>
+    <alim_nom_fr>Café, infusion</alim_nom_fr>
+    <alim_nom_eng>Coffee, brewed</alim_nom_eng>
+    <alim_grp_code>G12</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>2</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.12</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.01</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>5</teneur></COMPO>
+  </ALIM>
+  <!-- G13: Prepared Foods -->
+  <ALIM>
+    <alim_code>13001</alim_code>
+    <alim_nom_fr>Bouillon de poulet, préparé</alim_nom_fr>
+    <alim_nom_eng>Chicken broth, prepared</alim_nom_eng>
+    <alim_grp_code>G13</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>10</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>1.5</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.4</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0.1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>350</teneur></COMPO>
+  </ALIM>
+  <!-- Additional vegetables for completeness -->
+  <ALIM>
+    <alim_code>2006</alim_code>
+    <alim_nom_fr>Courgette, crue</alim_nom_fr>
+    <alim_nom_eng>Zucchini, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>17</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>1.21</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.32</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>3.11</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>2.5</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>8</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>2007</alim_code>
+    <alim_nom_fr>Poireau, cru</alim_nom_fr>
+    <alim_nom_eng>Leek, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>31</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>1.5</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.3</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>5.3</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>2</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.8</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>10</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>2008</alim_code>
+    <alim_nom_fr>Champignon de Paris, cru</alim_nom_fr>
+    <alim_nom_eng>Button mushroom, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>22</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>3.1</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.3</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>3.3</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>1.7</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>5</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>2009</alim_code>
+    <alim_nom_fr>Aubergine, crue</alim_nom_fr>
+    <alim_nom_eng>Eggplant (aubergine), raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>24</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>1</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>5.1</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>3.2</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.5</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>2</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>2010</alim_code>
+    <alim_nom_fr>Ail, cru</alim_nom_fr>
+    <alim_nom_eng>Garlic, raw</alim_nom_eng>
+    <alim_grp_code>G02</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>135</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>5.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.5</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>28.4</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.9</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>2.1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>17</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>31</teneur></COMPO>
+  </ALIM>
+  <!-- Additional proteins -->
+  <ALIM>
+    <alim_code>5006</alim_code>
+    <alim_nom_fr>Dinde, blanc (filet), cru</alim_nom_fr>
+    <alim_nom_eng>Turkey breast, raw</alim_nom_eng>
+    <alim_grp_code>G05</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>104</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>24.1</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.6</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>60</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>59</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>5007</alim_code>
+    <alim_nom_fr>Lentilles, vertes, cuites</alim_nom_fr>
+    <alim_nom_eng>Green lentils, cooked</alim_nom_eng>
+    <alim_grp_code>G05</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>116</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>9.02</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.38</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>20.1</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>1.8</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>7.9</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>238</teneur></COMPO>
+    <COMPO><const_code>10190</const_code><teneur>3.3</teneur></COMPO>
+  </ALIM>
+  <!-- More grains -->
+  <ALIM>
+    <alim_code>1006</alim_code>
+    <alim_nom_fr>Avoine, flocons</alim_nom_fr>
+    <alim_nom_eng>Oat flakes</alim_nom_eng>
+    <alim_grp_code>G01</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>367</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>13.5</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>7</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>55</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.9</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>9.7</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>4</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>52</teneur></COMPO>
+    <COMPO><const_code>10190</const_code><teneur>4.25</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>1007</alim_code>
+    <alim_nom_fr>Couscous, cuit</alim_nom_fr>
+    <alim_nom_eng>Couscous, cooked</alim_nom_eng>
+    <alim_grp_code>G01</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>112</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>3.79</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.16</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>23.2</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>0.1</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.4</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>5</teneur></COMPO>
+  </ALIM>
+  <!-- More fruits -->
+  <ALIM>
+    <alim_code>3006</alim_code>
+    <alim_nom_fr>Kiwi, cru</alim_nom_fr>
+    <alim_nom_eng>Kiwi fruit, raw</alim_nom_eng>
+    <alim_grp_code>G03</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>61</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>1.14</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.52</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>14.7</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>9</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>3</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>3</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>92.7</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>3007</alim_code>
+    <alim_nom_fr>Pêche, crue</alim_nom_fr>
+    <alim_nom_eng>Peach, raw</alim_nom_eng>
+    <alim_grp_code>G03</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>39</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>0.91</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.25</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>9.54</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>8.39</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>1.5</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>0</teneur></COMPO>
+  </ALIM>
+  <!-- More fish -->
+  <ALIM>
+    <alim_code>6004</alim_code>
+    <alim_nom_fr>Sardine, à l'huile, en conserve</alim_nom_fr>
+    <alim_nom_eng>Sardines in oil, canned</alim_nom_eng>
+    <alim_grp_code>G06</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>208</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>24.6</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>11.5</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>400</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>382</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>142</teneur></COMPO>
+  </ALIM>
+  <!-- More dairy -->
+  <ALIM>
+    <alim_code>4006</alim_code>
+    <alim_nom_fr>Fromage, Feta</alim_nom_fr>
+    <alim_nom_eng>Cheese, Feta</alim_nom_eng>
+    <alim_grp_code>G04</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>264</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>14.2</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>21.3</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>0</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>1150</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>493</teneur></COMPO>
+    <COMPO><const_code>51330</const_code><teneur>89</teneur></COMPO>
+  </ALIM>
+  <!-- Additional legumes (G01 - Grains & Starches for legumes) -->
+  <ALIM>
+    <alim_code>1008</alim_code>
+    <alim_nom_fr>Pois chiche, cuits</alim_nom_fr>
+    <alim_nom_eng>Chickpeas, cooked</alim_nom_eng>
+    <alim_grp_code>G01</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>164</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>8.86</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>2.59</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>27.4</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>4.8</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>7.6</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>24</teneur></COMPO>
+    <COMPO><const_code>10190</const_code><teneur>2.89</teneur></COMPO>
+  </ALIM>
+  <!-- More condiments -->
+  <ALIM>
+    <alim_code>7004</alim_code>
+    <alim_nom_fr>Moutarde de Dijon</alim_nom_fr>
+    <alim_nom_eng>Dijon mustard</alim_nom_eng>
+    <alim_grp_code>G07</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>61</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>4.8</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>3.8</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>3.8</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>3.7</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>760</teneur></COMPO>
+  </ALIM>
+  <!-- More nuts/seeds -->
+  <ALIM>
+    <alim_code>9004</alim_code>
+    <alim_nom_fr>Graines de sésame, nature</alim_nom_fr>
+    <alim_nom_eng>Sesame seeds, plain</alim_nom_eng>
+    <alim_grp_code>G09</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>598</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>18</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>50</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>23.5</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>8</teneur></COMPO>
+    <COMPO><const_code>34100</const_code><teneur>7</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>975</teneur></COMPO>
+    <COMPO><const_code>10190</const_code><teneur>14.6</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>9005</alim_code>
+    <alim_nom_fr>Pignons de pin</alim_nom_fr>
+    <alim_nom_eng>Pine nuts</alim_nom_eng>
+    <alim_grp_code>G09</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>673</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>13.7</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>68.4</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>4</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>3.7</teneur></COMPO>
+    <COMPO><const_code>34400</const_code><teneur>18.8</teneur></COMPO>
+    <COMPO><const_code>34500</const_code><teneur>34.1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>2</teneur></COMPO>
+  </ALIM>
+  <!-- More herbs/spices -->
+  <ALIM>
+    <alim_code>8004</alim_code>
+    <alim_nom_fr>Cannelle, en poudre</alim_nom_fr>
+    <alim_nom_eng>Cinnamon, ground</alim_nom_eng>
+    <alim_grp_code>G08</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>261</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>3.99</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>3.2</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>80.6</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>53.1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>10</teneur></COMPO>
+    <COMPO><const_code>10120</const_code><teneur>1002</teneur></COMPO>
+  </ALIM>
+  <ALIM>
+    <alim_code>8005</alim_code>
+    <alim_nom_fr>Thym, séché</alim_nom_fr>
+    <alim_nom_eng>Thyme, dried</alim_nom_eng>
+    <alim_grp_code>G08</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>276</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>9.1</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>7.43</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>63.9</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>37</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>55</teneur></COMPO>
+  </ALIM>
+  <!-- More prepared foods -->
+  <ALIM>
+    <alim_code>13002</alim_code>
+    <alim_nom_fr>Pâte de tomates</alim_nom_fr>
+    <alim_nom_eng>Tomato paste</alim_nom_eng>
+    <alim_grp_code>G13</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>82</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>4.3</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>0.4</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>18.9</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>13.4</teneur></COMPO>
+    <COMPO><const_code>51200</const_code><teneur>4.1</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>44</teneur></COMPO>
+    <COMPO><const_code>56200</const_code><teneur>39.2</teneur></COMPO>
+  </ALIM>
+  <!-- More beverages -->
+  <ALIM>
+    <alim_code>12003</alim_code>
+    <alim_nom_fr>Lait de coco</alim_nom_fr>
+    <alim_nom_eng>Coconut milk</alim_nom_eng>
+    <alim_grp_code>G12</alim_grp_code>
+    <COMPO><const_code>327</const_code><teneur>197</teneur></COMPO>
+    <COMPO><const_code>25000</const_code><teneur>2.02</teneur></COMPO>
+    <COMPO><const_code>40000</const_code><teneur>21.3</teneur></COMPO>
+    <COMPO><const_code>31000</const_code><teneur>2.8</teneur></COMPO>
+    <COMPO><const_code>32100</const_code><teneur>2.8</teneur></COMPO>
+    <COMPO><const_code>34100</const_code><teneur>18.9</teneur></COMPO>
+    <COMPO><const_code>10110</const_code><teneur>15</teneur></COMPO>
+  </ALIM>
+</Table_CIQUAL>

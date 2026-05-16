@@ -2,6 +2,7 @@
 
 use App\Models\Ingredient;
 use App\Models\IngredientTranslation;
+use Database\Seeders\IngredientCategorySeeder;
 
 /**
  * Covers INGR-02 (CIQUAL) — idempotent CIQUAL import command.
@@ -9,6 +10,10 @@ use App\Models\IngredientTranslation;
  * The command accepts a `--source-file` argument so the suite can run
  * against a small bundled fixture instead of the full bundled XML.
  */
+beforeEach(function () {
+    $this->seed(IngredientCategorySeeder::class);
+});
+
 test('the ciqual import command creates ingredient rows from a fixture', function () {
     $fixture = base_path('tests/fixtures/ingredients/ciqual-sample.xml');
 
