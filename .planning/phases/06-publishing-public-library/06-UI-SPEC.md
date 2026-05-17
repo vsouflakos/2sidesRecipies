@@ -75,12 +75,13 @@ Do not introduce any additional font sizes for this phase. The four declared siz
 | Destructive | `--destructive` oklch(0.577 0.245 27.325) light / oklch(0.396 0.141 25.723) dark | Unpublish confirmation dialog destructive action only |
 
 Accent (`--accent`) is reserved ONLY for:
-1. The "Published" status badge background on My Recipes cards
-2. The "Publish" primary CTA button (via `variant="default"` which uses `--primary`)
+1. The "Published" status badge background — on My Recipes cards and the recipe builder header.
 
-Note: The warm-minimal design system uses `--primary` (near-black) for the primary CTA button. Accent-colored elements are the Published badge only. All other interactive elements use `variant="default"` (primary) or `variant="secondary"` (muted).
+That is the single, exclusive use of `--accent` in this phase. No other element uses the accent token.
 
-Second semantic color: `--destructive` is used exclusively for the Unpublish confirmation button inside the alert dialog.
+Note: The "Publish recipe" CTA button uses `variant="default"`, which maps to `--primary` (near-black) — it does NOT use `--accent`. The warm-minimal design system reserves `--primary` for primary CTAs and `--secondary` for muted/secondary controls. The accent token is intentionally scarce.
+
+Second semantic color: `--destructive` is used exclusively for the Unpublish confirmation button inside the unpublish dialog.
 
 Source: `resources/css/app.css` — full token set established Phase 1.
 
@@ -115,7 +116,7 @@ This phase adds four distinct UI surfaces.
 The existing `RecipeCard` component gains a "Published" badge and a publish/unpublish menu item. No new card component is created.
 
 - "Published" badge: `<Badge>` using `variant="secondary"` with an accent-adjacent warm tone to distinguish it from the cuisine badge. Rendered in the card body below the recipe name, only when `is_published = true`.
-- Card menu (DropdownMenu already present from Phase 3): add "Publish recipe" item (when not published) and "Unpublish" item (when published) alongside existing "Edit" and "Delete" items.
+- Card menu (DropdownMenu already present from Phase 3): add "Publish recipe" item (when not published) and "Unpublish recipe" item (when published) alongside existing "Edit" and "Delete" items.
 - "Delete" menu item disabled state (visually muted, tooltip or inline message) when `is_published = true`. Do NOT hide the item — show it as disabled with a tooltip: "Unpublish this recipe before deleting it."
 
 Layout constraint: the badge sits on a single line between recipe name and cuisine badge. It does not wrap.
@@ -125,7 +126,7 @@ Layout constraint: the badge sits on a single line between recipe name and cuisi
 The existing `show.tsx` page gains a publish control in the page header area (alongside the existing Save and Recall actions).
 
 - When unpublished: a "Publish recipe" button (outline variant) in the header action group.
-- When published: a "Published" badge + "Unpublish" button (ghost variant) + conditional "Update to current version" inline cue.
+- When published: a "Published" badge + "Unpublish recipe" button (ghost variant) + conditional "Update to current version" inline cue.
 - "Update to current version" cue: rendered as a callout banner (`bg-muted rounded-md px-4 py-3`) directly below the header action row, only when `is_published = true` AND `published_version_id !== current_version_id`. Contains the cue text and an "Update to current" button (`variant="outline" size="sm"`).
 - The publish control area must not reflow the existing header layout. Use `flex items-center gap-2` within the existing action group.
 
@@ -185,16 +186,16 @@ Dialog structure (`Dialog` component):
 - Body: "Choose the version to make public. This version will be visible to all users."
 - `Select` component listing committed versions: label format "v{N} — saved {date}". Default selection: latest committed version.
 - Sub-recipe prerequisite error: if any sub-recipe is unpublished, the dialog body shows an inline `Alert` (destructive variant): "The following sub-recipes must be published first: {name list}." Publish button is disabled.
-- Footer: "Cancel" (`variant="ghost"`) + "Publish" (`variant="default"`)
+- Footer: "Don't publish" (`variant="ghost"`) + "Publish recipe" (`variant="default"`)
 
 ### Unpublish (confirmation dialog)
 
-Trigger: "Unpublish" button in builder header or card menu.
+Trigger: "Unpublish recipe" button in builder header or card menu.
 
 Dialog structure:
 - Title: "Unpublish Recipe" (20px semibold)
 - Body: "This recipe will be removed from the public library. Your recipe data is unchanged."
-- Footer: "Keep published" (`variant="ghost"`) + "Unpublish" (`variant="destructive"`)
+- Footer: "Keep published" (`variant="ghost"`) + "Unpublish recipe" (`variant="destructive"`)
 
 ### Delete-while-published (blocked)
 
@@ -218,15 +219,18 @@ All copy listed in both EN and EL (EN first, EL second).
 | Page title (library index) | "Library" | "Βιβλιοθήκη" |
 | Page title (public recipe) | "{recipe name}" | "{recipe name}" |
 | Primary CTA (publish) | "Publish recipe" | "Δημοσίευση συνταγής" |
-| Unpublish action | "Unpublish" | "Κατάργηση δημοσίευσης" |
+| Unpublish action | "Unpublish recipe" | "Κατάργηση δημοσίευσης συνταγής" |
 | Published badge | "Published" | "Δημοσιευμένη" |
 | Update public version button | "Update to current" | "Ενημέρωση στην τρέχουσα" |
 | Update cue banner | "New version available — update the public version?" | "Νέα έκδοση διαθέσιμη — ενημερώνετε τη δημόσια έκδοση;" |
 | Publish dialog title | "Publish Recipe" | "Δημοσίευση Συνταγής" |
 | Publish dialog body | "Choose the version to make public. This version will be visible to all users." | "Επιλέξτε την έκδοση που θα γίνει δημόσια. Η έκδοση αυτή θα είναι ορατή σε όλους τους χρήστες." |
+| Publish dialog confirm button | "Publish recipe" | "Δημοσίευση συνταγής" |
+| Publish dialog dismiss button | "Don't publish" | "Χωρίς δημοσίευση" |
 | Unpublish dialog title | "Unpublish Recipe" | "Κατάργηση Δημοσίευσης Συνταγής" |
 | Unpublish dialog body | "This recipe will be removed from the public library. Your recipe data is unchanged." | "Αυτή η συνταγή θα αφαιρεθεί από τη δημόσια βιβλιοθήκη. Τα δεδομένα σας παραμένουν αναλλοίωτα." |
-| Unpublish cancel | "Keep published" | "Διατήρηση δημοσίευσης" |
+| Unpublish dialog confirm button | "Unpublish recipe" | "Κατάργηση δημοσίευσης συνταγής" |
+| Unpublish dialog dismiss button | "Keep published" | "Διατήρηση δημοσίευσης" |
 | Delete-blocked tooltip | "Unpublish this recipe before deleting it." | "Καταργήστε τη δημοσίευση πριν τη διαγράψετε." |
 | Delete-blocked dialog title | "Cannot Delete Published Recipe" | "Δεν είναι δυνατή η Διαγραφή Δημοσιευμένης Συνταγής" |
 | Sub-recipe not published error | "{name} must be published before this recipe can be published." | "Το {name} πρέπει να δημοσιευτεί πριν από αυτή τη συνταγή." |
@@ -239,6 +243,8 @@ All copy listed in both EN and EL (EN first, EL second).
 | Library search empty (no results) heading | "No recipes match your search" | "Δεν βρέθηκαν συνταγές" |
 | Library search empty (no results) body | "Try different keywords or adjust your filters." | "Δοκιμάστε διαφορετικές λέξεις ή αλλάξτε τα φίλτρα σας." |
 | Library page author label | "by {name}" | "από {name}" |
+
+Note: no generic dismiss labels ("Cancel", "OK", "Close") are used. Each dialog dismiss button names the action being declined ("Don't publish", "Keep published").
 
 ---
 
@@ -322,7 +328,8 @@ No third-party registries are used in this phase. Registry safety gate: not appl
 | Update-version confirmation | None (one-click, no dialog) | CONTEXT.md: "update = one-click current" — intentional asymmetry |
 | Published badge style | `variant="secondary"` with `Globe` icon prefix | Warm-minimal; distinguishable from cuisine badge |
 | Library empty state | No CTA for guests (they have no recipes to publish) | Guests can read but cannot contribute in MVP |
-| "ingredient" filter exclusion | Confirmed excluded | Not in PUB-04 spec; ExcludeIngredient from library query params |
+| "ingredient" filter exclusion | Confirmed excluded | Not in PUB-04 spec; exclude ingredient from library query params |
+| Dialog dismiss labels | Action-specific ("Don't publish", "Keep published") | No generic "Cancel" — each label names the declined action |
 
 ---
 
