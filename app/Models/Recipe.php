@@ -110,4 +110,9 @@ class Recipe extends Model
     {
         return $this->hasOne(RecipeTest::class)->latestOfMany('tested_at');
     }
+
+    public function conversation(): HasOne
+    {
+        return $this->hasOne(RecipeConversation::class);
+    }
 }
