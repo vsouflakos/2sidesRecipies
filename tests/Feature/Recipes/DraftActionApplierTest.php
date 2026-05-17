@@ -276,6 +276,27 @@ it('resolves an ingredient_name to its ingredient_id when one exists', function 
         ->and($newLine['name'])->toBe('Caster Sugar');
 });
 
+it('resolves an ingredient_name to its ingredient_id case-insensitively', function () {
+    $ingredient = Ingredient::factory()->create(['name_cache' => 'Extra Virgin Olive Oil']);
+    IngredientTranslation::create([
+        'ingredient_id' => $ingredient->id,
+        'locale' => 'en',
+        'name' => 'Extra Virgin Olive Oil',
+    ]);
+
+    // The agent rarely reproduces catalog casing exactly.
+    [$owner, $recipe, $draft, $message] = makeEditProposal([
+        'action' => 'add_ingredient_line',
+        'data' => ['section_name' => 'Filling', 'ingredient_name' => 'extra virgin olive oil', 'quantity' => 30, 'unit' => 'g'],
+    ]);
+
+    app(SuggestionApplier::class)->apply($recipe->fresh(), $message);
+
+    $newLine = $draft->fresh()->data['sections'][1]['lines'][1];
+
+    expect($newLine['ingredient_id'])->toBe($ingredient->id);
+});
+
 it('fails gracefully when the targeted line id does not exist', function () {
     [$owner, $recipe, $draft, $message] = makeEditProposal([
         'action' => 'update_ingredient_line',

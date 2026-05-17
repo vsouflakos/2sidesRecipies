@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Models\RecipeConversation;
 use App\Models\RecipeConversationMessage;
@@ -87,4 +88,38 @@ it('propose_recipe_variant tool creates a tool_proposal message and returns a st
         'status' => 'pending',
     ]);
     expect($proposal->proposal_state['changes'])->not->toBeEmpty();
+});
+
+it('search_ingredients tool returns catalog matches within the owner visibility scope', function () {
+    $owner = User::factory()->create();
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+    $conversation = RecipeConversation::factory()->for($recipe)->create();
+
+    // Official ingredient — visible to every chef.
+    $official = Ingredient::factory()->create([
+        'user_id' => null,
+        'name_cache' => 'Extra Virgin Olive Oil',
+    ]);
+    // Another chef's private ingredient — must NOT leak into results.
+    $stranger = User::factory()->create();
+    Ingredient::factory()->create([
+        'user_id' => $stranger->id,
+        'name_cache' => 'Stranger Olive Oil',
+    ]);
+
+    $tools = app(AgentOrchestrator::class)->buildTools($recipe, $conversation);
+
+    $searchTool = collect($tools)->first(fn ($t) => $t->name() === 'search_ingredients');
+    expect($searchTool)->not->toBeNull();
+
+    $result = $searchTool->handle(query: 'olive oil');
+
+    expect($result)->toBeString()
+        ->and($result)->not->toBeInstanceOf(ToolError::class);
+
+    $matches = collect(json_decode($result, true)['matches']);
+
+    expect($matches->pluck('name'))->toContain('Extra Virgin Olive Oil')
+        ->and($matches->pluck('name'))->not->toContain('Stranger Olive Oil')
+        ->and($matches->firstWhere('name', 'Extra Virgin Olive Oil')['id'])->toBe($official->id);
 });

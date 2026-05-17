@@ -514,10 +514,14 @@ class DraftActionApplier
             return null;
         }
 
+        // Match case-insensitively — the agent rarely reproduces catalog casing
+        // exactly (e.g. "extra virgin olive oil" vs "Extra Virgin Olive Oil").
+        $lowerName = mb_strtolower((string) $name);
+
         $match = Ingredient::query()
-            ->whereHas('translations', fn ($q) => $q->where('name', $name))
+            ->whereHas('translations', fn ($q) => $q->whereRaw('LOWER(name) = ?', [$lowerName]))
             ->first()
-            ?? Ingredient::query()->where('name_cache', $name)->first();
+            ?? Ingredient::query()->whereRaw('LOWER(name_cache) = ?', [$lowerName])->first();
 
         if ($match === null) {
             // A free-text ingredient line is still valid — keep the name, no id.

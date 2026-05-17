@@ -2,6 +2,7 @@
 
 namespace App\Support\Recipes;
 
+use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Models\RecipeConversation;
 use Prism\Prism\Facades\Prism;
@@ -33,7 +34,7 @@ class AgentOrchestrator
             ->withStringParameter('summary', 'A short human-readable description of the change, e.g. "Reduce sugar 200 g to 150 g in Dough"')
             ->withStringParameter('dataJson', 'JSON object containing ONLY the action-specific delta fields — never the whole draft. Reference existing ids from the working-draft JSON in your context. '
                 .'update_metadata: any of {name, yield_amount, portions, prep_time_minutes, cook_time_minutes, difficulty, cuisine_id, notes, selling_price}. '
-                .'add_ingredient_line: {section_name OR section_id, ingredient_name OR ingredient_id, quantity, unit, prep_note?, yield_pct?, is_flour_base?}. '
+                .'add_ingredient_line: {section_name OR section_id, ingredient_id, quantity, unit, prep_note?, yield_pct?, is_flour_base?} — ALWAYS call search_ingredients first and pass a returned ingredient_id; only when the search finds no suitable match, omit ingredient_id and pass a free-text ingredient_name instead. '
                 .'remove_ingredient_line: {id} — the line id from the draft. '
                 .'update_ingredient_line: {id} (the line id from the draft) plus only the fields to change, e.g. {quantity}, {unit}, {prep_note}, {yield_pct}, {is_flour_base}, {name}. '
                 .'update_section: {section_id OR section_name, name?, order?}. '
@@ -74,7 +75,25 @@ class AgentOrchestrator
                 return json_encode(['proposal_recorded' => true, 'summary' => $summary]);
             });
 
-        return [$proposeRecipeEdit, $proposeRecipeVariant];
+        $searchIngredients = Tool::as('search_ingredients')
+            ->for('Search the ingredient catalog for ingredients matching a name. ALWAYS call this before proposing an add_ingredient_line edit, so the proposal references a real catalog ingredient by id instead of inventing a duplicate. Returns up to 10 matches as a JSON array of {id, name}. An empty result means no such ingredient exists yet.')
+            ->withStringParameter('query', 'The ingredient name or partial name to search for, e.g. "olive oil".')
+            ->using(function (string $query) use ($recipe): string {
+                // Owner-visibility scope: official ingredients (user_id null) plus
+                // the recipe owner's own private ingredients — mirrors RecipeSearchController.
+                $matches = Ingredient::query()
+                    ->where(fn ($q) => $q->whereNull('user_id')->orWhere('user_id', $recipe->user_id))
+                    ->where('name_cache', 'like', '%'.trim($query).'%')
+                    ->orderBy('name_cache')
+                    ->limit(10)
+                    ->get(['id', 'name_cache'])
+                    ->map(fn (Ingredient $i): array => ['id' => $i->id, 'name' => $i->name_cache])
+                    ->all();
+
+                return json_encode(['matches' => $matches]);
+            });
+
+        return [$proposeRecipeEdit, $proposeRecipeVariant, $searchIngredients];
     }
 
     /**
