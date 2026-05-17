@@ -7,6 +7,8 @@ use App\Http\Controllers\Dev\StyleguideController;
 use App\Http\Controllers\Ingredients\IngredientController;
 use App\Http\Controllers\Ingredients\IngredientPriceController;
 use App\Http\Controllers\Ingredients\PrivateIngredientController;
+use App\Http\Controllers\Library\LibraryController;
+use App\Http\Controllers\Recipes\PublishRecipeController;
 use App\Http\Controllers\Recipes\RecipeController;
 use App\Http\Controllers\Recipes\RecipeConversationController;
 use App\Http\Controllers\Recipes\RecipeDraftController;
@@ -21,6 +23,10 @@ use Laravel\Fortify\Features;
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
+
+// Guest-accessible public library routes — no auth middleware
+Route::get('library', [LibraryController::class, 'index'])->name('library.index');
+Route::get('library/{slug}', [LibraryController::class, 'show'])->name('library.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
@@ -53,6 +59,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('recipes/{recipe}/draft/recall', [RecipeDraftController::class, 'recall'])->name('recipes.draft.recall');
     Route::post('recipes/{recipe}/versions', [RecipeVersionController::class, 'store'])->name('recipes.versions.store');
     Route::post('recipes/{recipe}/duplicate', [RecipeDuplicateController::class, 'store'])->name('recipes.duplicate');
+    Route::post('recipes/{recipe}/publish', [PublishRecipeController::class, 'store'])->name('recipes.publish');
+    Route::delete('recipes/{recipe}/publish', [PublishRecipeController::class, 'destroy'])->name('recipes.unpublish');
 
     // Unified component search
     Route::get('search/components', [RecipeSearchController::class, 'index'])->name('search.components');

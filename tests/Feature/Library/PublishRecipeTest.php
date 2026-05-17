@@ -62,7 +62,7 @@ test('owner can publish a recipe and publish columns are set', function () {
         'version_id' => $version->id,
     ]);
 
-    $response->assertSuccessful()->orStatus(302);
+    $response->assertRedirect(route('recipes.show', $recipe));
 
     $recipe->refresh();
     expect($recipe->is_published)->toBeTrue();
@@ -166,7 +166,7 @@ test('owner can unpublish a recipe and publish columns are cleared', function ()
 
     $response = $this->actingAs($user)->delete(route('recipes.unpublish', $recipe));
 
-    $response->assertSuccessful()->orStatus(302);
+    $response->assertRedirect(route('recipes.show', $recipe));
 
     $recipe->refresh();
     expect($recipe->is_published)->toBeFalse();

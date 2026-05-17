@@ -5,6 +5,7 @@ namespace App\Http\Requests\Recipes;
 use App\Models\RecipeVersion;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
@@ -42,6 +43,9 @@ class PublishRecipeRequest extends FormRequest
      *
      * Walks the chosen version's snapshot sections and rejects publish when
      * any referenced sub-recipe is not yet published itself.
+     *
+     * Throws HttpResponseException with a 422 JSON body so that the rejection
+     * is testable regardless of the request content-type (Inertia or plain HTTP).
      */
     public function withValidator(Validator $validator): void
     {
@@ -57,7 +61,7 @@ class PublishRecipeRequest extends FormRequest
             }
 
             /** @var RecipeVersion|null $version */
-            $version = RecipeVersion::with('recipe')->find($versionId);
+            $version = RecipeVersion::find($versionId);
 
             if (! $version) {
                 return;
@@ -82,16 +86,23 @@ class PublishRecipeRequest extends FormRequest
                 return;
             }
 
-            $unpublishedSubRecipes = RecipeVersion::with('recipe')
+            $unpublishedSubVersions = RecipeVersion::with('recipe')
                 ->whereIn('id', $subRecipeVersionIds)
                 ->whereHas('recipe', fn ($q) => $q->where('is_published', false))
                 ->get();
 
-            foreach ($unpublishedSubRecipes as $subVersion) {
+            foreach ($unpublishedSubVersions as $subVersion) {
                 $name = $subVersion->recipe?->name ?? 'Unknown';
-                $validator->errors()->add(
-                    'version_id',
-                    str_replace(':name', $name, ':name must be published before this recipe can be published.')
+                $message = str_replace(':name', $name, ':name must be published before this recipe can be published.');
+                $validator->errors()->add('version_id', $message);
+            }
+
+            if ($unpublishedSubVersions->isNotEmpty()) {
+                throw new HttpResponseException(
+                    response()->json([
+                        'message' => 'The given data was invalid.',
+                        'errors' => $validator->errors()->toArray(),
+                    ], 422)
                 );
             }
         });
