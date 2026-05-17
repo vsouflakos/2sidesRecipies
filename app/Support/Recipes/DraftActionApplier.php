@@ -135,11 +135,13 @@ class DraftActionApplier
         $section = $draft['sections'][$sectionIndex];
         $lines = is_array($section['lines'] ?? null) ? $section['lines'] : [];
 
+        $ingredient = $this->resolveIngredient($delta);
+
         $line = [
             'id' => $this->nextNegativeId($draft),
-            'ingredient_id' => $this->resolveIngredientId($delta),
+            'ingredient_id' => $ingredient?->id,
             'sub_recipe_version_id' => $delta['sub_recipe_version_id'] ?? null,
-            'name' => $this->resolveLineName($delta),
+            'name' => $this->resolveLineName($delta, $ingredient),
             'quantity' => isset($delta['quantity']) ? (string) $delta['quantity'] : '0',
             'unit_id' => $this->resolveUnitId($delta),
             'prep_note' => $delta['prep_note'] ?? null,
@@ -214,7 +216,13 @@ class DraftActionApplier
             $line['unit_id'] = $this->resolveUnitId($delta);
         }
         if (array_key_exists('ingredient_id', $delta) || array_key_exists('ingredient_name', $delta)) {
-            $line['ingredient_id'] = $this->resolveIngredientId($delta);
+            $ingredient = $this->resolveIngredient($delta);
+            $line['ingredient_id'] = $ingredient?->id;
+
+            // Refresh the display name to the catalog name unless the delta set one explicitly.
+            if (! array_key_exists('name', $delta) && $ingredient !== null) {
+                $line['name'] = $ingredient->name_cache ?? $line['name'];
+            }
         }
 
         $draft['sections'][$sectionIndex]['lines'][$lineIndex] = $line;
@@ -497,16 +505,18 @@ class DraftActionApplier
     }
 
     /**
-     * Resolve an ingredient id from `ingredient_id`, or from `ingredient_name`.
+     * Resolve the catalog Ingredient a delta refers to — by `ingredient_id`, or
+     * by `ingredient_name` (case-insensitive, across translations and name_cache).
      *
-     * Returns null when neither is supplied (a free-text line is allowed).
+     * Returns null when neither is supplied or nothing matches; a free-text
+     * ingredient line is still valid in that case.
      *
      * @param  array<string, mixed>  $delta
      */
-    private function resolveIngredientId(array $delta): ?int
+    private function resolveIngredient(array $delta): ?Ingredient
     {
         if (array_key_exists('ingredient_id', $delta) && $delta['ingredient_id'] !== null) {
-            return (int) $delta['ingredient_id'];
+            return Ingredient::query()->find((int) $delta['ingredient_id']);
         }
 
         $name = $delta['ingredient_name'] ?? null;
@@ -518,25 +528,21 @@ class DraftActionApplier
         // exactly (e.g. "extra virgin olive oil" vs "Extra Virgin Olive Oil").
         $lowerName = mb_strtolower((string) $name);
 
-        $match = Ingredient::query()
+        return Ingredient::query()
             ->whereHas('translations', fn ($q) => $q->whereRaw('LOWER(name) = ?', [$lowerName]))
             ->first()
             ?? Ingredient::query()->whereRaw('LOWER(name_cache) = ?', [$lowerName])->first();
-
-        if ($match === null) {
-            // A free-text ingredient line is still valid — keep the name, no id.
-            return null;
-        }
-
-        return $match->id;
     }
 
     /**
-     * Resolve the display name for a new line.
+     * Resolve the display name for an ingredient line: an explicit `name`, then
+     * `ingredient_name`, then the resolved catalog ingredient's name. The third
+     * fallback is essential — when the agent passes only an `ingredient_id` the
+     * delta carries no name at all.
      *
      * @param  array<string, mixed>  $delta
      */
-    private function resolveLineName(array $delta): string
+    private function resolveLineName(array $delta, ?Ingredient $ingredient = null): string
     {
         if (isset($delta['name']) && $delta['name'] !== '') {
             return (string) $delta['name'];
@@ -546,7 +552,7 @@ class DraftActionApplier
             return (string) $delta['ingredient_name'];
         }
 
-        return '';
+        return $ingredient?->name_cache ?? '';
     }
 
     /**

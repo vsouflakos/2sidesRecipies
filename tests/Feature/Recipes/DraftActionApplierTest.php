@@ -297,6 +297,25 @@ it('resolves an ingredient_name to its ingredient_id case-insensitively', functi
     expect($newLine['ingredient_id'])->toBe($ingredient->id);
 });
 
+it('add_ingredient_line names the line from the catalog when only an ingredient_id is given', function () {
+    $ingredient = Ingredient::factory()->create(['name_cache' => 'Extra Virgin Olive Oil']);
+
+    // The agent, having searched the catalog, proposes only the ingredient_id —
+    // the delta carries no name at all.
+    [$owner, $recipe, $draft, $message] = makeEditProposal([
+        'action' => 'add_ingredient_line',
+        'data' => ['section_name' => 'Filling', 'ingredient_id' => $ingredient->id, 'quantity' => 200, 'unit' => 'ml'],
+    ]);
+
+    app(SuggestionApplier::class)->apply($recipe->fresh(), $message);
+
+    $newLine = $draft->fresh()->data['sections'][1]['lines'][1];
+
+    expect($newLine['ingredient_id'])->toBe($ingredient->id)
+        ->and($newLine['name'])->toBe('Extra Virgin Olive Oil')
+        ->and($newLine['quantity'])->toBe('200');
+});
+
 it('fails gracefully when the targeted line id does not exist', function () {
     [$owner, $recipe, $draft, $message] = makeEditProposal([
         'action' => 'update_ingredient_line',
