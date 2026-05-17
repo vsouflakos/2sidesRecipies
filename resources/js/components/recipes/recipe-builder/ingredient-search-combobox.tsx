@@ -199,7 +199,7 @@ export function IngredientSearchCombobox({
 
             {circularRefError && (
                 <p className="text-sm text-destructive">
-                    {t('app.recipes.circular_ref_error', { name: circularRefError })}
+                    {t('app.recipes.circular_ref_error', { name: circularRefError ?? '' })}
                 </p>
             )}
         </div>

@@ -86,14 +86,14 @@ export function RecipeCard({ recipe, className }: RecipeCardProps) {
                             <span>
                                 {t('app.recipes.card_cost', {
                                     currency: '€',
-                                    amount: recipe.cost_per_portion,
+                                    amount: recipe.cost_per_portion ?? '',
                                 })}
                             </span>
                         )}
                         {recipe.calories_per_portion !== null && (
                             <span>
                                 {t('app.recipes.card_calories', {
-                                    n: recipe.calories_per_portion,
+                                    n: recipe.calories_per_portion ?? '',
                                 })}
                             </span>
                         )}

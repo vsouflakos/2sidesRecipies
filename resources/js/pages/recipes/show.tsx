@@ -606,7 +606,7 @@ export default function RecipeShow({
                     <DialogHeader>
                         <DialogTitle>{t('app.recipes.delete_menu')}</DialogTitle>
                         <DialogDescription>
-                            {t('app.recipes.delete_body', { name: draft.name })}
+                            {t('app.recipes.delete_body', { name: draft.name ?? '' })}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
