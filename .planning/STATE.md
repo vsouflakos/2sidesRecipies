@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: "Phase 6 Plan 1 complete"
+stopped_at: "Phase 6 Plan 2 complete"
 last_updated: "2026-05-18T00:00:00.000Z"
-last_activity: 2026-05-18 — Phase 6 Plan 1 (Publish-State Foundation) complete
+last_activity: 2026-05-18 — Phase 6 Plan 2 (Publish/Unpublish Backend + Library Controller) complete
 progress:
   total_phases: 7
   completed_phases: 5
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 6 of 7 (Publishing & Public Library) — IN PROGRESS
-Plan: 1 of 4 complete
-Status: Phase 6 Plan 1 complete — publish-state foundation (migration, model, policy, Wave 0 RED tests, library stubs)
-Last activity: 2026-05-18 — Phase 6 Plan 1 complete
+Plan: 2 of 4 complete
+Status: Phase 6 Plan 2 complete — publish/unpublish backend (PublishRecipeController, LibraryController, 2 public resources, routes, Wayfinder)
+Last activity: 2026-05-18 — Phase 6 Plan 2 complete
 
 Progress: [██████████] 100%
 
@@ -77,6 +77,7 @@ Progress: [██████████] 100%
 | Phase 05-ai-agent PP02 | 16 | 3 tasks | 7 files |
 | Phase 05-ai-agent PP03 | 20 | 2 tasks | 3 files |
 | Phase 05-ai-agent P04 | — | 4 tasks | 17 files |
+| Phase 06-publishing-public-library P02 | 16 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -160,6 +161,10 @@ Recent decisions affecting current work:
 - [Phase 06-publishing-public-library]: published_version_id declared as plain unsignedBigInteger without FK constraint — follows Phase 3 deferred-FK pattern for nullable circular FKs
 - [Phase 06-publishing-public-library]: RecipeFactory default includes is_published => false so in-memory model reflects DB default immediately — avoids null vs false comparison failures in tests
 - [Phase 06-publishing-public-library]: Library stub pages (index.tsx, show.tsx) created before routes to prevent Vite manifest errors when Plan 02 routes are tested — established Phase 4 lesson
+- [Phase 06-publishing-public-library]: Sub-recipe validation throws HttpResponseException with JSON 422 — matches admin AssignRoleRequest pattern and ensures assertStatus(422) test passes regardless of request content-type
+- [Phase 06-publishing-public-library]: Wave 0 publish test assertions fixed from assertSuccessful()->orStatus(302) to assertRedirect() — publish/unpublish return 302 Inertia-style redirects, not 2xx responses
+- [Phase 06-publishing-public-library]: LibraryController has no Gate::authorize — where('is_published', true) scope IS the access control; adding Gate would cause false 403s for guests
+- [Phase 06-publishing-public-library]: PublicRecipeResource and PublicRecipeListResource read only publishedVersion cached columns — never re-resolve ingredient_id against live ingredients table per RESEARCH Anti-Patterns
 
 ### Pending Todos
 
@@ -171,6 +176,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-18T00:00:00.000Z
-Stopped at: Completed 06-01-PLAN.md
-Resume file: .planning/phases/06-publishing-public-library/06-01-SUMMARY.md
+Last session: 2026-05-17T23:47:51Z
+Stopped at: Completed 06-02-PLAN.md
+Resume file: .planning/phases/06-publishing-public-library/06-02-SUMMARY.md
