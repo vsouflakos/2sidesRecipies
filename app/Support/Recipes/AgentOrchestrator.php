@@ -5,6 +5,7 @@ namespace App\Support\Recipes;
 use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Models\RecipeConversation;
+use App\Models\Unit;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Facades\Tool;
 use Prism\Prism\ValueObjects\Messages\AssistantMessage;
@@ -28,6 +29,10 @@ class AgentOrchestrator
      */
     public function buildTools(Recipe $recipe, RecipeConversation $conversation): array
     {
+        // The valid `unit` symbols, embedded in the tool contract so the agent
+        // never invents one (e.g. "ea") that the applier cannot resolve.
+        $unitList = Unit::query()->orderBy('id')->pluck('symbol')->implode(', ');
+
         $proposeRecipeEdit = Tool::as('propose_recipe_edit')
             ->for('Propose a single structured edit to the recipe working draft. The user reviews it and clicks Apply or Dismiss. Does NOT change the draft directly. The edit is applied ON TOP of the current draft you see in context — never send a full new draft.')
             ->withStringParameter('action', 'The edit action — one of: update_metadata, add_ingredient_line, remove_ingredient_line, update_ingredient_line, update_section, add_step, update_step, apply_scale, add_sub_recipe')
@@ -41,7 +46,8 @@ class AgentOrchestrator
                 .'add_step: {section_name OR section_id, instruction}. '
                 .'update_step: {step_id, instruction}. '
                 .'apply_scale: {factor} or {scale_numerator, scale_denominator}. '
-                .'add_sub_recipe: {section_name OR section_id, sub_recipe_version_id, quantity, unit}.')
+                .'add_sub_recipe: {section_name OR section_id, sub_recipe_version_id, quantity, unit}. '
+                .'The `unit` field must be one of these exact symbols: '.$unitList.' — do NOT invent others (use "pc" for a countable piece).')
             ->using(function (string $action, string $summary, string $dataJson) use ($conversation): string {
                 $conversation->messages()->create([
                     'role' => 'tool_proposal',
@@ -76,14 +82,24 @@ class AgentOrchestrator
             });
 
         $searchIngredients = Tool::as('search_ingredients')
-            ->for('Search the ingredient catalog for ingredients matching a name. ALWAYS call this before proposing an add_ingredient_line edit, so the proposal references a real catalog ingredient by id instead of inventing a duplicate. Returns up to 10 matches as a JSON array of {id, name}. An empty result means no such ingredient exists yet.')
-            ->withStringParameter('query', 'The ingredient name or partial name to search for, e.g. "olive oil".')
+            ->for('Search the ingredient catalog for ingredients matching a name. ALWAYS call this before proposing an add_ingredient_line edit, so the proposal references a real catalog ingredient by id instead of inventing a duplicate. Catalog names may be phrased differently from common usage (e.g. "feta cheese" is stored as "Cheese, feta, whole milk, crumbled"), so inspect every match. Returns up to 10 matches as a JSON array of {id, name}. An empty result means no such ingredient exists yet.')
+            ->withStringParameter('query', 'The ingredient name or keywords to search for, e.g. "feta cheese" or "olive oil". Each word is matched independently, so word order and extra descriptive words do not matter.')
             ->using(function (string $query) use ($recipe): string {
+                // Match each whitespace-separated term independently (AND) so a
+                // multi-word query finds catalog names where the words are
+                // present but not contiguous — "feta cheese" matches
+                // "Cheese, feta, whole milk, crumbled".
+                $terms = preg_split('/\s+/', trim($query), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
                 // Owner-visibility scope: official ingredients (user_id null) plus
                 // the recipe owner's own private ingredients — mirrors RecipeSearchController.
                 $matches = Ingredient::query()
                     ->where(fn ($q) => $q->whereNull('user_id')->orWhere('user_id', $recipe->user_id))
-                    ->where('name_cache', 'like', '%'.trim($query).'%')
+                    ->where(function ($q) use ($terms): void {
+                        foreach ($terms as $term) {
+                            $q->where('name_cache', 'like', '%'.$term.'%');
+                        }
+                    })
                     ->orderBy('name_cache')
                     ->limit(10)
                     ->get(['id', 'name_cache'])
@@ -120,7 +136,10 @@ class AgentOrchestrator
             ->withSystemPrompt($this->contextBuilder->buildSystemPrompt($recipe))
             ->withMessages($messages)
             ->withTools($this->buildTools($recipe, $conversation))
-            ->withMaxSteps(5)
+            // Finishing a recipe can mean searching the catalog for and proposing
+            // many ingredients; 5 steps ran out mid-task. Allow room to search
+            // every ingredient before proposing it.
+            ->withMaxSteps(16)
             ->withMaxTokens($this->prismAdapter->maxTokens())
             ->asStream();
     }

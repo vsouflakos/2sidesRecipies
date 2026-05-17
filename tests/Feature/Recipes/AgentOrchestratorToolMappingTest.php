@@ -123,3 +123,22 @@ it('search_ingredients tool returns catalog matches within the owner visibility 
         ->and($matches->pluck('name'))->not->toContain('Stranger Olive Oil')
         ->and($matches->firstWhere('name', 'Extra Virgin Olive Oil')['id'])->toBe($official->id);
 });
+
+it('search_ingredients matches each query word independently against differently-phrased catalog names', function () {
+    $owner = User::factory()->create();
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+    $conversation = RecipeConversation::factory()->for($recipe)->create();
+
+    // The words "feta" and "cheese" are both present but not contiguous.
+    $feta = Ingredient::factory()->create([
+        'user_id' => null,
+        'name_cache' => 'Cheese, feta, whole milk, crumbled',
+    ]);
+
+    $tools = app(AgentOrchestrator::class)->buildTools($recipe, $conversation);
+    $searchTool = collect($tools)->first(fn ($t) => $t->name() === 'search_ingredients');
+
+    $matches = collect(json_decode($searchTool->handle(query: 'feta cheese'), true)['matches']);
+
+    expect($matches->firstWhere('id', $feta->id))->not->toBeNull();
+});
