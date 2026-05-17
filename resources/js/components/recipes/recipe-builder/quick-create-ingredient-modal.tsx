@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -51,7 +51,7 @@ export function QuickCreateIngredientModal({
     categories,
     onSuccess,
 }: QuickCreateIngredientModalProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     const { data, setData, post, processing, errors, reset } = useForm<QuickCreateFormData>({
         name_en: initialName,

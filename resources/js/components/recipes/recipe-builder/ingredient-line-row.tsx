@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { Trash2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -46,7 +46,7 @@ export function IngredientLineRow({
     circularError,
     className,
 }: IngredientLineRowProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [hovered, setHovered] = useState(false);
 
     const isSubRecipe = line.sub_recipe_version_id !== null && line.sub_recipe !== undefined;

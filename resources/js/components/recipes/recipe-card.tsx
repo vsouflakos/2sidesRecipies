@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { UtensilsCrossedIcon } from 'lucide-react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { AllergenIcons } from '@/components/ingredients/allergen-icons';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -14,7 +14,7 @@ type RecipeCardProps = {
 };
 
 export function RecipeCard({ recipe, className }: RecipeCardProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     const totalTime =
         (recipe.prep_time_minutes ?? 0) + (recipe.cook_time_minutes ?? 0);

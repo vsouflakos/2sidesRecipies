@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -81,7 +81,7 @@ export function SectionBlock({
     onDelete,
     className,
 }: SectionBlockProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [headerHovered, setHeaderHovered] = useState(false);
 

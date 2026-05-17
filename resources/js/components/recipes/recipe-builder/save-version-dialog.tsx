@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { toast } from 'sonner';
 import { store as storeVersion } from '@/actions/App/Http/Controllers/Recipes/RecipeVersionController';
 import { Button } from '@/components/ui/button';
@@ -32,7 +32,7 @@ export function SaveVersionDialog({
     open,
     onOpenChange,
 }: SaveVersionDialogProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [note, setNote] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 

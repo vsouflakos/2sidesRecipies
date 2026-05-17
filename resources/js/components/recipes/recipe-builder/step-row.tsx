@@ -1,4 +1,4 @@
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { ChevronDownIcon, ChevronUpIcon, ImagePlusIcon, Trash2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,7 +35,7 @@ export function StepRow({
     onDelete,
     className,
 }: StepRowProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     return (
         <div

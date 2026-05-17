@@ -1,4 +1,4 @@
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -36,7 +36,7 @@ function PanelContent({
     onSellingPriceChange,
     onApplyScale,
 }: MetricsPanelProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     if (!metrics) {
         return (
@@ -94,7 +94,7 @@ export function MetricsPanel({
     onSellingPriceChange,
     onApplyScale,
 }: MetricsPanelProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
 
     const kcalPerPortion = metrics?.nutrition.per_portion.energy_kcal;

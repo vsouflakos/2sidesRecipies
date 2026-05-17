@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { compare as compareVersions } from '@/actions/App/Http/Controllers/Recipes/RecipeVersionController';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,7 @@ export function VersionHistorySheet({
     versions,
     currentVersionNumber,
 }: VersionHistorySheetProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [selectedVersionIds, setSelectedVersionIds] = useState<number[]>([]);
 
     function handleCompareClick(versionId: number) {

@@ -1,4 +1,4 @@
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -39,7 +39,7 @@ function computeFoodCostPct(costPerPortion: string | null, sellingPrice: string)
 }
 
 export function CostSection({ cost, draftSellingPrice, onSellingPriceChange }: CostSectionProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [localSellingPrice, setLocalSellingPrice] = useState(draftSellingPrice ?? '');
 
     const liveFoodCostPct =

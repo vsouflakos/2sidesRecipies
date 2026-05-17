@@ -1,4 +1,4 @@
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { TriangleAlertIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -8,7 +8,7 @@ interface DataGapBannerProps {
 }
 
 export function DataGapBanner({ missingData }: DataGapBannerProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const safeMissingData = Array.isArray(missingData) ? missingData : [];
 
     if (safeMissingData.length === 0) {

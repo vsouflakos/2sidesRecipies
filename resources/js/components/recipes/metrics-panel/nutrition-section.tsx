@@ -1,4 +1,4 @@
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -23,7 +23,7 @@ function MetricRow({ label, value }: MetricRowProps) {
 }
 
 export function NutritionSection({ nutrition }: NutritionSectionProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [perPortion, setPerPortion] = useState(true);
 
     const slice = perPortion ? nutrition.per_portion : nutrition.per_100g;

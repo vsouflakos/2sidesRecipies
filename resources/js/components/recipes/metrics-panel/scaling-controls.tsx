@@ -1,4 +1,4 @@
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,7 @@ interface ScalingControlsProps {
 }
 
 export function ScalingControls({ draftPortions, onApplyScale }: ScalingControlsProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     /** Scale factor entered by the user (stored as a string for controlled input). */
     const [scaleInput, setScaleInput] = useState('1');

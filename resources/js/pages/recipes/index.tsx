@@ -1,7 +1,7 @@
 import { Head, router } from '@inertiajs/react';
 import { PlusIcon, SearchIcon } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { RecipeCard } from '@/components/recipes/recipe-card';
 import { RecipeFilters } from '@/components/recipes/recipe-filters';
 import type { RecipeFiltersState } from '@/components/recipes/recipe-filters';
@@ -53,7 +53,7 @@ interface RecipeIndexProps {
 const SKELETON_COUNT = 6;
 
 export default function RecipesIndex({ recipes, filters, cuisines, allergens, tags }: RecipeIndexProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     const [search, setSearch] = useState(filters.search ?? '');
     const [tag, setTag] = useState<number | null>(filters.tag ?? null);

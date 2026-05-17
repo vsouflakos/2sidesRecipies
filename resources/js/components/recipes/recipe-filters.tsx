@@ -1,7 +1,7 @@
 import { SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
 // onFiltersChange triggers router.reload({ only: ['recipes'], preserveState: true, replace: true }) in the parent
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -66,7 +66,7 @@ function countActiveFilters(filters: RecipeFiltersState): number {
 }
 
 function FiltersBody({ filters, cuisines, allergens, tags, onFiltersChange, className }: FiltersBodyProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [pendingAllergen, setPendingAllergen] = useState<string | null>(filters.allergen);
     const [allergenPopoverOpen, setAllergenPopoverOpen] = useState(false);
     const [tagCommandOpen, setTagCommandOpen] = useState(false);
@@ -235,7 +235,7 @@ function FiltersBody({ filters, cuisines, allergens, tags, onFiltersChange, clas
 }
 
 export function RecipeFilters({ filters, cuisines, allergens, tags, onFiltersChange }: RecipeFiltersProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [isOpen, setIsOpen] = useState(false);
     const activeCount = countActiveFilters(filters);
 

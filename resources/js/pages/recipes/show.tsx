@@ -1,5 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { useCallback, useState } from 'react';
 import {
     EllipsisVerticalIcon,
@@ -81,7 +81,7 @@ export default function RecipeShow({
     can,
     categories,
 }: ShowPageProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const { save, status } = useRecipeAutosave(recipe.id);
 
     const [draft, setDraft] = useState<RecipeDraft>(initialDraft ?? {

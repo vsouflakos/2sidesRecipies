@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { PlusIcon } from 'lucide-react';
 import {
     Command,
@@ -36,7 +36,7 @@ export function IngredientSearchCombobox({
     onQuickCreate,
     circularRefError,
 }: IngredientSearchComboboxProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');

@@ -1,4 +1,4 @@
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import type { BakersMetrics } from '@/types/recipe';
 
 interface BakersSectionProps {
@@ -6,7 +6,7 @@ interface BakersSectionProps {
 }
 
 export function BakersSection({ bakers }: BakersSectionProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     if (!bakers) {
         return null;

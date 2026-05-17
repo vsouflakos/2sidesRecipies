@@ -1,4 +1,4 @@
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { Badge } from '@/components/ui/badge';
 
 interface AllergenSectionProps {
@@ -17,7 +17,7 @@ function slugToName(slug: string): string {
 }
 
 export function AllergenSection({ contains, mayContain }: AllergenSectionProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const safeContains = Array.isArray(contains) ? contains : [];
     const safeMayContain = Array.isArray(mayContain) ? mayContain : [];
     const hasAllergens = safeContains.length > 0 || safeMayContain.length > 0;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -52,7 +52,7 @@ export function RecipeMetadataBlock({
     onChange,
     className,
 }: RecipeMetadataBlockProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const [isOpen, setIsOpen] = useState(false);
     const [tagsOpen, setTagsOpen] = useState(false);
 

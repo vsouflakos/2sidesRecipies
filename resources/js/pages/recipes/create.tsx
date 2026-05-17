@@ -1,5 +1,5 @@
 import { Head, useForm } from '@inertiajs/react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { store as recipesStore } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
@@ -10,7 +10,7 @@ interface RecipeCreateFormData {
 }
 
 export default function RecipeCreate() {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
     const { data, setData, post, processing, errors } = useForm<RecipeCreateFormData>({
         name: '',
     });

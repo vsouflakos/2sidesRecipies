@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { useLaravelReactI18n } from 'laravel-react-i18n';
+import { useTranslations } from '@/hooks/use-translations';
 import { VersionCompare } from '@/components/recipes/version-compare';
 import { Button } from '@/components/ui/button';
 import { show as showRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
@@ -39,7 +39,7 @@ export default function RecipeVersionsCompare({
     versionB,
     diff,
 }: ComparePageProps) {
-    const { t } = useLaravelReactI18n();
+    const { t } = useTranslations();
 
     // "Comparing {vA} → {vB}" — translation key: app.recipes.version_compare_heading
     const headingText = t('app.recipes.version_compare_heading', {
