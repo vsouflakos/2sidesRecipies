@@ -31,7 +31,7 @@ class AgentOrchestrator
             ->for('Propose a structured edit to the recipe working draft. The user reviews it and clicks Apply or Dismiss. Does NOT change the draft directly.')
             ->withStringParameter('action', 'The RecipeDraftManager action name — one of: update_metadata, add_ingredient_line, remove_ingredient_line, update_ingredient_line, update_section, add_step, update_step, apply_scale, add_sub_recipe')
             ->withStringParameter('summary', 'A short human-readable description of the change, e.g. "Reduce sugar 200 g to 150 g in Dough"')
-            ->withStringParameter('data_json', 'JSON-encoded full new draft data (or field/value delta) for the action')
+            ->withStringParameter('dataJson', 'JSON-encoded full new draft data (or field/value delta) for the action')
             ->using(function (string $action, string $summary, string $dataJson) use ($conversation): string {
                 $conversation->messages()->create([
                     'role' => 'tool_proposal',
@@ -50,7 +50,7 @@ class AgentOrchestrator
         $proposeRecipeVariant = Tool::as('propose_recipe_variant')
             ->for('Propose creating a new recipe variant (e.g. ingredient swaps) as a separate independent recipe. The user reviews and clicks Apply to create it.')
             ->withStringParameter('summary', 'Human-readable description of the variant, e.g. "Vegan version: butter to coconut oil, milk to oat milk"')
-            ->withStringParameter('changes_json', 'JSON-encoded array of draft edits to apply to the new variant recipe after duplication')
+            ->withStringParameter('changesJson', 'JSON-encoded array of draft edits to apply to the new variant recipe after duplication')
             ->using(function (string $summary, string $changesJson) use ($conversation): string {
                 $conversation->messages()->create([
                     'role' => 'tool_proposal',
