@@ -42,6 +42,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('recipes/{recipe}/tests', [RecipeTestController::class, 'index'])->name('recipes.tests.index');
     Route::get('recipes/{recipe}/conversation', [RecipeConversationController::class, 'show'])->name('recipes.conversation.show');
     Route::post('recipes/{recipe}/conversation/stream', [RecipeConversationController::class, 'stream'])->name('recipes.conversation.stream');
+    Route::post('recipes/{recipe}/conversation/messages/{message}/apply', [RecipeConversationController::class, 'apply'])->name('recipes.conversation.apply');
+    Route::post('recipes/{recipe}/conversation/messages/{message}/variant', [RecipeConversationController::class, 'variant'])->name('recipes.conversation.variant');
     Route::post('recipes/{recipe}/tests', [RecipeTestController::class, 'store'])->name('recipes.tests.store');
     Route::put('recipes/{recipe}/tests/{test}', [RecipeTestController::class, 'update'])->name('recipes.tests.update');
     Route::delete('recipes/{recipe}/tests/{test}', [RecipeTestController::class, 'destroy'])->name('recipes.tests.destroy');

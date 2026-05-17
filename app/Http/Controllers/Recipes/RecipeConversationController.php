@@ -6,9 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Recipes\SendConversationMessageRequest;
 use App\Models\Recipe;
 use App\Models\RecipeConversation;
+use App\Models\RecipeConversationMessage;
+use App\Models\RecipeDraft;
+use App\Models\RecipeSection;
 use App\Support\Recipes\AgentOrchestrator;
+use App\Support\Recipes\RecipeDraftManager;
+use App\Support\Recipes\RecipeVersionService;
+use App\Support\Recipes\SuggestionApplier;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Prism\Prism\Streaming\Events\TextDeltaEvent;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -16,6 +26,9 @@ class RecipeConversationController extends Controller
 {
     public function __construct(
         private readonly AgentOrchestrator $orchestrator,
+        private readonly SuggestionApplier $suggestionApplier,
+        private readonly RecipeVersionService $versionService,
+        private readonly RecipeDraftManager $draftManager,
     ) {}
 
     /**
@@ -121,6 +134,147 @@ class RecipeConversationController extends Controller
             'Content-Type' => 'text/event-stream; charset=utf-8',
             'Cache-Control' => 'no-cache, no-transform',
             'X-Accel-Buffering' => 'no',
+        ]);
+    }
+
+    /**
+     * Apply an accepted agent edit proposal to the recipe's working draft.
+     *
+     * The edit is validated through the same rules as UpdateRecipeDraftRequest
+     * before touching the draft (AI-07). On failure the proposal_state is marked
+     * 'failed' so the agent can receive the feedback on the next message.
+     *
+     * Returns 200 on success, 422 on validation failure, 409 for already-applied
+     * or variant proposals.
+     */
+    public function apply(Request $request, Recipe $recipe, RecipeConversationMessage $message): JsonResponse
+    {
+        Gate::authorize('update', $recipe);
+
+        // Scope guard: ensure the message belongs to this recipe's conversation
+        abort_unless($message->conversation->recipe_id === $recipe->id, 404);
+
+        try {
+            $this->suggestionApplier->apply($recipe, $message);
+
+            return response()->json(['status' => 'applied']);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 409);
+        }
+    }
+
+    /**
+     * Apply an accepted variant proposal: duplicate the recipe and apply the
+     * proposed changes to the new recipe's draft.
+     *
+     * The duplication reuses the same logic as RecipeDuplicateController::store —
+     * a new independent Recipe with its own v1 history and no lineage FK.
+     *
+     * Returns 200 with the variant recipe ID and URL on success.
+     */
+    public function variant(Request $request, Recipe $recipe, RecipeConversationMessage $message): JsonResponse
+    {
+        Gate::authorize('view', $recipe);
+
+        // Scope guard: ensure the message belongs to this recipe's conversation
+        abort_unless($message->conversation->recipe_id === $recipe->id, 404);
+
+        if (
+            data_get($message->proposal_state, 'kind') !== 'variant' ||
+            data_get($message->proposal_state, 'status') !== 'pending'
+        ) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Only pending variant proposals can be applied.',
+            ], 409);
+        }
+
+        $recipe->load(['currentVersion', 'draft']);
+
+        $variant = DB::transaction(function () use ($recipe, $message) {
+            // Duplicate the recipe — same logic as RecipeDuplicateController::store
+            $sourceSnapshot = $recipe->currentVersion?->snapshot ?? ($recipe->draft?->data ?? []);
+
+            $variantName = ($recipe->name ?? 'Recipe').' (variant)';
+
+            /** @var Recipe $variant */
+            $variant = Recipe::create([
+                'user_id' => auth()->id(),
+                'name' => $variantName,
+                'slug' => Str::slug($variantName).'-'.Str::random(6),
+                'yield_amount' => $recipe->yield_amount,
+                'yield_unit_id' => $recipe->yield_unit_id,
+                'portions' => $recipe->portions,
+                'prep_time_minutes' => $recipe->prep_time_minutes,
+                'cook_time_minutes' => $recipe->cook_time_minutes,
+                'difficulty' => $recipe->difficulty,
+                'cuisine_id' => $recipe->cuisine_id,
+                'notes' => $recipe->notes,
+                'selling_price' => $recipe->selling_price,
+            ]);
+
+            // Create a default first section for the variant
+            RecipeSection::create([
+                'recipe_id' => $variant->id,
+                'name' => 'Main',
+                'order' => 1,
+            ]);
+
+            // Build initial draft data from the source snapshot
+            $draftData = array_merge($sourceSnapshot, [
+                'name' => $variantName,
+            ]);
+
+            // Create the draft for the variant
+            $variantDraft = RecipeDraft::create([
+                'recipe_id' => $variant->id,
+                'user_id' => auth()->id(),
+                'data' => $draftData,
+                'edit_sequence' => 0,
+            ]);
+
+            // Load the draft relation so versionService can access it
+            $variant->load('draft');
+
+            // Commit v1 for the variant — its own independent history starting at v1
+            $this->versionService->commit($variant, null, auth()->id());
+
+            // Apply the proposed changes to the variant's draft
+            $changes = data_get($message->proposal_state, 'changes', []);
+
+            if (! empty($changes)) {
+                $variantDraft->refresh();
+
+                foreach ($changes as $change) {
+                    $changeAction = $change['action'] ?? 'update';
+                    $changeData = $change['data'] ?? [];
+                    $this->draftManager->applyEdit($variantDraft, $changeAction, $changeData);
+                    $variantDraft->refresh();
+                }
+            }
+
+            return $variant;
+        });
+
+        // Mark the proposal as applied on the original message
+        $proposalState = $message->proposal_state ?? [];
+        $proposalState['status'] = 'applied';
+        $proposalState['variant_recipe_id'] = $variant->id;
+        $message->proposal_state = $proposalState;
+        $message->save();
+
+        return response()->json([
+            'status' => 'applied',
+            'variant_recipe_id' => $variant->id,
+            'variant_url' => route('recipes.show', $variant),
         ]);
     }
 }
