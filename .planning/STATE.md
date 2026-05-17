@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 05-ai-agent-03-PLAN.md
-last_updated: "2026-05-17T17:02:12.937Z"
-last_activity: "2026-05-17 — Phase 4 Plan 04 complete: TestSummaryBlock + breadcrumb crash fix (React error #31); Phase 4 end-to-end human-verify APPROVED — all 4 plans done"
+stopped_at: Completed 05-ai-agent-04-PLAN.md
+last_updated: "2026-05-18T00:00:00.000Z"
+last_activity: "2026-05-18 — Phase 5 Plan 04 complete: AI chat UI; human-verify checkpoint APPROVED after 10 corrective commits — Phase 5 awaiting goal verification"
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 28
-  completed_plans: 27
+  completed_plans: 28
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-16)
 
 **Core value:** A chef can build a structured, versioned recipe and trust the professional metrics computed from its ingredients (nutrition, cost, yield, allergens).
-**Current focus:** Phase 3 — Recipe Core + Metrics (all plans complete)
+**Current focus:** Phase 5 — AI Agent (all plans complete, awaiting phase goal verification)
 
 ## Current Position
 
-Phase: 4 of 7 (Recipe Tests) — ALL PLANS COMPLETE
-Plan: 4 of 4 complete (04-04 recipe builder integration + end-to-end phase verification)
-Status: Plan 04-04 complete — Task 3 human-verify checkpoint APPROVED; Phase 4 fully complete
-Last activity: 2026-05-17 — Phase 4 Plan 04 complete: TestSummaryBlock + breadcrumb crash fix (React error #31); Phase 4 end-to-end human-verify APPROVED — all 4 plans done
+Phase: 5 of 7 (AI Agent) — ALL PLANS COMPLETE, awaiting phase goal verification
+Plan: 4 of 4 complete (05-04 AI chat UI + end-to-end human-verify checkpoint APPROVED)
+Status: Plan 05-04 complete — Task 4 human-verify checkpoint APPROVED after 10 corrective commits; Phase 5 awaiting gsd-verifier goal check
+Last activity: 2026-05-18 — Phase 5 Plan 04 complete: AI chat UI (streaming sheet, proposal cards, builder integration); checkpoint approved
 
 Progress: [██████████] 100%
 
@@ -76,6 +76,7 @@ Progress: [██████████] 100%
 | Phase 05-ai-agent P01 | 17 | 3 tasks | 14 files |
 | Phase 05-ai-agent PP02 | 16 | 3 tasks | 7 files |
 | Phase 05-ai-agent PP03 | 20 | 2 tasks | 3 files |
+| Phase 05-ai-agent P04 | — | 4 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -151,6 +152,10 @@ Recent decisions affecting current work:
 - [Phase 05-ai-agent]: buildMessages returns plain arrays not Prism objects — Wave 0 test toMatchArray(['role']) requires role key; AgentOrchestrator converts to UserMessage/AssistantMessage
 - [Phase 05-ai-agent]: Stream collects AI response synchronously before returning StreamedResponse — Laravel test infrastructure never executes stream callback; synchronous collection ensures DB persistence within HTTP lifecycle
 - [Phase 05-ai-agent]: SuggestionApplier merges recipeDraftDataRules and recipeMetadataRules for proposal validation — metadata rules prefixed with data. and required stripped to allow partial updates
+- [Phase 05-ai-agent]: Builder holds the draft in local React state — external mutations (AI Apply, Recall) must resync it explicitly via the partial-reload onSuccess; a useState initializer runs only at mount (discovered at 05-04 human-verify checkpoint)
+- [Phase 05-ai-agent]: Agent edits apply as deltas via DraftActionApplier, never a full-draft replace — preserves unrelated fields, keeps each Apply to one Recall step
+- [Phase 05-ai-agent]: Agent has a search_ingredients tool with tokenized name matching and a mandatory-search instruction so it links real catalog ingredients instead of inventing free-text duplicates; valid unit symbols embedded in the propose_recipe_edit contract
+- [Phase 05-ai-agent]: Prism::fake() Wave 0 tests cannot exercise SSE framing, the XSRF cookie, real streaming, or live tool-call ergonomics — those bugs only surfaced at the live human-verify checkpoint
 
 ### Pending Todos
 
@@ -162,6 +167,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-17T17:02:12.932Z
-Stopped at: Completed 05-ai-agent-03-PLAN.md
+Last session: 2026-05-18T00:00:00.000Z
+Stopped at: Completed 05-ai-agent-04-PLAN.md
 Resume file: None

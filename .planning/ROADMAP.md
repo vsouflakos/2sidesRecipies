@@ -106,7 +106,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] 05-01-PLAN.md — Prism install, provider-agnostic config + adapter, conversation data model, Wave 0 test suite
 - [ ] 05-02-PLAN.md — Context builder, agent orchestrator + tool surface, SSE streaming chat route, ai_enabled gate
 - [ ] 05-03-PLAN.md — Apply-suggestion path (validated draft edits) and AI variant creation via the Duplicate path
-- [ ] 05-04-PLAN.md — AI chat UI (sheet, proposal card, streaming), show.tsx integration, EN/EL i18n, end-to-end checkpoint
+- [x] 05-04-PLAN.md — AI chat UI (sheet, proposal card, streaming), show.tsx integration, EN/EL i18n, end-to-end checkpoint
 
 ### Phase 6: Publishing & Public Library
 **Goal**: Users can publish their recipes to a public library and browse other chefs' published recipes
@@ -140,6 +140,6 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 | 2. Ingredient Library | 6/6 | Complete   | 2026-05-16 |
 | 3. Recipe Core & Metrics | 8/8 | Complete   | 2026-05-17 |
 | 4. Recipe Tests | 4/4 | Complete   | 2026-05-17 |
-| 5. AI Agent | 3/4 | In Progress|  |
+| 5. AI Agent | 4/4 | Verifying  |  |
 | 6. Publishing & Public Library | 0/TBD | Not started | - |
 | 7. Ingredient Moderation | 0/TBD | Not started | - |
