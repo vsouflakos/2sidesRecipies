@@ -200,6 +200,12 @@ export interface RecipeCanFlags {
     duplicate: boolean;
 }
 
+/** Test summary aggregates passed from RecipeController::show. */
+export interface TestSummary {
+    count: number;
+    latest_score: number | null;
+}
+
 /** Full prop shape for the show (builder) page. */
 export interface RecipeShowProps {
     recipe: RecipeBuilderData;
@@ -209,5 +215,6 @@ export interface RecipeShowProps {
     cuisines: CuisineOption[];
     units: UnitOption[];
     tags: TagOption[];
+    test_summary: TestSummary;
     can: RecipeCanFlags;
 }

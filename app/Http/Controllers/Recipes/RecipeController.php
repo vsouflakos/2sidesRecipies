@@ -172,7 +172,8 @@ class RecipeController extends Controller
             'currentVersion',
             'cuisine',
             'tags',
-        ]);
+            'latestTest',
+        ])->loadCount('tests');
 
         $draft = $recipe->draft;
         $metrics = null;
@@ -231,6 +232,11 @@ class RecipeController extends Controller
             ])
             ->toArray();
 
+        $testSummary = [
+            'count' => $recipe->tests_count,
+            'latest_score' => $recipe->latestTest?->overall_rating,
+        ];
+
         return Inertia::render('recipes/show', [
             'recipe' => (new RecipeBuilderResource($recipe))->resolve(),
             'draft' => $draftData,
@@ -239,6 +245,7 @@ class RecipeController extends Controller
             'cuisines' => Cuisine::orderBy('name')->get(['id', 'name', 'slug']),
             'units' => Unit::orderBy('type')->orderBy('name')->get(['id', 'name', 'symbol', 'type']),
             'tags' => Tag::orderBy('name')->get(['id', 'name']),
+            'test_summary' => $testSummary,
             'can' => [
                 'update' => $request->user()->can('update', $recipe),
                 'delete' => $request->user()->can('delete', $recipe),

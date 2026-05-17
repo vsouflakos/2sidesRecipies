@@ -266,5 +266,9 @@ return [
         'toast_deleted' => 'Test deleted.',
         'toast_upload_error' => 'Photo upload failed. Please try again.',
         'toast_server_error' => 'Something went wrong. Please try again.',
+        'summary_has_tests' => ':count tests · Latest: :score/10',
+        'summary_no_tests' => 'No tests yet',
+        'summary_link' => 'View tests →',
+        'summary_link_empty' => 'Record first test',
     ],
 ];
