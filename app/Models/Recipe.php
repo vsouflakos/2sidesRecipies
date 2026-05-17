@@ -38,6 +38,9 @@ class Recipe extends Model
         'notes',
         'current_version_id',
         'selling_price',
+        'is_published',
+        'published_version_id',
+        'published_at',
     ];
 
     /**
@@ -53,6 +56,8 @@ class Recipe extends Model
             'portions' => 'decimal:4',
             'portion_size_g' => 'decimal:4',
             'selling_price' => 'decimal:4',
+            'is_published' => 'boolean',
+            'published_at' => 'datetime',
         ];
     }
 
@@ -94,6 +99,11 @@ class Recipe extends Model
     public function currentVersion(): BelongsTo
     {
         return $this->belongsTo(RecipeVersion::class, 'current_version_id');
+    }
+
+    public function publishedVersion(): BelongsTo
+    {
+        return $this->belongsTo(RecipeVersion::class, 'published_version_id');
     }
 
     public function draft(): HasOne
