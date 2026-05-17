@@ -37,6 +37,7 @@ import { QuickCreateIngredientModal } from '@/components/recipes/recipe-builder/
 import { SaveVersionDialog } from '@/components/recipes/recipe-builder/save-version-dialog';
 import { VersionHistorySheet } from '@/components/recipes/recipe-builder/version-history-sheet';
 import { MetricsPanel } from '@/components/recipes/metrics-panel/metrics-panel';
+import { TestSummaryBlock } from '@/components/recipes/test-summary-block';
 import { useRecipeAutosave } from '@/hooks/use-recipe-autosave';
 import { destroy as destroyRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
 import { store as duplicateRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeDuplicateController';
@@ -137,6 +138,7 @@ export default function RecipeShow({
     cuisines,
     units,
     tags: availableTags,
+    test_summary,
     can,
     categories,
 }: ShowPageProps) {
@@ -702,6 +704,10 @@ export default function RecipeShow({
                                 }))
                             }
                             onApplyScale={handleApplyScale}
+                        />
+                        <TestSummaryBlock
+                            recipeId={recipe.id}
+                            summary={test_summary}
                         />
                     </div>
                 </div>
