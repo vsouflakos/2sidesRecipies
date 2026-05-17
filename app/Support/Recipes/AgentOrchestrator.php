@@ -28,10 +28,19 @@ class AgentOrchestrator
     public function buildTools(Recipe $recipe, RecipeConversation $conversation): array
     {
         $proposeRecipeEdit = Tool::as('propose_recipe_edit')
-            ->for('Propose a structured edit to the recipe working draft. The user reviews it and clicks Apply or Dismiss. Does NOT change the draft directly.')
-            ->withStringParameter('action', 'The RecipeDraftManager action name — one of: update_metadata, add_ingredient_line, remove_ingredient_line, update_ingredient_line, update_section, add_step, update_step, apply_scale, add_sub_recipe')
+            ->for('Propose a single structured edit to the recipe working draft. The user reviews it and clicks Apply or Dismiss. Does NOT change the draft directly. The edit is applied ON TOP of the current draft you see in context — never send a full new draft.')
+            ->withStringParameter('action', 'The edit action — one of: update_metadata, add_ingredient_line, remove_ingredient_line, update_ingredient_line, update_section, add_step, update_step, apply_scale, add_sub_recipe')
             ->withStringParameter('summary', 'A short human-readable description of the change, e.g. "Reduce sugar 200 g to 150 g in Dough"')
-            ->withStringParameter('dataJson', 'JSON-encoded full new draft data (or field/value delta) for the action')
+            ->withStringParameter('dataJson', 'JSON object containing ONLY the action-specific delta fields — never the whole draft. Reference existing ids from the working-draft JSON in your context. '
+                .'update_metadata: any of {name, yield_amount, portions, prep_time_minutes, cook_time_minutes, difficulty, cuisine_id, notes, selling_price}. '
+                .'add_ingredient_line: {section_name OR section_id, ingredient_name OR ingredient_id, quantity, unit, prep_note?, yield_pct?, is_flour_base?}. '
+                .'remove_ingredient_line: {id} — the line id from the draft. '
+                .'update_ingredient_line: {id} (the line id from the draft) plus only the fields to change, e.g. {quantity}, {unit}, {prep_note}, {yield_pct}, {is_flour_base}, {name}. '
+                .'update_section: {section_id OR section_name, name?, order?}. '
+                .'add_step: {section_name OR section_id, instruction}. '
+                .'update_step: {step_id, instruction}. '
+                .'apply_scale: {factor} or {scale_numerator, scale_denominator}. '
+                .'add_sub_recipe: {section_name OR section_id, sub_recipe_version_id, quantity, unit}.')
             ->using(function (string $action, string $summary, string $dataJson) use ($conversation): string {
                 $conversation->messages()->create([
                     'role' => 'tool_proposal',
