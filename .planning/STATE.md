@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Phase 5 context gathered
-last_updated: "2026-05-17T15:08:33.796Z"
+stopped_at: Completed 05-ai-agent-01-PLAN.md
+last_updated: "2026-05-17T16:30:09.637Z"
 last_activity: "2026-05-17 — Phase 4 Plan 04 complete: TestSummaryBlock + breadcrumb crash fix (React error #31); Phase 4 end-to-end human-verify APPROVED — all 4 plans done"
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 24
-  completed_plans: 24
+  total_plans: 28
+  completed_plans: 25
   percent: 100
 ---
 
@@ -73,6 +73,7 @@ Progress: [██████████] 100%
 | Phase 04-recipe-tests P02 | 8 | 2 tasks | 8 files |
 | Phase 04-recipe-tests PP03 | 10 | 3 tasks | 8 files |
 | Phase 04-recipe-tests P04 | 45 | 3 tasks | 7 files |
+| Phase 05-ai-agent P01 | 17 | 3 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -142,6 +143,9 @@ Recent decisions affecting current work:
 - [Phase 04-recipe-tests]: TestPhotoGrid dual-mode via discriminated union (mode: upload|display) — single component, two distinct behaviors, no prop collision
 - [Phase 04-recipe-tests]: test_summary passed as sibling Inertia prop (not nested in RecipeBuilderResource) — consistent with metrics/versions/can sibling-prop pattern, keeps resource clean
 - [Phase 04-recipe-tests]: setLayoutProps() pattern required for dynamic breadcrumbs — layout.breadcrumbs = function causes React error #31 in production build; use setLayoutProps() inside useEffect as established by two-factor-challenge.tsx
+- [Phase 05-ai-agent]: No default AI provider baked in — AI_PROVIDER env must be set by deployer; empty string hides the AI feature (ai_enabled prop)
+- [Phase 05-ai-agent]: proposal_state JSON column stores {action, data, status, summary, kind} — status is pending|applied|dismissed|failed, kind is edit|variant
+- [Phase 05-ai-agent]: AgentContextBuilderTest uses TestCase+RefreshDatabase via uses() — Unit tests that use factories/IoC need Laravel app context even in Unit/ directory
 
 ### Pending Todos
 
@@ -153,6 +157,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-17T15:08:33.792Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-ai-agent/05-CONTEXT.md
+Last session: 2026-05-17T16:30:09.632Z
+Stopped at: Completed 05-ai-agent-01-PLAN.md
+Resume file: None
