@@ -38,6 +38,7 @@ import { SaveVersionDialog } from '@/components/recipes/recipe-builder/save-vers
 import { VersionHistorySheet } from '@/components/recipes/recipe-builder/version-history-sheet';
 import { MetricsPanel } from '@/components/recipes/metrics-panel/metrics-panel';
 import { TestSummaryBlock } from '@/components/recipes/test-summary-block';
+import { AiChatSheet } from '@/components/recipes/ai-chat/ai-chat-sheet';
 import { useRecipeAutosave } from '@/hooks/use-recipe-autosave';
 import { destroy as destroyRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
 import { store as duplicateRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeDuplicateController';
@@ -66,6 +67,8 @@ import type {
 interface ShowPageProps extends RecipeShowProps {
     /** Categories for quick-create ingredient modal. */
     categories: CategoryNode[];
+    /** Whether AI chat is enabled for this recipe (provider must be configured). */
+    ai_enabled: boolean;
 }
 
 /** Find the lowest numeric id used by any section, line, or step (0 when none). */
@@ -141,6 +144,7 @@ export default function RecipeShow({
     test_summary,
     can,
     categories,
+    ai_enabled: aiEnabled,
 }: ShowPageProps) {
     const { t } = useTranslations();
     const { save, status } = useRecipeAutosave(recipe.id);
@@ -520,6 +524,9 @@ export default function RecipeShow({
                             </span>
                         )}
                     </div>
+
+                    {/* AI chat trigger — only rendered when a provider is configured */}
+                    {aiEnabled && <AiChatSheet recipeId={recipe.id} />}
 
                     {/* Version history button */}
                     <VersionHistorySheet
