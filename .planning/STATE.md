@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 05-ai-agent-01-PLAN.md
-last_updated: "2026-05-17T16:30:09.637Z"
+stopped_at: Completed 05-ai-agent-02-PLAN.md
+last_updated: "2026-05-17T16:51:32.251Z"
 last_activity: "2026-05-17 — Phase 4 Plan 04 complete: TestSummaryBlock + breadcrumb crash fix (React error #31); Phase 4 end-to-end human-verify APPROVED — all 4 plans done"
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 28
-  completed_plans: 25
+  completed_plans: 26
   percent: 100
 ---
 
@@ -74,6 +74,7 @@ Progress: [██████████] 100%
 | Phase 04-recipe-tests PP03 | 10 | 3 tasks | 8 files |
 | Phase 04-recipe-tests P04 | 45 | 3 tasks | 7 files |
 | Phase 05-ai-agent P01 | 17 | 3 tasks | 14 files |
+| Phase 05-ai-agent PP02 | 16 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -146,6 +147,8 @@ Recent decisions affecting current work:
 - [Phase 05-ai-agent]: No default AI provider baked in — AI_PROVIDER env must be set by deployer; empty string hides the AI feature (ai_enabled prop)
 - [Phase 05-ai-agent]: proposal_state JSON column stores {action, data, status, summary, kind} — status is pending|applied|dismissed|failed, kind is edit|variant
 - [Phase 05-ai-agent]: AgentContextBuilderTest uses TestCase+RefreshDatabase via uses() — Unit tests that use factories/IoC need Laravel app context even in Unit/ directory
+- [Phase 05-ai-agent]: buildMessages returns plain arrays not Prism objects — Wave 0 test toMatchArray(['role']) requires role key; AgentOrchestrator converts to UserMessage/AssistantMessage
+- [Phase 05-ai-agent]: Stream collects AI response synchronously before returning StreamedResponse — Laravel test infrastructure never executes stream callback; synchronous collection ensures DB persistence within HTTP lifecycle
 
 ### Pending Todos
 
@@ -157,6 +160,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-17T16:30:09.632Z
-Stopped at: Completed 05-ai-agent-01-PLAN.md
+Last session: 2026-05-17T16:51:32.245Z
+Stopped at: Completed 05-ai-agent-02-PLAN.md
 Resume file: None
