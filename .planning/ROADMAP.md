@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Ingredient Library** - Official ingredient library with CIQUAL/USDA/OFF import pipeline and private ingredient creation
  (completed 2026-05-16)
 - [x] **Phase 3: Recipe Core & Metrics** - Structured recipes, versioning/draft layer, nested sub-recipes, and the full metrics engine (completed 2026-05-17)
-- [ ] **Phase 4: Recipe Tests** - Trial run and structured experiment recording against recipe versions
+- [x] **Phase 4: Recipe Tests** - Trial run and structured experiment recording against recipe versions (completed 2026-05-17)
 - [ ] **Phase 5: AI Agent** - Per-recipe conversational AI agent with scoped draft-editing tools
 - [ ] **Phase 6: Publishing & Public Library** - Publish/unpublish recipes and browse the public library
 - [ ] **Phase 7: Ingredient Moderation** - User ingredient submission and moderator review/promote workflow
@@ -135,7 +135,7 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 | 1. Foundation | 6/6 | Complete   | 2026-05-16 |
 | 2. Ingredient Library | 6/6 | Complete   | 2026-05-16 |
 | 3. Recipe Core & Metrics | 8/8 | Complete   | 2026-05-17 |
-| 4. Recipe Tests | 3/4 | In Progress|  |
+| 4. Recipe Tests | 4/4 | Complete   | 2026-05-17 |
 | 5. AI Agent | 0/TBD | Not started | - |
 | 6. Publishing & Public Library | 0/TBD | Not started | - |
 | 7. Ingredient Moderation | 0/TBD | Not started | - |

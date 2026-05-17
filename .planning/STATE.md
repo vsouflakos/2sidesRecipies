@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 04-recipe-tests-04-03-PLAN.md
-last_updated: "2026-05-17T11:30:50.732Z"
-last_activity: "2026-05-17 — Phase 3 Plan 08 complete: recipe list grid + six-filter panel + Recipes nav; Task 3 end-to-end human-verify checkpoint APPROVED"
+status: complete
+stopped_at: Completed 04-recipe-tests-04-04-PLAN.md
+last_updated: "2026-05-17T12:20:00.000Z"
+last_activity: "2026-05-17 — Phase 4 Plan 04 complete: TestSummaryBlock + breadcrumb crash fix (React error #31); Phase 4 end-to-end human-verify APPROVED — all 4 plans done"
 progress:
   total_phases: 7
   completed_phases: 3
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 
 ## Current Position
 
-Phase: 3 of 7 (Recipe Core + Metrics) — ALL PLANS COMPLETE
-Plan: 8 of 8 complete (03-08 recipe list grid + end-to-end phase verification)
-Status: Plan 03-08 complete — Task 3 human-verify checkpoint APPROVED; awaiting orchestrator phase-level verification
-Last activity: 2026-05-17 — Phase 3 Plan 08 complete: recipe list grid + six-filter panel + Recipes nav; Task 3 end-to-end human-verify checkpoint APPROVED
+Phase: 4 of 7 (Recipe Tests) — ALL PLANS COMPLETE
+Plan: 4 of 4 complete (04-04 recipe builder integration + end-to-end phase verification)
+Status: Plan 04-04 complete — Task 3 human-verify checkpoint APPROVED; Phase 4 fully complete
+Last activity: 2026-05-17 — Phase 4 Plan 04 complete: TestSummaryBlock + breadcrumb crash fix (React error #31); Phase 4 end-to-end human-verify APPROVED — all 4 plans done
 
 Progress: [██████████] 100%
 
@@ -72,6 +72,7 @@ Progress: [██████████] 100%
 | Phase 04-recipe-tests P01 | 25 | 3 tasks | 10 files |
 | Phase 04-recipe-tests P02 | 8 | 2 tasks | 8 files |
 | Phase 04-recipe-tests PP03 | 10 | 3 tasks | 8 files |
+| Phase 04-recipe-tests P04 | 45 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -139,6 +140,8 @@ Recent decisions affecting current work:
 - [Phase 04-recipe-tests]: abort_unless scope-check on nested resource before Gate::authorize — returns 404 before revealing ownership info
 - [Phase 04-recipe-tests]: Separate deletedPhotoIds state (not in form.data) — avoids serialization issues and keeps form.transform() clean for the _method: PUT injection on edit
 - [Phase 04-recipe-tests]: TestPhotoGrid dual-mode via discriminated union (mode: upload|display) — single component, two distinct behaviors, no prop collision
+- [Phase 04-recipe-tests]: test_summary passed as sibling Inertia prop (not nested in RecipeBuilderResource) — consistent with metrics/versions/can sibling-prop pattern, keeps resource clean
+- [Phase 04-recipe-tests]: setLayoutProps() pattern required for dynamic breadcrumbs — layout.breadcrumbs = function causes React error #31 in production build; use setLayoutProps() inside useEffect as established by two-factor-challenge.tsx
 
 ### Pending Todos
 
@@ -150,6 +153,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-17T11:30:50.727Z
-Stopped at: Completed 04-recipe-tests-04-03-PLAN.md
+Last session: 2026-05-17T12:20:00.000Z
+Stopped at: Completed 04-recipe-tests-04-04-PLAN.md
 Resume file: None
