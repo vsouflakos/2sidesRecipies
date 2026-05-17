@@ -121,7 +121,7 @@ Accent is NOT used for: primary buttons, test card hover state, photo thumbnails
 | Card | `ui/card.tsx` | Individual test cards on the tests index page |
 | Skeleton | `ui/skeleton.tsx` | Loading state for tests list (deferred props pattern) |
 | Sonner | `ui/sonner.tsx` | Toast feedback (test saved, test deleted, upload error) |
-| Tooltip | `ui/tooltip.tsx` | Photo limit reached tooltip, version picker helper |
+| Tooltip | `ui/tooltip.tsx` | Photo limit reached tooltip, icon-only action labels (test card action dropdown, lightbox arrows), version picker helper |
 | Separator | `ui/separator.tsx` | Modal section dividers, card internal dividers |
 
 ### New components to build (project-specific, not shadcn installs)
@@ -150,6 +150,8 @@ All required primitives are already in `resources/js/components/ui/`. Phase 4 ad
 **File:** `resources/js/pages/recipes/tests/index.tsx`
 **Layout:** Same app shell (sidebar + content area) as all other recipe pages.
 
+**Primary visual anchor:** The page focal point is the Display-size heading "Tests for {Recipe Name}" paired with the "Record test" primary CTA button immediately below it. These two elements together are the highest-priority visual element on the page — the user's eye should land here first, and recording a test is the page's primary action.
+
 **Page structure (top to bottom):**
 1. Breadcrumb: "Recipes → {Recipe Name} → Tests" — using existing breadcrumb pattern
 2. Page heading: "Tests for {Recipe Name}" (Display 28px/600) + "Back to recipe" ghost link aligned right
@@ -172,7 +174,7 @@ All required primitives are already in `resources/js/components/ui/`. Phase 4 ad
 
 1. **Card header row:**
    - Left: Type badge (`Trial` in `variant="secondary"` or `Experiment` in `variant="outline"`) + Version label ("v{N}" in Label/muted)
-   - Right: Tested date (Label/muted, e.g. "16 May 2026") + action dropdown (ellipsis icon, `DropdownMenu` with Edit / Delete)
+   - Right: Tested date (Label/muted, e.g. "16 May 2026") + action dropdown (ellipsis icon, `DropdownMenu` with Edit / Delete). The icon-only trigger is wrapped in a `Tooltip` with visible-on-hover label "Test actions" as a sighted-user fallback for the `aria-label`.
 
 2. **Overall score display:**
    - Large display: "{N}/10" — Heading size (20px/600) + accent foreground when score ≥ 7, muted-foreground when score < 7
@@ -255,11 +257,11 @@ All required primitives are already in `resources/js/components/ui/`. Phase 4 ad
 
 **Modal footer:**
 - Left: Character count for tasting notes ("0 / 5000") — Label/muted, visible when notes textarea is focused
-- Right: "Cancel" (secondary button) + "Save test" (default button, shows `Spinner` while submitting)
+- Right: "Discard changes" (secondary button) + "Save test" (default button, shows `Spinner` while submitting)
 
 **Validation inline errors:** Appear below the relevant field in Label/14px/`text-destructive`. Never use toast for field-level errors.
 
-**Modal close behaviour:** Closing via Cancel or the × button without saving leaves no orphaned files (photos not yet uploaded; local preview state is discarded).
+**Modal close behaviour:** Closing via "Discard changes" or the × button without saving leaves no orphaned files (photos not yet uploaded; local preview state is discarded).
 
 ---
 
@@ -296,7 +298,7 @@ All required primitives are already in `resources/js/components/ui/`. Phase 4 ad
 
 **On saved test card:** Up to 4 thumbnails shown inline (80×80px). Click any thumbnail → opens lightbox.
 
-**Lightbox:** shadcn `Dialog` with `max-w-3xl`. Shows the clicked photo full-size (`max-h-[80vh] object-contain`). Left/right arrow buttons (icon buttons with `ChevronLeftIcon` / `ChevronRightIcon`) to navigate between photos. Photo count indicator: "{current}/{total}" (Label/muted). Close via × or Escape.
+**Lightbox:** shadcn `Dialog` with `max-w-3xl`. Shows the clicked photo full-size (`max-h-[80vh] object-contain`). Left/right arrow buttons (icon buttons with `ChevronLeftIcon` / `ChevronRightIcon`) to navigate between photos — each arrow is wrapped in a `Tooltip` with visible-on-hover label ("Previous photo" / "Next photo") as a sighted-user fallback for the `aria-label`. Photo count indicator: "{current}/{total}" (Label/muted). Close via × or Escape.
 
 ---
 
@@ -338,11 +340,14 @@ All required primitives are already in `resources/js/components/ui/`. Phase 4 ad
 | Experiment section heading | "Experiment details" | Heading 20px/600, visible when type = experiment |
 | Save button (idle) | "Save test" | Default button |
 | Save button (loading) | Spinner + "Saving…" | Disabled while submitting |
-| Cancel button | "Cancel" | Secondary button |
+| Discard button | "Discard changes" | Secondary button — communicates unsaved test data and staged photos will be lost on close |
 | Delete dialog title | "Delete test?" | DialogTitle |
 | Delete dialog body | "This will permanently delete this test record, including all ratings, notes, and photos. This action cannot be undone." | DialogDescription |
 | Delete dismiss button | "Keep test" | Secondary variant |
 | Delete confirm button | "Delete test" | Destructive variant |
+| Test card action trigger | "Test actions" | Tooltip label on icon-only ellipsis trigger |
+| Lightbox previous arrow | "Previous photo" | Tooltip label on icon-only arrow |
+| Lightbox next arrow | "Next photo" | Tooltip label on icon-only arrow |
 | Toast: test saved | "Test recorded." | Sonner success |
 | Toast: test updated | "Test updated." | Sonner success |
 | Toast: test deleted | "Test deleted." | Sonner success |
@@ -377,7 +382,7 @@ All required primitives are already in `resources/js/components/ui/`. Phase 4 ad
 | Type toggle: Experiment selected | "Experiment" tab — `bg-accent text-accent-foreground font-semibold`; Experiment section revealed with smooth height transition |
 | Photo adding (staged, not yet uploaded) | Thumbnail shown with semi-transparent overlay badge "Pending" |
 | Photo removing (staged) | Thumbnail removed from local state immediately; no server call |
-| Form submitting | Save button shows Spinner + "Saving…", disabled; Cancel button disabled; entire form `pointer-events-none opacity-70` |
+| Form submitting | Save button shows Spinner + "Saving…", disabled; "Discard changes" button disabled; entire form `pointer-events-none opacity-70` |
 | Field validation error | Error text appears below field in `text-destructive text-sm`; field border changes to `border-destructive` |
 | Photo limit reached | Upload zone gets `opacity-50 cursor-not-allowed`; tooltip fires on hover: "Photo limit reached (8/8)" |
 
@@ -404,13 +409,13 @@ All required primitives are already in `resources/js/components/ui/`. Phase 4 ad
 
 - All interactive elements meet WCAG 2.5.5 (minimum 44×44px touch target).
 - Photo remove (×) buttons carry `aria-label="Remove photo {N}"` for screen-reader identification.
-- Photo thumbnail lightbox arrows carry `aria-label="Previous photo"` / `aria-label="Next photo"`.
+- Photo thumbnail lightbox arrows carry `aria-label="Previous photo"` / `aria-label="Next photo"` and a matching visible `Tooltip` label on hover/focus as a sighted-user fallback.
 - Rating dimension score inputs carry `aria-label="{Dimension} rating"` (e.g. `aria-label="Taste rating"`).
 - Modal uses Radix Dialog's built-in focus trap and `aria-modal="true"`.
 - Type toggle uses `role="group"` with `aria-label="Test type"`.
 - Delete confirmation dialog: destructive confirm button is NOT auto-focused on open — focus lands on the dismiss ("Keep test") button per WCAG destructive action pattern.
 - Version picker `Select` carries `aria-label="Recipe version for this test"`.
-- Test card action dropdown trigger carries `aria-label="Test actions"`.
+- Test card action dropdown trigger carries `aria-label="Test actions"` and a matching visible `Tooltip` label on hover/focus as a sighted-user fallback.
 - Photo upload drop zone carries `role="button"` and `tabIndex={0}` so keyboard users can activate it.
 
 ---
