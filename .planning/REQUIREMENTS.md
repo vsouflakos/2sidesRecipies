@@ -42,7 +42,7 @@ including the AI agent. Each maps to a roadmap phase.
 - [x] **RECIPE-09**: User can duplicate a recipe to create a new editable copy
 - [x] **RECIPE-10**: User can attach a hero image and optional step images to a recipe
 - [x] **RECIPE-11**: User can write free-text chef notes on a recipe
-- [ ] **RECIPE-12**: User can search and filter recipes by tag, cuisine, allergen, ingredient, difficulty, and time
+- [x] **RECIPE-12**: User can search and filter recipes by tag, cuisine, allergen, ingredient, difficulty, and time
 - [x] **RECIPE-13**: An ingredient line can carry a prep action and a yield/loss percentage
 
 ### Versioning & Working Draft
@@ -191,7 +191,7 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | RECIPE-09 | Phase 3 | Complete |
 | RECIPE-10 | Phase 3 | Complete |
 | RECIPE-11 | Phase 3 | Complete |
-| RECIPE-12 | Phase 3 | Pending |
+| RECIPE-12 | Phase 3 | Complete |
 | RECIPE-13 | Phase 3 | Complete |
 | VERSION-01 | Phase 3 | Complete |
 | VERSION-02 | Phase 3 | Complete |

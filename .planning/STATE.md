@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-recipe-core-metrics-07-PLAN.md
-last_updated: "2026-05-16T23:19:26.072Z"
+stopped_at: "Task 3 checkpoint (human-verify): 03-08 recipe list + phase verification"
+last_updated: "2026-05-17T09:26:05.881Z"
 last_activity: "2026-05-16 — Phase 2 Plan 05 complete: ingredient detail page, verification flow, human-verify checkpoint passed"
 progress:
   total_phases: 7
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 20
-  completed_plans: 19
+  completed_plans: 20
   percent: 35
 ---
 
@@ -68,6 +68,7 @@ Progress: [████░░░░░░] 35%
 | Phase 03-recipe-core-metrics P05 | 13 | 3 tasks | 13 files |
 | Phase 03-recipe-core-metrics P06 | 35 | 3 tasks | 10 files |
 | Phase 03-recipe-core-metrics P07 | 13 | 3 tasks | 8 files |
+| Phase 03-recipe-core-metrics P08 | 180 | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,9 @@ Recent decisions affecting current work:
 - [Phase 03-recipe-core-metrics]: Allergen display names resolved client-side via slugToName() — no extra server call needed; Apply to Draft uses integer rational (numerator/denominator=1000) not pre-rounded float
 - [Phase 03-recipe-core-metrics]: Sub-recipe update badge is a clickable button element wrapping a Badge for keyboard accessibility
 - [Phase 03-recipe-core-metrics]: edit_sequence added to RecipeBuilderData TS type to support Recall sequence guard client-side
+- [Phase 03-recipe-core-metrics]: MetricsAggregator reworked post-Task-2: PHP service output shape corrected to match TS types — per-portion not per-100g default, allergens as slug arrays, bakers as percentages map, missing_data as string[]
+- [Phase 03-recipe-core-metrics]: Draft metrics exposed via RecipeDraftController save response — avoids extra round-trip for live metrics panel update
+- [Phase 03-recipe-core-metrics]: show.tsx builder fully null-safe via safeStr() sanitizing wrapper — all t() calls guard against null section/ingredient names
 
 ### Pending Todos
 
@@ -135,6 +139,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-16T23:19:26.067Z
-Stopped at: Completed 03-recipe-core-metrics-07-PLAN.md
+Last session: 2026-05-17T09:26:05.875Z
+Stopped at: Task 3 checkpoint (human-verify): 03-08 recipe list + phase verification
 Resume file: None
