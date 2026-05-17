@@ -84,7 +84,24 @@ export default function RecipeShow({
     const { t } = useLaravelReactI18n();
     const { save, status } = useRecipeAutosave(recipe.id);
 
-    const [draft, setDraft] = useState<RecipeDraft>(initialDraft);
+    const [draft, setDraft] = useState<RecipeDraft>(initialDraft ?? {
+        id: recipe.id,
+        name: recipe.name,
+        slug: recipe.slug,
+        hero_image_path: recipe.hero_image_path,
+        cuisine_id: recipe.cuisine_id,
+        difficulty: recipe.difficulty,
+        yield_amount: recipe.yield_amount,
+        yield_unit_id: null,
+        portions: recipe.portions ? Number(recipe.portions) : null,
+        prep_time_minutes: recipe.prep_time_minutes,
+        cook_time_minutes: recipe.cook_time_minutes,
+        chef_notes: null,
+        selling_price: recipe.selling_price,
+        edit_sequence: 0,
+        sections: [],
+        tags: recipe.tags,
+    });
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [saveVersionOpen, setSaveVersionOpen] = useState(false);
     const [recallDisabled, setRecallDisabled] = useState(false);

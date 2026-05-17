@@ -18,7 +18,9 @@ function slugToName(slug: string): string {
 
 export function AllergenSection({ contains, mayContain }: AllergenSectionProps) {
     const { t } = useLaravelReactI18n();
-    const hasAllergens = contains.length > 0 || mayContain.length > 0;
+    const safeContains = Array.isArray(contains) ? contains : [];
+    const safeMayContain = Array.isArray(mayContain) ? mayContain : [];
+    const hasAllergens = safeContains.length > 0 || safeMayContain.length > 0;
 
     if (!hasAllergens) {
         return (
@@ -35,13 +37,13 @@ export function AllergenSection({ contains, mayContain }: AllergenSectionProps) 
         <section className="space-y-3">
             <h3 className="text-base font-semibold">{t('app.recipes.metrics_allergens')}</h3>
 
-            {contains.length > 0 && (
+            {safeContains.length > 0 && (
                 <div className="space-y-1.5">
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                         {t('app.recipes.metrics_contains')}
                     </p>
                     <div className="flex flex-wrap gap-1">
-                        {contains.map((slug) => (
+                        {safeContains.map((slug) => (
                             <Badge
                                 key={slug}
                                 variant="outline"
@@ -54,13 +56,13 @@ export function AllergenSection({ contains, mayContain }: AllergenSectionProps) 
                 </div>
             )}
 
-            {mayContain.length > 0 && (
+            {safeMayContain.length > 0 && (
                 <div className="space-y-1.5">
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                         {t('app.recipes.metrics_may_contain')}
                     </p>
                     <div className="flex flex-wrap gap-1">
-                        {mayContain.map((slug) => (
+                        {safeMayContain.map((slug) => (
                             <Badge
                                 key={slug}
                                 variant="outline"

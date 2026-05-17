@@ -146,6 +146,65 @@ test('GET /recipes returns allergen_slugs as a flat array for recipes with a str
     );
 });
 
+// --- Bug A regression: GET /search/components must return 200 JSON array even when no ingredients match ---
+
+test('GET /search/components returns 200 JSON array when query matches only a recipe (zero ingredients)', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    // Create a recipe whose name will match but no ingredients will match the query
+    Recipe::factory()->create(['user_id' => $user->id, 'name' => 'Zucchini Fritters']);
+
+    $response = $this->actingAs($user)->getJson('/search/components?q=Zucchini');
+
+    $response->assertOk();
+    $response->assertJsonIsArray();
+    // At least the recipe should be in results
+    $data = $response->json();
+    expect($data)->toBeArray();
+    $types = array_column($data, 'type');
+    expect(in_array('recipe', $types, true))->toBeTrue();
+});
+
+test('GET /search/components returns 200 JSON array when query matches nothing at all', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    $response = $this->actingAs($user)->getJson('/search/components?q=zzznomatchzzz');
+
+    $response->assertOk();
+    $response->assertJsonIsArray();
+    expect($response->json())->toBeArray()->toBeEmpty();
+});
+
+test('GET /search/components returns 200 JSON array for empty query', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    $response = $this->actingAs($user)->getJson('/search/components?q=');
+
+    $response->assertOk();
+    $response->assertJsonIsArray();
+});
+
+// --- Bug B regression: allergen_slugs on index page is always an array ---
+
+test('GET /recipes index returns allergen_slugs as a flat array regardless of cached_allergen_slugs format', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    // Recipe with null current_version → allergen_slugs must be []
+    Recipe::factory()->create(['user_id' => $user->id, 'name' => 'No Version']);
+
+    $response = $this->actingAs($user)->get('/recipes');
+
+    $response->assertOk();
+    $response->assertInertia(fn ($page) => $page
+        ->has('recipes.data', 1)
+        ->where('recipes.data.0.allergen_slugs', [])
+    );
+});
+
 test('GET /recipes filters by time range', function () {
     $user = User::factory()->create();
     $user->assignRole('User');

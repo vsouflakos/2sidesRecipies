@@ -105,15 +105,16 @@ export function RecipeMetadataBlock({
                     <div className="space-y-2">
                         <Label className="text-sm">{t('app.recipes.metadata_cuisine')}</Label>
                         <Select
-                            value={draft.cuisine_id !== null ? String(draft.cuisine_id) : undefined}
+                            value={draft.cuisine_id !== null ? String(draft.cuisine_id) : '__none__'}
                             onValueChange={(val) =>
-                                onChange({ cuisine_id: val ? Number(val) : null })
+                                onChange({ cuisine_id: val && val !== '__none__' ? Number(val) : null })
                             }
                         >
                             <SelectTrigger>
                                 <SelectValue placeholder={t('app.recipes.metadata_cuisine')} />
                             </SelectTrigger>
                             <SelectContent>
+                                <SelectItem value="__none__">{t('app.recipes.metadata_cuisine')}</SelectItem>
                                 {cuisines.map((cuisine) => (
                                     <SelectItem key={cuisine.id} value={String(cuisine.id)}>
                                         {cuisine.name}
@@ -127,10 +128,10 @@ export function RecipeMetadataBlock({
                     <div className="space-y-2">
                         <Label className="text-sm">{t('app.recipes.metadata_difficulty')}</Label>
                         <Select
-                            value={draft.difficulty ?? undefined}
+                            value={draft.difficulty ?? '__none__'}
                             onValueChange={(val) =>
                                 onChange({
-                                    difficulty: val as RecipeDraft['difficulty'] ?? null,
+                                    difficulty: (val && val !== '__none__' ? val : null) as RecipeDraft['difficulty'] ?? null,
                                 })
                             }
                         >
@@ -138,6 +139,7 @@ export function RecipeMetadataBlock({
                                 <SelectValue placeholder={t('app.recipes.metadata_difficulty')} />
                             </SelectTrigger>
                             <SelectContent>
+                                <SelectItem value="__none__">{t('app.recipes.metadata_difficulty')}</SelectItem>
                                 {difficultyOptions.map((opt) => (
                                     <SelectItem key={opt.value} value={opt.value}>
                                         {opt.label}
@@ -236,16 +238,17 @@ export function RecipeMetadataBlock({
                                 value={
                                     draft.yield_unit_id !== null
                                         ? String(draft.yield_unit_id)
-                                        : undefined
+                                        : '__none__'
                                 }
                                 onValueChange={(val) =>
-                                    onChange({ yield_unit_id: val ? Number(val) : null })
+                                    onChange({ yield_unit_id: val && val !== '__none__' ? Number(val) : null })
                                 }
                             >
                                 <SelectTrigger className="w-[100px]">
                                     <SelectValue placeholder="Unit" />
                                 </SelectTrigger>
                                 <SelectContent>
+                                    <SelectItem value="__none__">Unit</SelectItem>
                                     {units.map((unit) => (
                                         <SelectItem key={unit.id} value={String(unit.id)}>
                                             {unit.symbol}

@@ -133,13 +133,14 @@ export function QuickCreateIngredientModal({
                             {t('app.ingredients.create_category')}
                         </Label>
                         <Select
-                            value={data.category_id !== '' ? String(data.category_id) : undefined}
-                            onValueChange={(val) => setData('category_id', Number(val))}
+                            value={data.category_id !== '' ? String(data.category_id) : '__none__'}
+                            onValueChange={(val) => setData('category_id', val && val !== '__none__' ? Number(val) : '')}
                         >
                             <SelectTrigger id="quick-create-category" aria-invalid={!!errors.category_id}>
                                 <SelectValue placeholder={t('app.ingredients.create_category')} />
                             </SelectTrigger>
                             <SelectContent>
+                                <SelectItem value="__none__">{t('app.ingredients.create_category')}</SelectItem>
                                 {flatCategories.map((cat) => (
                                     <SelectItem key={cat.id} value={String(cat.id)}>
                                         {cat.name}

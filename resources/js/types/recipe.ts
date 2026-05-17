@@ -203,8 +203,8 @@ export interface RecipeCanFlags {
 /** Full prop shape for the show (builder) page. */
 export interface RecipeShowProps {
     recipe: RecipeBuilderData;
-    draft: RecipeDraft;
-    metrics: RecipeMetrics;
+    draft: RecipeDraft | null;
+    metrics: RecipeMetrics | null;
     versions: RecipeVersion[];
     cuisines: CuisineOption[];
     units: UnitOption[];

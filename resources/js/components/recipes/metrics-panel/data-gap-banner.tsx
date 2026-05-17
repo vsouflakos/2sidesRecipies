@@ -9,8 +9,9 @@ interface DataGapBannerProps {
 
 export function DataGapBanner({ missingData }: DataGapBannerProps) {
     const { t } = useLaravelReactI18n();
+    const safeMissingData = Array.isArray(missingData) ? missingData : [];
 
-    if (missingData.length === 0) {
+    if (safeMissingData.length === 0) {
         return null;
     }
 
@@ -21,7 +22,7 @@ export function DataGapBanner({ missingData }: DataGapBannerProps) {
             <AlertDescription>
                 <p className="font-medium">{t('app.recipes.metrics_gap_items')}</p>
                 <ul className="mt-1 list-inside list-disc space-y-0.5">
-                    {missingData.map((name) => (
+                    {safeMissingData.map((name) => (
                         <li key={name}>{name}</li>
                     ))}
                 </ul>

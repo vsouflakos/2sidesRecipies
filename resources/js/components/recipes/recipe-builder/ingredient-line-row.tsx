@@ -87,13 +87,14 @@ export function IngredientLineRow({
 
             {/* Unit */}
             <Select
-                value={line.unit_id !== null ? String(line.unit_id) : undefined}
-                onValueChange={(val) => onChange({ unit_id: val ? Number(val) : null })}
+                value={line.unit_id !== null ? String(line.unit_id) : '__none__'}
+                onValueChange={(val) => onChange({ unit_id: val && val !== '__none__' ? Number(val) : null })}
             >
                 <SelectTrigger className="w-[100px] shrink-0">
                     <SelectValue placeholder="Unit" />
                 </SelectTrigger>
                 <SelectContent>
+                    <SelectItem value="__none__">Unit</SelectItem>
                     {units.map((unit) => (
                         <SelectItem key={unit.id} value={String(unit.id)}>
                             {unit.symbol}

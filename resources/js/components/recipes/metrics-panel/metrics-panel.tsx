@@ -71,7 +71,7 @@ function PanelContent({
                 draftPortions={draftPortions}
                 onApplyScale={onApplyScale}
             />
-            {metrics.missing_data.length > 0 && (
+            {(Array.isArray(metrics.missing_data) ? metrics.missing_data : []).length > 0 && (
                 <>
                     <div className="border-t border-border" />
                     <DataGapBanner missingData={metrics.missing_data} />

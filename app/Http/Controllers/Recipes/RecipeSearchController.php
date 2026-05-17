@@ -56,6 +56,6 @@ class RecipeSearchController extends Controller
                 ])
             : collect();
 
-        return response()->json($ingredients->merge($recipes)->values());
+        return response()->json(collect($ingredients)->merge(collect($recipes))->values());
     }
 }
