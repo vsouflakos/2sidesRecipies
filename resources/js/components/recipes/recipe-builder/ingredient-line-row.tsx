@@ -87,7 +87,7 @@ export function IngredientLineRow({
 
             {/* Unit */}
             <Select
-                value={line.unit_id !== null ? String(line.unit_id) : ''}
+                value={line.unit_id !== null ? String(line.unit_id) : undefined}
                 onValueChange={(val) => onChange({ unit_id: val ? Number(val) : null })}
             >
                 <SelectTrigger className="w-[100px] shrink-0">

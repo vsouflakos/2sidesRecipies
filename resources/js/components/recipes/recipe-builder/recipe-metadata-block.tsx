@@ -105,7 +105,7 @@ export function RecipeMetadataBlock({
                     <div className="space-y-2">
                         <Label className="text-sm">{t('app.recipes.metadata_cuisine')}</Label>
                         <Select
-                            value={draft.cuisine_id !== null ? String(draft.cuisine_id) : ''}
+                            value={draft.cuisine_id !== null ? String(draft.cuisine_id) : undefined}
                             onValueChange={(val) =>
                                 onChange({ cuisine_id: val ? Number(val) : null })
                             }
@@ -127,7 +127,7 @@ export function RecipeMetadataBlock({
                     <div className="space-y-2">
                         <Label className="text-sm">{t('app.recipes.metadata_difficulty')}</Label>
                         <Select
-                            value={draft.difficulty ?? ''}
+                            value={draft.difficulty ?? undefined}
                             onValueChange={(val) =>
                                 onChange({
                                     difficulty: val as RecipeDraft['difficulty'] ?? null,
@@ -236,7 +236,7 @@ export function RecipeMetadataBlock({
                                 value={
                                     draft.yield_unit_id !== null
                                         ? String(draft.yield_unit_id)
-                                        : ''
+                                        : undefined
                                 }
                                 onValueChange={(val) =>
                                     onChange({ yield_unit_id: val ? Number(val) : null })

@@ -133,7 +133,7 @@ export function QuickCreateIngredientModal({
                             {t('app.ingredients.create_category')}
                         </Label>
                         <Select
-                            value={data.category_id !== '' ? String(data.category_id) : ''}
+                            value={data.category_id !== '' ? String(data.category_id) : undefined}
                             onValueChange={(val) => setData('category_id', Number(val))}
                         >
                             <SelectTrigger id="quick-create-category" aria-invalid={!!errors.category_id}>
