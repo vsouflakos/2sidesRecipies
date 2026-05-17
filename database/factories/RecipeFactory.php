@@ -38,6 +38,9 @@ class RecipeFactory extends Factory
             'notes' => null,
             'current_version_id' => null,
             'selling_price' => null,
+            'is_published' => false,
+            'published_version_id' => null,
+            'published_at' => null,
         ];
     }
 }
