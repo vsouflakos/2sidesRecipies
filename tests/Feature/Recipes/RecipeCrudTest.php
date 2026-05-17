@@ -100,6 +100,52 @@ test('GET /recipes/{recipe} renders the builder page with normalized draft data 
     });
 });
 
+test('GET /recipes/{recipe} renders builder without crashing when draft contains a section with a null name', function () {
+    // Regression test for the React Compiler + laravel-react-i18n crash:
+    // babel-plugin-react-compiler eagerly precomputes t('app.recipes.section_delete_body', {name: section.name})
+    // outside the Dialog gate. When section.name is null the replacer calls null.toString() and throws.
+    // The controller now normalises null section names to '' before sending draftData to the frontend.
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    // Create a recipe through the normal flow first
+    $createResponse = $this->actingAs($user)->post('/recipes', ['name' => 'Crash Test Recipe']);
+    $createResponse->assertRedirect();
+
+    $recipe = \App\Models\Recipe::where('user_id', $user->id)->first();
+    expect($recipe)->not->toBeNull();
+
+    // Manually inject a null-name section into the draft (mirrors the real-world bug shape).
+    $draft = $recipe->draft;
+    expect($draft)->not->toBeNull();
+
+    $data = $draft->data;
+    $data['sections'][] = [
+        'id' => -99,
+        'name' => null,
+        'order' => 2,
+        'lines' => [],
+        'steps' => [
+            ['id' => -1, 'instruction' => null, 'order' => 0, 'step_image_path' => null],
+        ],
+    ];
+    $draft->data = $data;
+    $draft->save();
+
+    // The builder page must return 200 — not crash.
+    $showResponse = $this->actingAs($user)->get("/recipes/{$recipe->id}");
+    $showResponse->assertOk();
+    $showResponse->assertInertia(function ($page) {
+        $page->component('recipes/show');
+        $page->has('draft.sections');
+
+        // The null name must be normalised to '' by the controller.
+        $page->where('draft.sections.1.name', '');
+        // The null instruction must be normalised to '' by the controller.
+        $page->where('draft.sections.1.steps.0.instruction', '');
+    });
+});
+
 test('ingredient lines accept weight, volume, and count units', function () {
     $user = User::factory()->create();
     $user->assignRole('User');

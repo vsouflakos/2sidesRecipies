@@ -190,11 +190,20 @@ class RecipeController extends Controller
         if ($draft !== null) {
             $data = $draft->data ?? [];
 
-            // Ensure each section has both a lines and a steps array, and an id field.
+            // Ensure each section has both a lines and a steps array, and a non-null name.
             if (isset($data['sections']) && is_array($data['sections'])) {
                 $data['sections'] = array_map(function (array $section) {
+                    // Null section names crash the React Compiler-precomputed t() call.
+                    $section['name'] = $section['name'] ?? '';
                     $section['lines'] = is_array($section['lines'] ?? null) ? $section['lines'] : [];
                     $section['steps'] = is_array($section['steps'] ?? null) ? $section['steps'] : [];
+
+                    // Ensure step instructions are strings (null crashes controlled Textarea).
+                    $section['steps'] = array_map(function (array $step) {
+                        $step['instruction'] = $step['instruction'] ?? '';
+
+                        return $step;
+                    }, $section['steps']);
 
                     return $section;
                 }, $data['sections']);

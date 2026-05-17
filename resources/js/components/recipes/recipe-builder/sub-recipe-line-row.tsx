@@ -53,7 +53,7 @@ export function SubRecipeLineRow({
     const pinnedVersion = subRecipe?.version_number ?? 0;
     const latestVersion = subRecipe?.latest_version_number ?? 0;
     const hasUpdateAvailable = latestVersion > pinnedVersion;
-    const subRecipeName = subRecipe?.name ?? line.name;
+    const subRecipeName = subRecipe?.name ?? line.name ?? '';
 
     function handleConfirmUpdate() {
         onUpdatePin(line);

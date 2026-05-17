@@ -225,7 +225,7 @@ export function SectionBlock({
                     <DialogHeader>
                         <DialogTitle>{t('app.recipes.section_delete_confirm')}</DialogTitle>
                         <DialogDescription>
-                            {t('app.recipes.section_delete_body', { name: section.name })}
+                            {t('app.recipes.section_delete_body', { name: section.name ?? '' })}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
