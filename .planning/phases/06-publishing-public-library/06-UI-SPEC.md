@@ -1,10 +1,11 @@
 ---
 phase: 6
 slug: publishing-public-library
-status: draft
+status: approved
 shadcn_initialized: true
 preset: new-york / neutral / radix
 created: 2026-05-18
+reviewed_at: 2026-05-18T00:00:00Z
 ---
 
 # Phase 6 — UI Design Contract
