@@ -104,7 +104,14 @@ export function MessageList({
                     className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-2 text-[16px] text-destructive-foreground"
                     role="alert"
                 >
-                    {t('app.ai.stream_error')}{' '}
+                    {(() => {
+                        const lastAssistant = [...messages]
+                            .reverse()
+                            .find((m) => m.role === 'assistant');
+                        const detail =
+                            lastAssistant?.content?.trim() ? lastAssistant.content : null;
+                        return detail ?? t('app.ai.stream_error');
+                    })()}{' '}
                     <Button
                         type="button"
                         variant="link"

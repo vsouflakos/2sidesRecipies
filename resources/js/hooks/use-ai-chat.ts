@@ -92,6 +92,8 @@ export function useAiChat(recipeId: number): {
             /** Buffer for partial SSE lines across chunks. */
             let buffer = '';
             let currentEvent = '';
+            /** Whether the stream resolved cleanly via a done or error event. */
+            let streamResolved = false;
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -126,11 +128,23 @@ export function useAiChat(recipeId: number): {
                                         ),
                                     );
                                 } else if (currentEvent === 'done') {
+                                    streamResolved = true;
                                     setStatus('idle');
                                     /** Re-fetch so server-persisted proposal cards appear. */
                                     await loadHistory();
                                 } else if (currentEvent === 'error') {
+                                    streamResolved = true;
+                                    const errorText =
+                                        typeof payload.message === 'string' ? payload.message : '';
+                                    setMessages((prev) =>
+                                        prev.map((m) =>
+                                            m.id === streamingId
+                                                ? { ...m, content: errorText }
+                                                : m,
+                                        ),
+                                    );
                                     setStatus('error');
+                                    return;
                                 }
                             } catch {
                                 // Malformed JSON — skip line
@@ -140,6 +154,14 @@ export function useAiChat(recipeId: number): {
                         }
                     }
                 }
+            }
+
+            /** Stream closed without a done or error event — resolve to error state. */
+            if (!streamResolved) {
+                setMessages((prev) =>
+                    prev.map((m) => (m.id === streamingId ? { ...m, content: '' } : m)),
+                );
+                setStatus('error');
             }
         } catch {
             setStatus('error');

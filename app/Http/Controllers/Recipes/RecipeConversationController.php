@@ -17,6 +17,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Prism\Prism\Streaming\Events\TextDeltaEvent;
@@ -105,6 +106,9 @@ class RecipeConversationController extends Controller
                 'content' => $fullContent,
             ]);
         } catch (\Throwable $e) {
+            Log::error('AI stream error for recipe '.$recipe->id, [
+                'exception' => $e,
+            ]);
             $errorMessage = $e->getMessage();
         }
 
