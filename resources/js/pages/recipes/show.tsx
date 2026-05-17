@@ -184,6 +184,45 @@ export default function RecipeShow({
 
         return tempIdRef.current;
     }
+
+    /**
+     * Resync the builder's local draft state from a server-provided draft.
+     *
+     * The builder holds the draft in local React state (seeded once at mount),
+     * so a partial Inertia reload that refreshes the `draft` prop is NOT
+     * reflected automatically. External mutations — an applied AI proposal or a
+     * Recall — must call this so the builder shows the server's authoritative
+     * draft. The builder's own debounced autosave deliberately does NOT call it:
+     * resyncing there would drop keystrokes typed during the save round-trip.
+     */
+    const syncDraftFromServer = useCallback(
+        (fresh: RecipeDraft | null | undefined): void => {
+            if (!fresh) {
+                return;
+            }
+
+            const normalized = normalizeDraft(fresh);
+            // Keep the temp-id source below every id now present in the draft.
+            tempIdRef.current = Math.min(tempIdRef.current, collectMinId(normalized));
+            setDraft(normalized);
+        },
+        [],
+    );
+
+    /**
+     * Reload draft + metrics from the server and resync builder state.
+     * Invoked by the AI chat sheet after a proposal is applied so the builder
+     * behind the sheet reflects the AI's edit.
+     */
+    const handleAiDraftRefresh = useCallback((): void => {
+        router.reload({
+            only: ['draft', 'metrics'],
+            onSuccess: (page) => {
+                syncDraftFromServer(page.props.draft as RecipeDraft);
+            },
+        });
+    }, [syncDraftFromServer]);
+
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [saveVersionOpen, setSaveVersionOpen] = useState(false);
     const [recallDisabled, setRecallDisabled] = useState(false);
@@ -445,7 +484,9 @@ export default function RecipeShow({
                 preserveState: true,
                 preserveScroll: true,
                 only: ['draft', 'metrics'],
-                onSuccess: () => {
+                onSuccess: (page) => {
+                    /** Resync builder state — the reverted draft lives only in the prop. */
+                    syncDraftFromServer(page.props.draft as RecipeDraft);
                     toast.success(t('app.recipes.recall_toast'));
                 },
                 onError: (errors) => {
@@ -526,7 +567,12 @@ export default function RecipeShow({
                     </div>
 
                     {/* AI chat trigger — only rendered when a provider is configured */}
-                    {aiEnabled && <AiChatSheet recipeId={recipe.id} />}
+                    {aiEnabled && (
+                        <AiChatSheet
+                            recipeId={recipe.id}
+                            onDraftRefresh={handleAiDraftRefresh}
+                        />
+                    )}
 
                     {/* Version history button */}
                     <VersionHistorySheet

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { router } from '@inertiajs/react';
 import { MessageCircleIcon, SendIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -18,6 +17,8 @@ import { MessageList } from './message-list';
 
 interface AiChatSheetProps {
     recipeId: number;
+    /** Resync the recipe builder from the server after a proposal is applied. */
+    onDraftRefresh: () => void;
 }
 
 /**
@@ -26,7 +27,7 @@ interface AiChatSheetProps {
  * Loads conversation history on open, supports streaming agent replies,
  * starter prompts, proposal apply/dismiss, and builder refresh on apply.
  */
-export function AiChatSheet({ recipeId }: AiChatSheetProps) {
+export function AiChatSheet({ recipeId, onDraftRefresh }: AiChatSheetProps) {
     const { t } = useTranslations();
     const [open, setOpen] = useState(false);
     const [inputText, setInputText] = useState('');
@@ -71,8 +72,8 @@ export function AiChatSheet({ recipeId }: AiChatSheetProps) {
         const success = await applyProposal(messageId);
 
         if (success) {
-            /** Reload draft and metrics so the builder behind the sheet reflects the change. */
-            router.reload({ only: ['draft', 'metrics'] });
+            /** Resync the builder behind the sheet so it reflects the applied edit. */
+            onDraftRefresh();
         }
 
         return success;
@@ -82,7 +83,7 @@ export function AiChatSheet({ recipeId }: AiChatSheetProps) {
         const success = await applyVariant(messageId);
 
         if (success) {
-            router.reload({ only: ['draft', 'metrics'] });
+            onDraftRefresh();
         }
 
         return success;
