@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Ingredient Library** - Official ingredient library with CIQUAL/USDA/OFF import pipeline and private ingredient creation
  (completed 2026-05-16)
 - [x] **Phase 3: Recipe Core & Metrics** - Structured recipes, versioning/draft layer, nested sub-recipes, and the full metrics engine (completed 2026-05-17)
-- [x] **Phase 4: Recipe Tests** - Trial run and structured experiment recording against recipe versions (completed 2026-05-17)
+- [x] **Phase 4: Recipe Tests** - Trial run and structured experiment recording against recipe versions (completed 2026-05-17)
 - [x] **Phase 5: AI Agent** - Per-recipe conversational AI agent with scoped draft-editing tools (completed 2026-05-18)
 - [ ] **Phase 6: Publishing & Public Library** - Publish/unpublish recipes and browse the public library
 - [ ] **Phase 7: Ingredient Moderation** - User ingredient submission and moderator review/promote workflow
@@ -116,7 +116,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. Recipes default to private and are not visible to other users until explicitly published
   2. User can publish a recipe to the public library and unpublish it at any time
   3. Any user can browse and search the public library of published recipes by name, tag, cuisine, allergen, difficulty, and time
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 06-01-PLAN.md — Publish-state schema, RecipePolicy guest-view + delete-block, Wave 0 RED test scaffold, library stub pages
+- [ ] 06-02-PLAN.md — Backend: PublishRecipeController, guest LibraryController (index + slug show), public resources, routes, Wayfinder
+- [ ] 06-03-PLAN.md — Frontend: publish dialogs + builder/card controls, public library page, public recipe page, guest layout, nav, EN/EL i18n, checkpoint
 
 ### Phase 7: Ingredient Moderation
 **Goal**: Users can submit private ingredients for inclusion in the official library, and moderators can review, approve, or reject submissions
@@ -141,5 +144,5 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 | 3. Recipe Core & Metrics | 8/8 | Complete   | 2026-05-17 |
 | 4. Recipe Tests | 4/4 | Complete   | 2026-05-17 |
 | 5. AI Agent | 4/4 | Complete   | 2026-05-18 |
-| 6. Publishing & Public Library | 0/TBD | Not started | - |
+| 6. Publishing & Public Library | 0/3 | Planned | - |
 | 7. Ingredient Moderation | 0/TBD | Not started | - |
