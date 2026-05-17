@@ -1,10 +1,11 @@
 ---
 phase: 5
 slug: ai-agent
-status: draft
+status: approved
 shadcn_initialized: true
 preset: "new-york / neutral / cssVariables"
 created: 2026-05-17
+reviewed_at: 2026-05-17
 ---
 
 # Phase 5 — UI Design Contract
