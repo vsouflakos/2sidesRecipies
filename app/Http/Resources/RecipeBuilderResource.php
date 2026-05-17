@@ -33,6 +33,9 @@ class RecipeBuilderResource extends JsonResource
             'current_version_number' => $this->currentVersion?->version_number,
             'edit_sequence' => $this->draft?->edit_sequence,
             'tags' => $this->tags->map(fn ($tag) => ['id' => $tag->id, 'name' => $tag->name]),
+            'is_published' => (bool) $this->is_published,
+            'published_version_id' => $this->published_version_id,
+            'current_version_id' => $this->currentVersion?->id,
             'sections' => $this->sections->map(fn ($section) => [
                 'id' => $section->id,
                 'name' => $section->name,

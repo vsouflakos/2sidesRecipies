@@ -74,6 +74,7 @@ class RecipeListResource extends JsonResource
                 ? (string) $caloriesPerPortion
                 : null,
             'allergen_slugs' => $this->flattenAllergenSlugs($version?->cached_allergen_slugs),
+            'is_published' => (bool) $this->is_published,
         ];
     }
 }

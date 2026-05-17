@@ -16,6 +16,43 @@ export interface RecipeCardData {
     cost_per_portion: string | null;
     calories_per_portion: string | null;
     allergen_slugs: string[];
+    is_published: boolean;
+}
+
+/** Shape of a single published recipe item on the public library grid (from PublicRecipeListResource). */
+export interface PublicRecipeCardData {
+    id: number;
+    name: string;
+    slug: string;
+    hero_image_path: string | null;
+    cuisine: string | null;
+    total_time: number | null;
+    prep_time_minutes: number | null;
+    cook_time_minutes: number | null;
+    difficulty: 'easy' | 'medium' | 'hard' | 'expert' | null;
+    calories_per_portion: string | null;
+    allergen_slugs: string[];
+    author_name: string;
+}
+
+/** Shape of the full public recipe detail (from PublicRecipeResource). */
+export interface PublicRecipeData {
+    id: number;
+    name: string;
+    slug: string;
+    hero_image_path: string | null;
+    cuisine: string | null;
+    difficulty: string | null;
+    total_time: number | null;
+    author_name: string;
+    published_at: string | null;
+    sections: Array<{
+        name: string;
+        lines: Array<{ quantity: string; unit: string | null; name: string }>;
+        steps: Array<{ order: number; instruction: string }>;
+    }>;
+    nutrition: Record<string, unknown> | null;
+    allergen_slugs: string[];
 }
 
 /** Cuisine option from seeded list. */
@@ -93,6 +130,12 @@ export interface RecipeBuilderData {
     edit_sequence: number;
     sections: RecipeSection[];
     tags: TagOption[];
+    /** Whether this recipe is currently published to the public library. */
+    is_published: boolean;
+    /** The recipe version ID that is currently published (null if not published). */
+    published_version_id: number | null;
+    /** The ID of the current (latest committed) version. */
+    current_version_id: number | null;
 }
 
 /** Working draft shape — mirrors RecipeBuilderData. */

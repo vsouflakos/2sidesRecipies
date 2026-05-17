@@ -3,11 +3,13 @@ import { useTranslations } from '@/hooks/use-translations';
 import { useCallback, useRef, useState } from 'react';
 import {
     EllipsisVerticalIcon,
+    GlobeIcon,
     ImageIcon,
     PlusIcon,
     XIcon,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -31,6 +33,8 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { PublishRecipeDialog } from '@/components/recipes/publish-recipe-dialog';
+import { UnpublishRecipeDialog } from '@/components/recipes/unpublish-recipe-dialog';
 import { SectionBlock } from '@/components/recipes/recipe-builder/section-block';
 import { RecipeMetadataBlock } from '@/components/recipes/recipe-builder/recipe-metadata-block';
 import { QuickCreateIngredientModal } from '@/components/recipes/recipe-builder/quick-create-ingredient-modal';
@@ -41,6 +45,7 @@ import { TestSummaryBlock } from '@/components/recipes/test-summary-block';
 import { AiChatSheet } from '@/components/recipes/ai-chat/ai-chat-sheet';
 import { useRecipeAutosave } from '@/hooks/use-recipe-autosave';
 import { destroy as destroyRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
+import { store as publishStore } from '@/actions/App/Http/Controllers/Recipes/PublishRecipeController';
 import { store as duplicateRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeDuplicateController';
 import {
     recall as recallDraft,
@@ -168,6 +173,9 @@ export default function RecipeShow({
                 edit_sequence: 0,
                 sections: [],
                 tags: recipe.tags,
+                is_published: recipe.is_published,
+                published_version_id: recipe.published_version_id,
+                current_version_id: recipe.current_version_id,
             },
         ),
     );
@@ -227,6 +235,8 @@ export default function RecipeShow({
     const [saveVersionOpen, setSaveVersionOpen] = useState(false);
     const [recallDisabled, setRecallDisabled] = useState(false);
     const [quickCreateOpen, setQuickCreateOpen] = useState(false);
+    const [publishDialogOpen, setPublishDialogOpen] = useState(false);
+    const [unpublishDialogOpen, setUnpublishDialogOpen] = useState(false);
     const [quickCreateQuery, setQuickCreateQuery] = useState('');
     const [quickCreateSectionId, setQuickCreateSectionId] = useState<number | null>(null);
 
@@ -620,6 +630,35 @@ export default function RecipeShow({
                         </Tooltip>
                     </TooltipProvider>
 
+                    {/* Publish controls */}
+                    <div className="flex items-center gap-2">
+                        {recipe.is_published ? (
+                            <>
+                                <Badge variant="secondary" className="flex items-center gap-1 whitespace-nowrap">
+                                    <GlobeIcon className="size-3" />
+                                    {t('app.recipes.published_badge')}
+                                </Badge>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setUnpublishDialogOpen(true)}
+                                >
+                                    {t('app.recipes.unpublish_btn')}
+                                </Button>
+                            </>
+                        ) : (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setPublishDialogOpen(true)}
+                            >
+                                {t('app.recipes.publish_btn')}
+                            </Button>
+                        )}
+                    </div>
+
                     {/* Recipe actions dropdown */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -641,6 +680,49 @@ export default function RecipeShow({
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
+
+                {/* Update-to-current cue banner */}
+                {recipe.is_published && recipe.published_version_id !== recipe.current_version_id && (
+                    <div className="bg-muted rounded-md px-4 py-3 flex items-center justify-between gap-4 border-b border-border mx-4 mb-2">
+                        <span className="text-sm text-muted-foreground">
+                            {t('app.recipes.update_public_version_cue')}
+                        </span>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                router.post(
+                                    publishStore({ recipe: recipe.id }).url,
+                                    { version_id: recipe.current_version_id },
+                                    {
+                                        preserveScroll: true,
+                                        onSuccess: () => {
+                                            toast.success(t('app.recipes.update_version_toast'));
+                                        },
+                                    },
+                                );
+                            }}
+                        >
+                            {t('app.recipes.update_public_version_btn')}
+                        </Button>
+                    </div>
+                )}
+
+                {/* Publish dialog */}
+                <PublishRecipeDialog
+                    recipeId={recipe.id}
+                    versions={versions}
+                    open={publishDialogOpen}
+                    onOpenChange={setPublishDialogOpen}
+                />
+
+                {/* Unpublish dialog */}
+                <UnpublishRecipeDialog
+                    recipeId={recipe.id}
+                    open={unpublishDialogOpen}
+                    onOpenChange={setUnpublishDialogOpen}
+                />
 
                 {/* Two-column builder layout */}
                 <div className="flex flex-1 overflow-auto lg:grid lg:grid-cols-[65%_35%]">
