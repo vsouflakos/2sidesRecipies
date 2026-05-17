@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 6 context gathered
-last_updated: "2026-05-17T22:24:07.380Z"
-last_activity: 2026-05-18 — Phase 5 (AI Agent) complete and verified
+status: in-progress
+stopped_at: "Phase 6 Plan 1 complete"
+last_updated: "2026-05-18T00:00:00.000Z"
+last_activity: 2026-05-18 — Phase 6 Plan 1 (Publish-State Foundation) complete
 progress:
   total_phases: 7
   completed_phases: 5
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 
 ## Current Position
 
-Phase: 5 of 7 (AI Agent) — COMPLETE & VERIFIED
-Plan: 4 of 4 complete
-Status: Phase 5 verified — gsd-verifier passed (4/4 success criteria, AI-01..AI-07 satisfied; see 05-VERIFICATION.md). Next: Phase 6 (Publishing & Public Library) — not yet planned
-Last activity: 2026-05-18 — Phase 5 (AI Agent) complete and verified
+Phase: 6 of 7 (Publishing & Public Library) — IN PROGRESS
+Plan: 1 of 4 complete
+Status: Phase 6 Plan 1 complete — publish-state foundation (migration, model, policy, Wave 0 RED tests, library stubs)
+Last activity: 2026-05-18 — Phase 6 Plan 1 complete
 
 Progress: [██████████] 100%
 
@@ -156,6 +156,10 @@ Recent decisions affecting current work:
 - [Phase 05-ai-agent]: Agent edits apply as deltas via DraftActionApplier, never a full-draft replace — preserves unrelated fields, keeps each Apply to one Recall step
 - [Phase 05-ai-agent]: Agent has a search_ingredients tool with tokenized name matching and a mandatory-search instruction so it links real catalog ingredients instead of inventing free-text duplicates; valid unit symbols embedded in the propose_recipe_edit contract
 - [Phase 05-ai-agent]: Prism::fake() Wave 0 tests cannot exercise SSE framing, the XSRF cookie, real streaming, or live tool-call ergonomics — those bugs only surfaced at the live human-verify checkpoint
+- [Phase 06-publishing-public-library]: RecipePolicy::view uses ?User (nullable) so Laravel invokes the policy for guests and allows published recipe access — non-nullable User causes Laravel to skip policy for unauthenticated requests
+- [Phase 06-publishing-public-library]: published_version_id declared as plain unsignedBigInteger without FK constraint — follows Phase 3 deferred-FK pattern for nullable circular FKs
+- [Phase 06-publishing-public-library]: RecipeFactory default includes is_published => false so in-memory model reflects DB default immediately — avoids null vs false comparison failures in tests
+- [Phase 06-publishing-public-library]: Library stub pages (index.tsx, show.tsx) created before routes to prevent Vite manifest errors when Plan 02 routes are tested — established Phase 4 lesson
 
 ### Pending Todos
 
@@ -167,6 +171,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-17T22:24:07.375Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-publishing-public-library/06-CONTEXT.md
+Last session: 2026-05-18T00:00:00.000Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: .planning/phases/06-publishing-public-library/06-01-SUMMARY.md
