@@ -169,6 +169,28 @@ it('creates a recipe variant as a new independent recipe', function () {
     expect(Recipe::where('user_id', $owner->id)->count())->toBe($recipeCountBefore + 1);
 });
 
+it('emits SSE frames with LF line endings, not CRLF', function () {
+    // SSE spec mandates LF ("\n") line endings. PHP_EOL on Windows is "\r\n",
+    // which would break stream parsing in the frontend hook. This test ensures
+    // the streamed body uses "\n\n" frame separators and contains no "\r\n".
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+
+    $response = $this->actingAs($owner)
+        ->post(route('recipes.conversation.stream', $recipe), [
+            'message' => 'Check line endings please.',
+        ]);
+
+    $response->assertOk();
+
+    $body = $response->streamedContent();
+
+    expect($body)->toContain("\n\n")
+        ->and($body)->not->toContain("\r\n");
+});
+
 it('forbids accessing another user conversation', function () {
     // ACCESS — non-owner gets 403
     $owner = User::factory()->create();

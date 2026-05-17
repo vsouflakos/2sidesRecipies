@@ -117,22 +117,25 @@ class RecipeConversationController extends Controller
             @ini_set('output_buffering', 'off');
             ob_implicit_flush(true);
 
+            // SSE spec requires LF ("\n") line endings, NOT PHP_EOL (which is "\r\n"
+            // on Windows). Using PHP_EOL here would produce CRLF-delimited frames
+            // that the browser SSE parser and our frontend hook cannot split on "\n\n".
             if ($errorMessage !== null) {
-                echo 'event: error'.PHP_EOL;
-                echo 'data: '.json_encode(['message' => $errorMessage]).PHP_EOL.PHP_EOL;
+                echo "event: error\n";
+                echo 'data: '.json_encode(['message' => $errorMessage])."\n\n";
                 flush();
 
                 return;
             }
 
             foreach ($chunks as $chunk) {
-                echo 'event: token'.PHP_EOL;
-                echo 'data: '.json_encode(['text' => $chunk]).PHP_EOL.PHP_EOL;
+                echo "event: token\n";
+                echo 'data: '.json_encode(['text' => $chunk])."\n\n";
                 flush();
             }
 
-            echo 'event: done'.PHP_EOL;
-            echo 'data: '.json_encode(['finished' => true]).PHP_EOL.PHP_EOL;
+            echo "event: done\n";
+            echo 'data: '.json_encode(['finished' => true])."\n\n";
             flush();
         }, 200, [
             'Content-Type' => 'text/event-stream; charset=utf-8',

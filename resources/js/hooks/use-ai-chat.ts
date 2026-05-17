@@ -105,14 +105,20 @@ export function useAiChat(recipeId: number): {
                 const chunk = decoder.decode(value, { stream: true });
                 buffer += chunk;
 
-                /** Process complete SSE messages (delimited by double newline). */
-                const parts = buffer.split('\n\n');
+                // Split on CRLF-tolerant double-newline boundaries (\r\n\r\n or \n\n).
+                // This is belt-and-suspenders: the server emits plain LF per the SSE
+                // spec, but a defensive split prevents a stray \r from breaking parsing.
+                const parts = buffer.split(/\r?\n\r?\n/);
                 buffer = parts.pop() ?? '';
 
                 for (const part of parts) {
-                    const lines = part.split('\n');
+                    // Split lines tolerating both LF and CRLF line endings.
+                    const lines = part.split(/\r?\n/);
 
-                    for (const line of lines) {
+                    for (const rawLine of lines) {
+                        // Strip a possible trailing \r before prefix checks.
+                        const line = rawLine.replace(/\r$/, '');
+
                         if (line.startsWith('event: ')) {
                             currentEvent = line.slice(7).trim();
                         } else if (line.startsWith('data: ')) {
