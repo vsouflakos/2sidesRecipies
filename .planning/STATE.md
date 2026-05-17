@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 04-recipe-tests-04-02-PLAN.md
-last_updated: "2026-05-17T11:18:45.812Z"
+stopped_at: Completed 04-recipe-tests-04-03-PLAN.md
+last_updated: "2026-05-17T11:30:50.732Z"
 last_activity: "2026-05-17 — Phase 3 Plan 08 complete: recipe list grid + six-filter panel + Recipes nav; Task 3 end-to-end human-verify checkpoint APPROVED"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 24
-  completed_plans: 22
+  completed_plans: 23
   percent: 100
 ---
 
@@ -71,6 +71,7 @@ Progress: [██████████] 100%
 | Phase 03-recipe-core-metrics P08 | 180 | 2 tasks | 13 files |
 | Phase 04-recipe-tests P01 | 25 | 3 tasks | 10 files |
 | Phase 04-recipe-tests P02 | 8 | 2 tasks | 8 files |
+| Phase 04-recipe-tests PP03 | 10 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -136,6 +137,8 @@ Recent decisions affecting current work:
 - [Phase 04-recipe-tests]: UpdateRecipeTestRequest uses sometimes modifier — Wave 0 test only sends subset of fields for update; required without sometimes fails partial updates
 - [Phase 04-recipe-tests]: Stub recipes/tests/index.tsx created (deviation Rule 3) — Inertia assertInertia() triggers Vite manifest lookup; page must exist in build for GET index test to pass
 - [Phase 04-recipe-tests]: abort_unless scope-check on nested resource before Gate::authorize — returns 404 before revealing ownership info
+- [Phase 04-recipe-tests]: Separate deletedPhotoIds state (not in form.data) — avoids serialization issues and keeps form.transform() clean for the _method: PUT injection on edit
+- [Phase 04-recipe-tests]: TestPhotoGrid dual-mode via discriminated union (mode: upload|display) — single component, two distinct behaviors, no prop collision
 
 ### Pending Todos
 
@@ -147,6 +150,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-17T11:18:45.806Z
-Stopped at: Completed 04-recipe-tests-04-02-PLAN.md
+Last session: 2026-05-17T11:30:50.727Z
+Stopped at: Completed 04-recipe-tests-04-03-PLAN.md
 Resume file: None
