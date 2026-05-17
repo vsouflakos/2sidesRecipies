@@ -35,8 +35,8 @@ Inherited from Phase 1 (established system — no changes). All values are multi
 | Token | Value | Usage |
 |-------|-------|-------|
 | xs | 4px | Icon-to-label gaps, badge internal padding, message avatar gap |
-| sm | 8px | Compact element spacing, message bubble internal padding (vertical) |
-| md | 16px | Default card/sheet padding, message bubble horizontal padding |
+| sm | 8px | Compact element spacing, message bubble internal padding (vertical), input area inner flex gap, starter prompt grid gap |
+| md | 16px | Default card/sheet padding, message bubble horizontal padding, message bubble spacing, input area padding |
 | lg | 24px | Sheet header padding, section spacing inside chat |
 | xl | 32px | Chat panel header height area |
 | 2xl | 48px | Major section breaks |
@@ -50,7 +50,7 @@ Inherited from Phase 1 (established system — no changes). All values are multi
 | Starter prompt chips (touch target) | min 44px height | WCAG 2.5.5 — tappable on mobile |
 | Apply / Dismiss buttons on proposal card | min 44px height | WCAG 2.5.5 — primary interaction in chat |
 
-*Source: Phase 1 UI-SPEC (approved). Touch target exceptions per WCAG 2.5.5.*
+*Source: Phase 1 UI-SPEC (approved). Touch target exceptions per WCAG 2.5.5. All chat-surface spacing snaps to scale tokens — no off-scale values.*
 
 ---
 
@@ -184,7 +184,7 @@ All needed primitives are already in the project. No third-party registry blocks
 
 ### Surface 3: Message List
 
-**Layout:** Vertically stacked message bubbles, newest at bottom, auto-scrolls on new message. `overflow-y-auto`, `flex flex-col gap-3` (12px between bubbles).
+**Layout:** Vertically stacked message bubbles, newest at bottom, auto-scrolls on new message. `overflow-y-auto`, `flex flex-col gap-4` (16px between bubbles — `md` scale token).
 
 **User message bubble:**
 - Aligned right
@@ -278,7 +278,7 @@ All needed primitives are already in the project. No third-party registry blocks
 1. `MessageCircle` Lucide icon, 32×32px, `text-muted-foreground`
 2. Intro text (Body, 16px/400, muted-foreground, centered):
    "Ask me anything about this recipe, or try one of these:"
-3. Grid of 4 prompt chips: `grid grid-cols-2 gap-2`, full width of message area
+3. Grid of 4 prompt chips: `grid grid-cols-2 gap-2` (8px — `sm` scale token), full width of message area
 
 **Prompt chip design:**
 - shadcn `Button` with `variant="outline"`, `size="sm"`, `h-auto min-h-[44px]`, `text-left`, `whitespace-normal`
@@ -300,9 +300,9 @@ All needed primitives are already in the project. No third-party registry blocks
 
 ### Surface 7: Message Input Area
 
-**Placement:** Fixed at the bottom of the Sheet, always visible. Visually separated from the message list by a top border (`border-t border-border`), `bg-background`, `p-3` (12px) padding.
+**Placement:** Fixed at the bottom of the Sheet, always visible. Visually separated from the message list by a top border (`border-t border-border`), `bg-background`, `p-4` (16px — `md` scale token) padding.
 
-**Layout:** `flex gap-2 items-end`
+**Layout:** `flex gap-2 items-end` (8px — `sm` scale token)
 
 **Textarea:**
 - shadcn `Textarea`, `resize-none`, `min-h-[44px]`, `max-h-[120px]` (auto-expands up to 3 lines, scrolls beyond)
