@@ -100,4 +100,14 @@ class Recipe extends Model
     {
         return $this->hasOne(RecipeDraft::class);
     }
+
+    public function tests(): HasMany
+    {
+        return $this->hasMany(RecipeTest::class);
+    }
+
+    public function latestTest(): HasOne
+    {
+        return $this->hasOne(RecipeTest::class)->latestOfMany('tested_at');
+    }
 }
