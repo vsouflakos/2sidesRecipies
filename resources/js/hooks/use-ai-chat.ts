@@ -19,11 +19,10 @@ export function useAiChat(recipeId: number): {
     const [status, setStatus] = useState<ChatStatus>('idle');
     const lastUserMessageRef = useRef<string>('');
 
-    /** Read the CSRF token from the meta tag (Pitfall 6). */
-    function getCsrfToken(): string {
-        return (
-            document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? ''
-        );
+    /** Read the XSRF token from the cookie Laravel sets on every response. */
+    function getXsrfToken(): string {
+        const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : '';
     }
 
     const loadHistory = useCallback(async (): Promise<void> => {
@@ -31,7 +30,7 @@ export function useAiChat(recipeId: number): {
 
         try {
             const response = await fetch(`/recipes/${recipeId}/conversation`, {
-                headers: { 'X-CSRF-TOKEN': getCsrfToken() },
+                headers: { 'X-XSRF-TOKEN': getXsrfToken() },
             });
 
             if (response.ok) {
@@ -77,7 +76,7 @@ export function useAiChat(recipeId: number): {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': getCsrfToken(),
+                    'X-XSRF-TOKEN': getXsrfToken(),
                 },
                 body: JSON.stringify({ message: text }),
             });
@@ -155,7 +154,7 @@ export function useAiChat(recipeId: number): {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken(),
+                        'X-XSRF-TOKEN': getXsrfToken(),
                     },
                 },
             );
@@ -215,7 +214,7 @@ export function useAiChat(recipeId: number): {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken(),
+                        'X-XSRF-TOKEN': getXsrfToken(),
                     },
                 },
             );
