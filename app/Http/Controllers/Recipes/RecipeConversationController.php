@@ -63,17 +63,23 @@ class RecipeConversationController extends Controller
     /**
      * Stream an AI response to the user's chat message via Server-Sent Events.
      *
-     * Collects the full AI response synchronously, persists both the user message
-     * and the assistant message, then returns a StreamedResponse that replays
-     * the content as SSE tokens. If the AI request fails, no assistant message
-     * is persisted (CONTEXT.md: failed turns discard partial output).
+     * Auth, conversation resolution, and user-message persistence happen
+     * synchronously before the StreamedResponse closure, so auth/validation
+     * failures still produce normal HTTP error responses.
      *
-     * NOTE: Collecting synchronously before streaming ensures the assistant
-     * message is persisted within the HTTP request lifecycle. For Prism::fake()
-     * in tests, this is effectively instant. In production, the first SSE token
-     * is delayed until the provider response is complete; this is an acceptable
-     * trade-off given the CONTEXT.md requirement that failed turns never persist
-     * partial output.
+     * Prism iteration happens INSIDE the closure so PHP's max_execution_time
+     * does not kill long AI generations. `set_time_limit(0)` inside the closure
+     * removes the time cap for the streamed portion of the request. Each
+     * TextDeltaEvent is echoed immediately as an `event: token` SSE frame
+     * followed by flush(), giving the client real incremental output.
+     *
+     * The assistant message is persisted only after a successful full iteration
+     * (failed turns never persist partial output, per CONTEXT.md). Tools inside
+     * the orchestrator persist `tool_proposal` messages themselves during
+     * iteration — that behaviour is unchanged.
+     *
+     * SSE frames use literal "\n" line endings (never PHP_EOL) to satisfy the
+     * SSE spec on all platforms.
      */
     public function stream(SendConversationMessageRequest $request, Recipe $recipe): StreamedResponse
     {
@@ -87,56 +93,50 @@ class RecipeConversationController extends Controller
             'content' => $request->string('message')->toString(),
         ]);
 
-        // Collect the full response from Prism synchronously so the assistant
-        // message can be persisted before the HTTP response is sent.
-        $chunks = [];
-        $errorMessage = null;
+        return response()->stream(function () use ($recipe, $conversation) {
+            // Remove PHP's execution time cap for the streamed portion — long AI
+            // generations (multi-step tool use) must not be killed at 30 seconds.
+            set_time_limit(0);
 
-        try {
-            foreach ($this->orchestrator->buildStream($recipe, $conversation) as $event) {
-                if ($event instanceof TextDeltaEvent) {
-                    $chunks[] = $event->delta;
-                }
-            }
-
-            $fullContent = implode('', $chunks);
-
-            $conversation->messages()->create([
-                'role' => 'assistant',
-                'content' => $fullContent,
-            ]);
-        } catch (\Throwable $e) {
-            Log::error('AI stream error for recipe '.$recipe->id, [
-                'exception' => $e,
-            ]);
-            $errorMessage = $e->getMessage();
-        }
-
-        return response()->stream(function () use ($chunks, $errorMessage) {
-            // Disable PHP output buffering so tokens stream immediately (Pitfall 3)
+            // Disable PHP output buffering so each token reaches the client
+            // immediately rather than accumulating in a buffer.
             @ini_set('output_buffering', 'off');
             ob_implicit_flush(true);
 
-            // SSE spec requires LF ("\n") line endings, NOT PHP_EOL (which is "\r\n"
-            // on Windows). Using PHP_EOL here would produce CRLF-delimited frames
-            // that the browser SSE parser and our frontend hook cannot split on "\n\n".
-            if ($errorMessage !== null) {
+            // SSE spec requires LF ("\n") line endings, NOT PHP_EOL (which is
+            // "\r\n" on Windows). Using PHP_EOL here would produce CRLF-delimited
+            // frames that the browser SSE parser and the frontend hook cannot
+            // split on "\n\n".
+            $full = '';
+
+            try {
+                foreach ($this->orchestrator->buildStream($recipe, $conversation) as $event) {
+                    if ($event instanceof TextDeltaEvent) {
+                        $full .= $event->delta;
+                        echo "event: token\n";
+                        echo 'data: '.json_encode(['text' => $event->delta])."\n\n";
+                        flush();
+                    }
+                }
+
+                // Persist the assistant message only after a successful iteration.
+                $conversation->messages()->create([
+                    'role' => 'assistant',
+                    'content' => $full,
+                ]);
+
+                echo "event: done\n";
+                echo 'data: '.json_encode(['finished' => true])."\n\n";
+                flush();
+            } catch (\Throwable $e) {
+                // Do NOT persist a partial assistant message on failure.
+                Log::error('AI stream error for recipe '.$recipe->id, [
+                    'exception' => $e,
+                ]);
                 echo "event: error\n";
-                echo 'data: '.json_encode(['message' => $errorMessage])."\n\n";
-                flush();
-
-                return;
-            }
-
-            foreach ($chunks as $chunk) {
-                echo "event: token\n";
-                echo 'data: '.json_encode(['text' => $chunk])."\n\n";
+                echo 'data: '.json_encode(['message' => $e->getMessage()])."\n\n";
                 flush();
             }
-
-            echo "event: done\n";
-            echo 'data: '.json_encode(['finished' => true])."\n\n";
-            flush();
         }, 200, [
             'Content-Type' => 'text/event-stream; charset=utf-8',
             'Cache-Control' => 'no-cache, no-transform',

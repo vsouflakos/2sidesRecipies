@@ -5,6 +5,7 @@ use App\Models\RecipeConversation;
 use App\Models\RecipeConversationMessage;
 use App\Models\RecipeDraft;
 use App\Models\User;
+use App\Support\Recipes\AgentOrchestrator;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 use Prism\Prism\Enums\FinishReason;
@@ -31,7 +32,9 @@ beforeEach(function () {
 });
 
 it('streams an assistant response to a chat message', function () {
-    // AI-01, AI-03 — POST to stream route, assistant message persisted
+    // AI-01, AI-03 — POST to stream route, assistant message persisted.
+    // The StreamedResponse closure runs lazily; consuming the body via
+    // streamedContent() triggers Prism iteration and DB persistence.
     $owner = User::factory()->create();
     $owner->assignRole('User');
 
@@ -44,11 +47,18 @@ it('streams an assistant response to a chat message', function () {
 
     $response->assertOk();
 
+    // Consume the stream so the closure executes and persists the assistant message.
+    $body = $response->streamedContent();
+
     $conversation = RecipeConversation::where('recipe_id', $recipe->id)->first();
     expect($conversation)->not->toBeNull();
     expect(
         $conversation->messages()->where('role', 'assistant')->count()
     )->toBe(1);
+
+    // Verify SSE body contains token and done frames.
+    expect($body)->toContain('event: token')
+        ->and($body)->toContain('event: done');
 });
 
 it('hides the AI feature when no provider is configured', function () {
@@ -189,6 +199,39 @@ it('emits SSE frames with LF line endings, not CRLF', function () {
 
     expect($body)->toContain("\n\n")
         ->and($body)->not->toContain("\r\n");
+});
+
+it('does not persist an assistant message when the AI stream throws', function () {
+    // Error path: a failing orchestrator call must not leave a partial assistant
+    // message in the DB, and must emit an event: error SSE frame instead.
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+
+    // Bind a mock orchestrator that throws so the stream closure catches the error.
+    $this->mock(AgentOrchestrator::class, function ($mock) {
+        $mock->shouldReceive('buildStream')->andThrow(new RuntimeException('Provider unavailable'));
+    });
+
+    $response = $this->actingAs($owner)
+        ->post(route('recipes.conversation.stream', $recipe), [
+            'message' => 'This will fail.',
+        ]);
+
+    $response->assertOk();
+
+    $body = $response->streamedContent();
+
+    // The SSE body must carry an error event.
+    expect($body)->toContain('event: error');
+
+    // No assistant message must have been persisted.
+    $conversation = RecipeConversation::where('recipe_id', $recipe->id)->first();
+    expect($conversation)->not->toBeNull();
+    expect(
+        $conversation->messages()->where('role', 'assistant')->count()
+    )->toBe(0);
 });
 
 it('forbids accessing another user conversation', function () {
