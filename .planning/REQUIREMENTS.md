@@ -75,10 +75,10 @@ including the AI agent. Each maps to a roadmap phase.
 
 ### Recipe Tests
 
-- [ ] **TEST-01**: User can record a trial run against a specific recipe version
-- [ ] **TEST-02**: User can record a structured experiment with a hypothesis and an outcome
-- [ ] **TEST-03**: A test captures tasting notes, photos, and structured ratings
-- [ ] **TEST-04**: A test records what changed versus what was expected
+- [x] **TEST-01**: User can record a trial run against a specific recipe version
+- [x] **TEST-02**: User can record a structured experiment with a hypothesis and an outcome
+- [x] **TEST-03**: A test captures tasting notes, photos, and structured ratings
+- [x] **TEST-04**: A test records what changed versus what was expected
 
 ### AI Agent
 
@@ -212,10 +212,10 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | ALLG-01 | Phase 3 | Complete |
 | ALLG-02 | Phase 3 | Complete |
 | ALLG-03 | Phase 3 | Complete |
-| TEST-01 | Phase 4 | Pending |
-| TEST-02 | Phase 4 | Pending |
-| TEST-03 | Phase 4 | Pending |
-| TEST-04 | Phase 4 | Pending |
+| TEST-01 | Phase 4 | Complete |
+| TEST-02 | Phase 4 | Complete |
+| TEST-03 | Phase 4 | Complete |
+| TEST-04 | Phase 4 | Complete |
 | AI-01 | Phase 5 | Pending |
 | AI-02 | Phase 5 | Pending |
 | AI-03 | Phase 5 | Pending |

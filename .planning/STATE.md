@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Phase 4 context gathered
-last_updated: "2026-05-17T10:05:37.445Z"
+stopped_at: Completed 04-recipe-tests-04-01-PLAN.md
+last_updated: "2026-05-17T11:05:40.269Z"
 last_activity: "2026-05-17 — Phase 3 Plan 08 complete: recipe list grid + six-filter panel + Recipes nav; Task 3 end-to-end human-verify checkpoint APPROVED"
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 20
-  completed_plans: 20
+  total_plans: 24
+  completed_plans: 21
   percent: 100
 ---
 
@@ -69,6 +69,7 @@ Progress: [██████████] 100%
 | Phase 03-recipe-core-metrics P06 | 35 | 3 tasks | 10 files |
 | Phase 03-recipe-core-metrics P07 | 13 | 3 tasks | 8 files |
 | Phase 03-recipe-core-metrics P08 | 180 | 2 tasks | 13 files |
+| Phase 04-recipe-tests P01 | 25 | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -128,6 +129,9 @@ Recent decisions affecting current work:
 - [Phase 03-recipe-core-metrics]: MetricsAggregator reworked post-Task-2: PHP service output shape corrected to match TS types — per-portion not per-100g default, allergens as slug arrays, bakers as percentages map, missing_data as string[]
 - [Phase 03-recipe-core-metrics]: Draft metrics exposed via RecipeDraftController save response — avoids extra round-trip for live metrics panel update
 - [Phase 03-recipe-core-metrics]: show.tsx builder fully null-safe via safeStr() sanitizing wrapper — all t() calls guard against null section/ingredient names
+- [Phase 04-recipe-tests]: Wave 0 test suite writes real assertions (no skip/markTestIncomplete) — 13 tests RED because routes/controller not yet built; gives plan 04-02 a concrete GREEN target
+- [Phase 04-recipe-tests]: RecipeTestPhoto.url() accessor uses Storage::disk(config('filesystems.default', 'public')) so disk is configurable and tests can use Storage::fake()
+- [Phase 04-recipe-tests]: recipe_version_id FK uses restrictOnDelete (not cascadeOnDelete) to prevent accidental test data loss when recipe versions are retained for historical tracking
 
 ### Pending Todos
 
@@ -139,6 +143,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-17T10:05:37.440Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-recipe-tests/04-CONTEXT.md
+Last session: 2026-05-17T11:05:40.263Z
+Stopped at: Completed 04-recipe-tests-04-01-PLAN.md
+Resume file: None
