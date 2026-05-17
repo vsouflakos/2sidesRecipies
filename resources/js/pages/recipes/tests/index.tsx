@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, setLayoutProps } from '@inertiajs/react';
 import { ChevronLeftIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { TestCard } from '@/components/recipes/test-card';
@@ -11,6 +11,14 @@ import type { RecipeTest, RecipeTestsIndexProps } from '@/types/recipe-test';
 
 export default function RecipeTestsIndex({ recipe, tests, versions }: RecipeTestsIndexProps) {
     const { t } = useTranslations();
+
+    setLayoutProps({
+        breadcrumbs: [
+            { title: 'My Recipes', href: '/recipes' },
+            { title: recipe.name, href: recipesShow({ recipe: recipe.id }).url },
+            { title: 'Tests', href: testsIndex({ recipe: recipe.id }).url },
+        ],
+    });
     const [modalOpen, setModalOpen] = useState(false);
     const [editingTest, setEditingTest] = useState<RecipeTest | null>(null);
 
@@ -111,19 +119,3 @@ export default function RecipeTestsIndex({ recipe, tests, versions }: RecipeTest
     );
 }
 
-RecipeTestsIndex.layout = {
-    breadcrumbs: (props: RecipeTestsIndexProps) => [
-        {
-            title: 'My Recipes',
-            href: '/recipes',
-        },
-        {
-            title: props.recipe.name,
-            href: recipesShow({ recipe: props.recipe.id }).url,
-        },
-        {
-            title: 'Tests',
-            href: testsIndex({ recipe: props.recipe.id }).url,
-        },
-    ],
-};
