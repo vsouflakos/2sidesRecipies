@@ -37,7 +37,7 @@ test('PUT /recipes/{id}/draft updates the draft without creating a new version',
         'value' => 'Updated notes in draft',
     ]);
 
-    $response->assertSuccessful();
+    $response->assertRedirect();
 
     $versionCountAfter = RecipeVersion::where('recipe_id', $recipe->id)->count();
     expect($versionCountAfter)->toBe($versionCountBefore);
@@ -91,7 +91,7 @@ test('POST /recipes/{id}/draft/recall removes the last edit and restores prior s
 
     $response = $this->actingAs($user)->post("/recipes/{$recipe->id}/draft/recall");
 
-    $response->assertSuccessful();
+    $response->assertRedirect();
 
     $draft->refresh();
     expect($draft->data['name'])->toBe('Before edit');
@@ -137,7 +137,7 @@ test('apply_scale action multiplies every ingredient line quantity by the exact 
         'scale_denominator' => 1,
     ]);
 
-    $response->assertSuccessful();
+    $response->assertRedirect();
 
     $draft->refresh();
 
@@ -153,4 +153,49 @@ test('apply_scale action multiplies every ingredient line quantity by the exact 
     // No new recipe_versions row was created
     $versionCountAfter = RecipeVersion::where('recipe_id', $recipe->id)->count();
     expect($versionCountAfter)->toBe($versionCountBefore);
+});
+
+/**
+ * apply_scale scales section-nested lines (the shape the builder actually sends)
+ * and persists an updated portion count when provided.
+ */
+test('apply_scale scales section lines and persists an updated portion count', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+    $recipe = Recipe::factory()->create(['user_id' => $user->id]);
+
+    $draft = RecipeDraft::factory()->create([
+        'recipe_id' => $recipe->id,
+        'user_id' => $user->id,
+        'data' => [
+            'name' => 'Portion Scale Recipe',
+            'portions' => 4,
+            'sections' => [
+                [
+                    'id' => -1,
+                    'name' => 'Main',
+                    'order' => 1,
+                    'steps' => [],
+                    'lines' => [
+                        ['id' => -1, 'quantity' => '100.000000', 'ingredient_id' => 1],
+                    ],
+                ],
+            ],
+        ],
+        'edit_sequence' => 0,
+    ]);
+
+    $response = $this->actingAs($user)->put("/recipes/{$recipe->id}/draft", [
+        'action' => 'apply_scale',
+        'scale_numerator' => 2,
+        'scale_denominator' => 1,
+        'portions' => 8,
+    ]);
+
+    $response->assertRedirect();
+
+    $draft->refresh();
+
+    expect((string) $draft->data['sections'][0]['lines'][0]['quantity'])->toBe('200.000000');
+    expect($draft->data['portions'])->toBe(8);
 });

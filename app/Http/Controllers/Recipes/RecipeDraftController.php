@@ -13,10 +13,10 @@ use App\Support\Recipes\CircularReferenceDetector;
 use App\Support\Recipes\RecipeDraftManager;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
 
 class RecipeDraftController extends Controller
 {
@@ -30,8 +30,12 @@ class RecipeDraftController extends Controller
      *
      * When the action adds a sub-recipe line, validates there is no circular reference first.
      * Handles the apply_scale action inline using BigDecimal arithmetic to avoid float drift.
+     *
+     * Responds with a redirect so Inertia performs a partial reload of draft + metrics.
+     * Returning a bare 204 here would be treated as a non-Inertia response and surface
+     * the empty Inertia dialog (the "white modal").
      */
-    public function update(UpdateRecipeDraftRequest $request, Recipe $recipe): Response|JsonResponse
+    public function update(UpdateRecipeDraftRequest $request, Recipe $recipe): RedirectResponse
     {
         $action = $request->string('action')->toString();
 
@@ -59,12 +63,9 @@ class RecipeDraftController extends Controller
             if ($candidateRecipeId !== null) {
                 // Check cycles using committed relational data AND draft JSON data
                 if ($this->wouldCreateCycleIncludingDrafts($recipe->id, (int) $candidateRecipeId)) {
-                    return response()->json([
-                        'message' => 'The given data was invalid.',
-                        'errors' => [
-                            'sub_recipe_version_id' => ['Cannot add this recipe — it would create a circular reference.'],
-                        ],
-                    ], 422);
+                    throw ValidationException::withMessages([
+                        'sub_recipe_version_id' => ['Cannot add this recipe — it would create a circular reference.'],
+                    ]);
                 }
             }
         }
@@ -75,6 +76,12 @@ class RecipeDraftController extends Controller
             $denominator = $request->integer('scale_denominator', 1);
 
             $newData = $this->applyScale($draft->data ?? [], $numerator, $denominator);
+
+            // Scaling may also change the portion count (e.g. doubling a 4-portion
+            // recipe to 8) — persist it alongside the scaled quantities.
+            if ($request->has('portions')) {
+                $newData['portions'] = $request->integer('portions');
+            }
         } elseif ($action === 'add_sub_recipe' || $action === 'attach_sub_recipe') {
             // Store sub-recipe line in the first section's lines (or flat ingredient_lines)
             $newData = $draft->data ?? [];
@@ -103,16 +110,18 @@ class RecipeDraftController extends Controller
 
         $this->draftManager->applyEdit($draft, $action, $newData);
 
-        // Return 200 with empty content so the client can do a partial Inertia reload
-        return response()->noContent();
+        // Redirect back (303) so Inertia follows it and performs the partial
+        // reload requested via `only: ['draft', 'metrics']`.
+        return back(303);
     }
 
     /**
      * Recall (undo) the last draft edit.
      *
-     * Returns HTTP 409 on a sequence mismatch — the client must refresh before retrying.
+     * A sequence mismatch surfaces as a validation error on `expected_sequence` so the
+     * Inertia client receives it via `onError` (the client must refresh before retrying).
      */
-    public function recall(Request $request, Recipe $recipe): Response|JsonResponse
+    public function recall(Request $request, Recipe $recipe): RedirectResponse
     {
         Gate::authorize('update', $recipe);
 
@@ -121,11 +130,14 @@ class RecipeDraftController extends Controller
         try {
             $this->draftManager->recall($recipe->draft, $expectedSequence);
         } catch (DraftSequenceMismatchException $e) {
-            return response()->json(['message' => $e->getMessage()], 409);
+            throw ValidationException::withMessages([
+                'expected_sequence' => [$e->getMessage()],
+            ]);
         }
 
-        // Return 200 with empty content so the client can do a partial Inertia reload
-        return response()->noContent();
+        // Redirect back (303) so Inertia follows it and performs the partial
+        // reload requested via `only: ['draft', 'metrics']`.
+        return back(303);
     }
 
     /**
@@ -220,7 +232,7 @@ class RecipeDraftController extends Controller
 
         if (isset($data['ingredient_lines']) && is_array($data['ingredient_lines'])) {
             $data['ingredient_lines'] = array_map(function (array $line) use ($num, $den) {
-                if (isset($line['quantity'])) {
+                if (isset($line['quantity']) && is_numeric($line['quantity'])) {
                     $quantity = BigDecimal::of((string) $line['quantity']);
                     $line['quantity'] = (string) $quantity
                         ->multipliedBy($num)
@@ -236,7 +248,7 @@ class RecipeDraftController extends Controller
             $data['sections'] = array_map(function (array $section) use ($num, $den) {
                 if (isset($section['lines']) && is_array($section['lines'])) {
                     $section['lines'] = array_map(function (array $line) use ($num, $den) {
-                        if (isset($line['quantity'])) {
+                        if (isset($line['quantity']) && is_numeric($line['quantity'])) {
                             $quantity = BigDecimal::of((string) $line['quantity']);
                             $line['quantity'] = (string) $quantity
                                 ->multipliedBy($num)

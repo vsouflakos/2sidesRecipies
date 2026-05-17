@@ -27,7 +27,7 @@ class RecipeMetricsService
      *
      * @return array{
      *     nutrition: array{per_portion: array<string, string>, per_100g: array<string, string>},
-     *     cost: array{total: string, per_portion: string, food_cost_pct: string|null},
+     *     cost: array{total_cost: string, cost_per_portion: string, food_cost_pct: string|null},
      *     shrinkage: array{raw_weight_g: string, finished_weight_g: string, loss_g: string, shrinkage_pct: string},
      *     bakers: array{flour_base_g: string, percentages: array<string, string>, hydration_pct: string|null}|null,
      *     allergens: array{contains: list<string>, may_contain: list<string>},
@@ -74,16 +74,12 @@ class RecipeMetricsService
             $this->mapLinesForBakers($lines),
         );
 
-        // Allergens — roll up from line allergen arrays
+        // Allergens — each prepared line already carries a flat {slug, state} list.
         $allergenMerged = $this->allergenRollupService->merge(
-            ...array_map(fn (array $line) => array_map(
-                fn (string $slug) => ['slug' => $slug, 'state' => 'contains'],
-                is_array($line['allergens'] ?? null)
-                    ? (isset($line['allergens'][0]) && is_string($line['allergens'][0])
-                        ? $line['allergens']
-                        : array_keys(array_filter((array) ($line['allergens'] ?? []), fn ($v) => $v === 'contains')))
-                    : [],
-            ), $lines),
+            ...array_map(
+                fn (array $line) => is_array($line['allergens'] ?? null) ? $line['allergens'] : [],
+                $lines,
+            ),
         );
 
         // Compute raw cost per gram for version caching
@@ -104,8 +100,8 @@ class RecipeMetricsService
                 'per_100g' => $nutritionResult['per_100g'],
             ],
             'cost' => [
-                'total' => $costResult['total_cost'],
-                'per_portion' => $costResult['cost_per_portion'],
+                'total_cost' => $costResult['total_cost'],
+                'cost_per_portion' => $costResult['cost_per_portion'],
                 'food_cost_pct' => $costResult['food_cost_pct'],
             ],
             'shrinkage' => $shrinkageResult,

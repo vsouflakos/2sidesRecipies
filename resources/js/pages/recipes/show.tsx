@@ -1,6 +1,6 @@
 import { Head, router } from '@inertiajs/react';
 import { useTranslations } from '@/hooks/use-translations';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import {
     EllipsisVerticalIcon,
     ImageIcon,
@@ -40,7 +40,10 @@ import { MetricsPanel } from '@/components/recipes/metrics-panel/metrics-panel';
 import { useRecipeAutosave } from '@/hooks/use-recipe-autosave';
 import { destroy as destroyRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeController';
 import { store as duplicateRecipe } from '@/actions/App/Http/Controllers/Recipes/RecipeDuplicateController';
-import { recall as recallDraft } from '@/actions/App/Http/Controllers/Recipes/RecipeDraftController';
+import {
+    recall as recallDraft,
+    update as updateDraftRoute,
+} from '@/actions/App/Http/Controllers/Recipes/RecipeDraftController';
 import type {
     CategoryNode,
 } from '@/types/ingredient';
@@ -64,10 +67,66 @@ interface ShowPageProps extends RecipeShowProps {
     categories: CategoryNode[];
 }
 
-let nextTempId = -1;
+/** Find the lowest numeric id used by any section, line, or step (0 when none). */
+function collectMinId(draft: RecipeDraft): number {
+    let min = 0;
 
-function getNextTempId(): number {
-    return nextTempId--;
+    for (const section of draft.sections ?? []) {
+        if (typeof section.id === 'number') {
+            min = Math.min(min, section.id);
+        }
+        for (const line of section.lines ?? []) {
+            if (typeof line.id === 'number') {
+                min = Math.min(min, line.id);
+            }
+        }
+        for (const step of section.steps ?? []) {
+            if (typeof step.id === 'number') {
+                min = Math.min(min, step.id);
+            }
+        }
+    }
+
+    return min;
+}
+
+/**
+ * Ensure every section, line, and step in a draft carries a unique numeric id.
+ *
+ * Draft JSON loaded from the server can contain items with no id (e.g. the default
+ * section created at recipe creation). Without stable, unique ids React list keys
+ * collide and deleting one line filters out every line sharing the same id.
+ */
+function normalizeDraft(draft: RecipeDraft): RecipeDraft {
+    let counter = collectMinId(draft) - 1;
+    const nextId = (): number => counter--;
+
+    return {
+        ...draft,
+        sections: (draft.sections ?? []).map((section) => ({
+            ...section,
+            id: typeof section.id === 'number' ? section.id : nextId(),
+            lines: (section.lines ?? []).map((line) => ({
+                ...line,
+                id: typeof line.id === 'number' ? line.id : nextId(),
+            })),
+            steps: (section.steps ?? []).map((step) => ({
+                ...step,
+                id: typeof step.id === 'number' ? step.id : nextId(),
+            })),
+        })),
+    };
+}
+
+/** Multiply a string quantity by a rational factor, formatted to 6 decimals. */
+function scaleQuantity(quantity: string, numerator: number, denominator: number): string {
+    const value = parseFloat(quantity);
+
+    if (!Number.isFinite(value) || denominator === 0) {
+        return quantity;
+    }
+
+    return ((value * numerator) / denominator).toFixed(6);
 }
 
 export default function RecipeShow({
@@ -84,24 +143,41 @@ export default function RecipeShow({
     const { t } = useTranslations();
     const { save, status } = useRecipeAutosave(recipe.id);
 
-    const [draft, setDraft] = useState<RecipeDraft>(initialDraft ?? {
-        id: recipe.id,
-        name: recipe.name,
-        slug: recipe.slug,
-        hero_image_path: recipe.hero_image_path,
-        cuisine_id: recipe.cuisine_id,
-        difficulty: recipe.difficulty,
-        yield_amount: recipe.yield_amount,
-        yield_unit_id: null,
-        portions: recipe.portions ? Number(recipe.portions) : null,
-        prep_time_minutes: recipe.prep_time_minutes,
-        cook_time_minutes: recipe.cook_time_minutes,
-        chef_notes: null,
-        selling_price: recipe.selling_price,
-        edit_sequence: 0,
-        sections: [],
-        tags: recipe.tags,
-    });
+    const [draft, setDraft] = useState<RecipeDraft>(() =>
+        normalizeDraft(
+            initialDraft ?? {
+                id: recipe.id,
+                name: recipe.name,
+                slug: recipe.slug,
+                hero_image_path: recipe.hero_image_path,
+                cuisine_id: recipe.cuisine_id,
+                difficulty: recipe.difficulty,
+                yield_amount: recipe.yield_amount,
+                yield_unit_id: null,
+                portions: recipe.portions ? Number(recipe.portions) : null,
+                prep_time_minutes: recipe.prep_time_minutes,
+                cook_time_minutes: recipe.cook_time_minutes,
+                chef_notes: null,
+                selling_price: recipe.selling_price,
+                edit_sequence: 0,
+                sections: [],
+                tags: recipe.tags,
+            },
+        ),
+    );
+
+    /**
+     * Monotonic source of temp ids for new sections/lines/steps. Seeded below
+     * every id already present in the loaded draft so freshly added items can
+     * never collide with existing ones (which would break delete + list keys).
+     */
+    const tempIdRef = useRef<number>(collectMinId(draft));
+
+    function getNextTempId(): number {
+        tempIdRef.current -= 1;
+
+        return tempIdRef.current;
+    }
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [saveVersionOpen, setSaveVersionOpen] = useState(false);
     const [recallDisabled, setRecallDisabled] = useState(false);
@@ -367,13 +443,51 @@ export default function RecipeShow({
                     toast.success(t('app.recipes.recall_toast'));
                 },
                 onError: (errors) => {
-                    /** HTTP 409 — sequence mismatch from concurrent edit */
+                    /** Sequence mismatch from a concurrent edit. */
                     if (errors && Object.keys(errors).length > 0) {
                         toast.error(t('app.recipes.recall_conflict_toast'));
                         setRecallDisabled(true);
                     }
                 },
             },
+        );
+    }
+
+    /** ---- Scaling ---- */
+    function handleApplyScale({
+        scale_numerator,
+        scale_denominator,
+        portions,
+    }: {
+        scale_numerator: number;
+        scale_denominator: number;
+        portions: number;
+    }) {
+        /**
+         * Optimistically scale every line quantity so the builder reflects the
+         * new amounts immediately; the server then persists the authoritative
+         * BigDecimal result via the partial reload requested below.
+         */
+        setDraft((prev) => ({
+            ...prev,
+            portions,
+            sections: (prev.sections ?? []).map((section) => ({
+                ...section,
+                lines: section.lines.map((line) => ({
+                    ...line,
+                    quantity: scaleQuantity(
+                        line.quantity,
+                        scale_numerator,
+                        scale_denominator,
+                    ),
+                })),
+            })),
+        }));
+
+        router.put(
+            updateDraftRoute({ recipe: recipe.id }).url,
+            { action: 'apply_scale', scale_numerator, scale_denominator, portions },
+            { preserveState: true, preserveScroll: true, only: ['draft', 'metrics'] },
         );
     }
 
@@ -587,14 +701,7 @@ export default function RecipeShow({
                                     selling_price: value,
                                 }))
                             }
-                            onApplyScale={({ scale_numerator, scale_denominator, portions }) =>
-                                updateDraft('apply_scale', (prev) => ({
-                                    ...prev,
-                                    scale_numerator,
-                                    scale_denominator,
-                                    portions,
-                                }))
-                            }
+                            onApplyScale={handleApplyScale}
                         />
                     </div>
                 </div>
