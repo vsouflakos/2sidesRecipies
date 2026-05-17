@@ -87,7 +87,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. User can record a trial run against a specific recipe version with tasting notes, photos, and structured ratings
   2. User can record a structured experiment with a hypothesis, an outcome, and what changed versus what was expected
   3. Test records are linked to the exact recipe version they were run against and are visible on the recipe detail page
-**Plans**: TBD
+**Plans**: 4 plans
+- [ ] 04-01-PLAN.md — Schema: recipe_tests + recipe_test_photos tables, models, TestType/TestVerdict enums, factories, Wave 0 test suite
+- [ ] 04-02-PLAN.md — Backend: owner-scoped policy, Store/Update FormRequests, RecipeTestResource, controller with transactional photo upload, routes
+- [ ] 04-03-PLAN.md — Frontend: tests page, record/edit modal, photo upload + lightbox, test card, EN/EL i18n
+- [ ] 04-04-PLAN.md — Builder test summary block + end-to-end human-verify checkpoint
 
 ### Phase 5: AI Agent
 **Goal**: Users can have a conversational AI session attached to a recipe; the agent can read the recipe and test feedback, suggest improvements, and apply accepted edits directly to the working draft

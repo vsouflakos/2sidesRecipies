@@ -42,10 +42,11 @@ created: 2026-05-17
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| TBD | TBD | TBD | TEST-01 | feature | `php artisan test --compact --filter=RecipeTestTest` | ❌ W0 | ⬜ pending |
-| TBD | TBD | TBD | TEST-02 | feature | `php artisan test --compact --filter=RecipeTestTest` | ❌ W0 | ⬜ pending |
-| TBD | TBD | TBD | TEST-03 | feature | `php artisan test --compact --filter=RecipeTestTest` | ❌ W0 | ⬜ pending |
-| TBD | TBD | TBD | TEST-04 | feature | `php artisan test --compact --filter=RecipeTestTest` | ❌ W0 | ⬜ pending |
+| 04-01 T3 | 04-01 | 1 | TEST-01 | feature | `php artisan test --compact --filter=RecipeTestTest` | created in 04-01 T3 (RED) | ⬜ pending |
+| 04-01 T3 | 04-01 | 1 | TEST-02 | feature | `php artisan test --compact --filter=RecipeTestTest` | created in 04-01 T3 (RED) | ⬜ pending |
+| 04-01 T3 | 04-01 | 1 | TEST-03 | feature | `php artisan test --compact --filter=RecipeTestTest` | created in 04-01 T3 (RED) | ⬜ pending |
+| 04-01 T3 | 04-01 | 1 | TEST-04 | feature | `php artisan test --compact --filter=RecipeTestTest` | created in 04-01 T3 (RED) | ⬜ pending |
+| 04-02 T2 | 04-02 | 2 | TEST-01..04 | feature | `php artisan test --compact --filter=RecipeTestTest` | GREEN target | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
