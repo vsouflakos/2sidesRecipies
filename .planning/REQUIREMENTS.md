@@ -85,10 +85,10 @@ including the AI agent. Each maps to a roadmap phase.
 - [x] **AI-01**: User can chat with an AI agent attached to a recipe
 - [x] **AI-02**: The agent reads the recipe, chef notes, and test feedback as context
 - [x] **AI-03**: The agent can suggest tests/experiments and recipe improvements
-- [ ] **AI-04**: User can accept an agent suggestion, applying the edit to the recipe's working draft
-- [ ] **AI-05**: The agent can create a recipe variant as a working draft
+- [x] **AI-04**: User can accept an agent suggestion, applying the edit to the recipe's working draft
+- [x] **AI-05**: The agent can create a recipe variant as a working draft
 - [x] **AI-06**: The AI provider is configurable via a provider-agnostic adapter
-- [ ] **AI-07**: Agent edits pass through the same validation as user edits before touching the draft
+- [x] **AI-07**: Agent edits pass through the same validation as user edits before touching the draft
 
 ### Publishing & Public Library
 
@@ -219,10 +219,10 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | AI-01 | Phase 5 | Complete |
 | AI-02 | Phase 5 | Complete |
 | AI-03 | Phase 5 | Complete |
-| AI-04 | Phase 5 | Pending |
-| AI-05 | Phase 5 | Pending |
+| AI-04 | Phase 5 | Complete |
+| AI-05 | Phase 5 | Complete |
 | AI-06 | Phase 5 | Complete |
-| AI-07 | Phase 5 | Pending |
+| AI-07 | Phase 5 | Complete |
 | PUB-01 | Phase 6 | Pending |
 | PUB-02 | Phase 6 | Pending |
 | PUB-03 | Phase 6 | Pending |
