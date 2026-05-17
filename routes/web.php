@@ -11,6 +11,7 @@ use App\Http\Controllers\Recipes\RecipeController;
 use App\Http\Controllers\Recipes\RecipeDraftController;
 use App\Http\Controllers\Recipes\RecipeDuplicateController;
 use App\Http\Controllers\Recipes\RecipeSearchController;
+use App\Http\Controllers\Recipes\RecipeTestController;
 use App\Http\Controllers\Recipes\RecipeVersionController;
 use App\Http\Controllers\Settings\UpdateLocaleController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('recipes', [RecipeController::class, 'store'])->name('recipes.store');
     Route::get('recipes/{recipe}/versions/compare', [RecipeVersionController::class, 'compare'])->name('recipes.versions.compare');
     Route::get('recipes/{recipe}/versions/{version}', [RecipeVersionController::class, 'show'])->name('recipes.versions.show');
+    Route::get('recipes/{recipe}/tests', [RecipeTestController::class, 'index'])->name('recipes.tests.index');
+    Route::post('recipes/{recipe}/tests', [RecipeTestController::class, 'store'])->name('recipes.tests.store');
+    Route::put('recipes/{recipe}/tests/{test}', [RecipeTestController::class, 'update'])->name('recipes.tests.update');
+    Route::delete('recipes/{recipe}/tests/{test}', [RecipeTestController::class, 'destroy'])->name('recipes.tests.destroy');
     Route::get('recipes/{recipe}', [RecipeController::class, 'show'])->name('recipes.show');
     Route::delete('recipes/{recipe}', [RecipeController::class, 'destroy'])->name('recipes.destroy');
     Route::put('recipes/{recipe}/draft', [RecipeDraftController::class, 'update'])->name('recipes.draft.update');
