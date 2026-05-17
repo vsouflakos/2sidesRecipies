@@ -8,6 +8,7 @@ use App\Http\Controllers\Ingredients\IngredientController;
 use App\Http\Controllers\Ingredients\IngredientPriceController;
 use App\Http\Controllers\Ingredients\PrivateIngredientController;
 use App\Http\Controllers\Recipes\RecipeController;
+use App\Http\Controllers\Recipes\RecipeConversationController;
 use App\Http\Controllers\Recipes\RecipeDraftController;
 use App\Http\Controllers\Recipes\RecipeDuplicateController;
 use App\Http\Controllers\Recipes\RecipeSearchController;
@@ -39,6 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('recipes/{recipe}/versions/compare', [RecipeVersionController::class, 'compare'])->name('recipes.versions.compare');
     Route::get('recipes/{recipe}/versions/{version}', [RecipeVersionController::class, 'show'])->name('recipes.versions.show');
     Route::get('recipes/{recipe}/tests', [RecipeTestController::class, 'index'])->name('recipes.tests.index');
+    Route::get('recipes/{recipe}/conversation', [RecipeConversationController::class, 'show'])->name('recipes.conversation.show');
+    Route::post('recipes/{recipe}/conversation/stream', [RecipeConversationController::class, 'stream'])->name('recipes.conversation.stream');
     Route::post('recipes/{recipe}/tests', [RecipeTestController::class, 'store'])->name('recipes.tests.store');
     Route::put('recipes/{recipe}/tests/{test}', [RecipeTestController::class, 'update'])->name('recipes.tests.update');
     Route::delete('recipes/{recipe}/tests/{test}', [RecipeTestController::class, 'destroy'])->name('recipes.tests.destroy');

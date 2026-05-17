@@ -13,6 +13,7 @@ use App\Models\RecipeDraft;
 use App\Models\RecipeSection;
 use App\Models\Tag;
 use App\Models\Unit;
+use App\Support\Recipes\PrismAdapter;
 use App\Support\Recipes\RecipeMetricsService;
 use App\Support\Recipes\RecipeVersionService;
 use Illuminate\Http\RedirectResponse;
@@ -246,6 +247,7 @@ class RecipeController extends Controller
             'units' => Unit::orderBy('type')->orderBy('name')->get(['id', 'name', 'symbol', 'type']),
             'tags' => Tag::orderBy('name')->get(['id', 'name']),
             'test_summary' => $testSummary,
+            'ai_enabled' => app(PrismAdapter::class)->isConfigured() && $request->user()->id === $recipe->user_id,
             'can' => [
                 'update' => $request->user()->can('update', $recipe),
                 'delete' => $request->user()->can('delete', $recipe),
