@@ -1,10 +1,11 @@
 ---
 phase: 7
 slug: ingredient-moderation
-status: draft
+status: approved
 shadcn_initialized: true
 preset: new-york / neutral / cssVariables
 created: 2026-05-18
+reviewed_at: 2026-05-18
 ---
 
 # Phase 7 — UI Design Contract
