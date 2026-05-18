@@ -1,11 +1,11 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Completed 07-ingredient-moderation-03-PLAN.md
-last_updated: "2026-05-18T15:35:45.190Z"
-last_activity: 2026-05-18 — Phase 7 Plan 3 complete (all 3 plans — phase complete)
+milestone_name: MVP
+status: shipped
+stopped_at: v1.0 MVP milestone complete — archived and tagged
+last_updated: "2026-05-18T00:00:00.000Z"
+last_activity: 2026-05-18 — v1.0 MVP milestone shipped (7 phases, 34 plans)
 progress:
   total_phases: 7
   completed_phases: 7
@@ -18,178 +18,40 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-16)
+See: .planning/PROJECT.md (updated 2026-05-18 after v1.0 milestone)
 
 **Core value:** A chef can build a structured, versioned recipe and trust the professional metrics computed from its ingredients (nutrition, cost, yield, allergens).
-**Current focus:** Phase 5 complete — next is Phase 6 (Publishing & Public Library), not yet planned
+**Current focus:** v1.0 MVP shipped — planning next milestone (`/gsd:new-milestone`)
 
 ## Current Position
 
-Phase: 7 of 7 (Ingredient Moderation) — COMPLETE
-Plan: 3 of 3 complete
-Status: Phase 7 Plan 3 complete — full ingredient moderation frontend (submit/withdraw CTA, frozen banner, review queue with completeness signal + pending-count nav badge, per-submission review screen with approve/reject, in-app notification bell, contributed-by credit, EN/EL copy); auth.permissions bug fixed (role-derived permissions now correctly shared)
-Last activity: 2026-05-18 — Phase 7 Plan 3 complete (all 3 plans — phase complete)
+Milestone: v1.0 MVP — SHIPPED 2026-05-18
+Phase: 7 of 7 complete
+Status: Milestone archived (`milestones/v1.0-*.md`), tagged `v1.0`. No active milestone — next is `/gsd:new-milestone`.
 
-Progress: [██████████] 100%
-
-## Performance Metrics
-
-**Velocity:**
-- Total plans completed: 0
-- Average duration: — min
-- Total execution time: 0 hours
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| - | - | - | - |
-
-**Recent Trend:**
-- Last 5 plans: none yet
-- Trend: —
-
-*Updated after each plan completion*
-| Phase 01-foundation P01 | 11 | 3 tasks | 17 files |
-| Phase 01-foundation P03 | 15 | 2 tasks | 7 files |
-| Phase 01-foundation P05 | 25 | 2 tasks | 5 files |
-| Phase 01-foundation P02 | 13 | 3 tasks | 10 files |
-| Phase 01-foundation P05 | 30 | 3 tasks | 5 files |
-| Phase 02-ingredient-library P01 | 40 | 3 tasks | 28 files |
-| Phase 02-ingredient-library P03 | 45 | 3 tasks | 14 files |
-| Phase 02-ingredient-library PP02 | 60 | 3 tasks | 13 files |
-| Phase 02-ingredient-library P04 | 45 | 2 tasks | 13 files |
-| Phase 02-ingredient-library P05 | 50 | 3 tasks | 11 files |
-| Phase 02-ingredient-library P06 | 13 | 2 tasks | 12 files |
-| Phase 03-recipe-core-metrics P01 | 16 | 3 tasks | 47 files |
-| Phase 03-recipe-core-metrics P02 | 8 | 2 tasks | 9 files |
-| Phase 03-recipe-core-metrics P03 | 9 | 2 tasks | 7 files |
-| Phase 03-recipe-core-metrics PP04 | 23 | 3 tasks | 21 files |
-| Phase 03-recipe-core-metrics P05 | 13 | 3 tasks | 13 files |
-| Phase 03-recipe-core-metrics P06 | 35 | 3 tasks | 10 files |
-| Phase 03-recipe-core-metrics P07 | 13 | 3 tasks | 8 files |
-| Phase 03-recipe-core-metrics P08 | 180 | 2 tasks | 13 files |
-| Phase 04-recipe-tests P01 | 25 | 3 tasks | 10 files |
-| Phase 04-recipe-tests P02 | 8 | 2 tasks | 8 files |
-| Phase 04-recipe-tests PP03 | 10 | 3 tasks | 8 files |
-| Phase 04-recipe-tests P04 | 45 | 3 tasks | 7 files |
-| Phase 05-ai-agent P01 | 17 | 3 tasks | 14 files |
-| Phase 05-ai-agent PP02 | 16 | 3 tasks | 7 files |
-| Phase 05-ai-agent PP03 | 20 | 2 tasks | 3 files |
-| Phase 05-ai-agent P04 | — | 4 tasks | 17 files |
-| Phase 06-publishing-public-library P02 | 16 | 3 tasks | 7 files |
-| Phase 06-publishing-public-library P03 | 45 | 3 tasks | 16 files |
-| Phase 07-ingredient-moderation P01 | 40 | 3 tasks | 14 files |
-| Phase 07-ingredient-moderation P02 | 16 | 3 tasks | 8 files |
+Progress: [██████████] 100% (v1.0 complete)
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- Roadmap: Phase 3 deliberately bundles recipe core with metrics engine — they are inseparable (metrics depend on draft/version structures; separating would block metric development)
-- Roadmap: Phase 6 (Publishing) depends on Phase 3, not Phase 5 — can be worked after Phase 3 in parallel with Phases 4 and 5
-- Roadmap: Phase 7 (Moderation) depends on Phase 2 — can be worked in parallel with later phases once Phase 2 is complete
-- [Phase 01-foundation]: HasRoles trait added to User model immediately as it is required for spatie/laravel-permission to function on the User model
-- [Phase 01-foundation]: Wave 0 test files write real assertions rather than skip(), giving later waves concrete red-to-green targets
-- [Phase 01-foundation]: Allergen slug used as firstOrCreate key (unique per EU regulation) rather than name — slug is stable canonical identifier
-- [Phase 01-foundation]: base_factor cast as decimal:6 to preserve conversion precision without floating-point drift
-- [Phase 01-foundation]: Route gate uses app()->isLocal() || app()->runningUnitTests() so Pest tests can reach /dev/styleguide in APP_ENV=testing
-- [Phase 01-foundation]: Route declarations for admin.users.* placed in Plan 02 so Plan 04 only adds the controller
-- [Phase 01-foundation]: EnsureUserIsActive placed after AttemptToAuthenticate, before PrepareAuthenticatedSession to block deactivated users without writing session
-- [Phase 01-foundation]: Route gated with app()->isLocal() || app()->runningUnitTests() so Pest tests can reach /dev/styleguide in APP_ENV=testing without relaxing the production gate
-- [Phase 01-foundation]: Warm-minimal token correctness for UI-02 is perceptual — human visual verification at the checkpoint is the authoritative artifact, not automated tests
-- [Phase 01-foundation]: Redirect-not-JSON pattern for Inertia mutation endpoints — assignRole/toggleStatus/destroy must return back() redirect so Inertia performs a prop-refresh cycle and the table re-renders (discovered at Plan 04 human-verify checkpoint)
-- [Phase 01-foundation]: React deduplication via vite.config.ts resolve.dedupe required for laravel-react-i18n — the package bundles its own React copy; without dedupe, hook invariant violations cause app-wide white screen (discovered at Plan 06 human-verify checkpoint)
-- [Phase 01-foundation]: Silent fetch() (not router.put()) for fire-and-forget locale persistence — router.put() is always an Inertia visit; fetch() allows optimistic setLocale() with no page reload
-- [Phase 02-ingredient-library]: Seeded 50 ingredient subcategories (the full RESEARCH.md Starter Category Tree) — the enumerated tree is authoritative and counts to 50, not the plan-text figure of 41
-- [Phase 02-ingredient-library]: Added HasFactory + AllergenFactory to the Phase 1 Allergen model so ingredient tests can build individual allergen rows without seeding all 14
-- [Phase 02-ingredient-library]: ingredients table uses a (source, source_id) unique index — required for DB::upsert idempotency in the Plan 02-02 import pipeline; data_hash column gates the verified-reset on re-import
-- [Phase 02-ingredient-library]: MySQL-only FULLTEXT index on ingredient_translations.name guarded by DB::getDriverName() so SQLite test runs do not error
-- [Phase 02-ingredient-library]: Private ingredient visibility scope applied as base constraint — all ingredient queries exclude other users' private ingredients regardless of source filter
-- [Phase 02-ingredient-library]: Allergen-free filter fires on Popover close (not per checkbox tick) per UI-SPEC interaction contract to avoid multiple reloads
-- [Phase 02-ingredient-library]: EL dismiss labels are context-specific per UI-SPEC: Διατήρηση Ανεπιβεβαίωτου / Επιστροφή στη Βιβλιοθήκη / Διατήρηση Συστατικού
-- [Phase 02-ingredient-library]: CIQUAL XML bundled as 60-food representative subset (CC-BY 4.0); full dataset obtained by running import against live ANSES download
-- [Phase 02-ingredient-library]: Two-pass verified-reset in IngredientImporter: caller must call resetVerifiedForChangedRows BEFORE upsertIngredients so hash comparison uses old stored values
-- [Phase 02-ingredient-library]: Gate::authorize() used instead of this->authorize() - base Controller has no AuthorizesRequests trait; Gate facade works identically
-- [Phase 02-ingredient-library]: IngredientValidationRules trait accepts name field as alias for name_en for pre-written test compatibility
-- [Phase 02-ingredient-library]: IngredientDetailResource resolved via ->resolve() in the controller so Inertia receives a plain array (no JsonResource data-wrapping)
-- [Phase 02-ingredient-library]: ingredients.show route placed AFTER ingredients/create and ingredients/{ingredient}/edit so the {ingredient} wildcard does not shadow the static-segment routes
-- [Phase 02-ingredient-library]: verify-ingredients route given its own permission-gated group, separate from review-ingredients, to keep the two moderation permissions explicit
-- [Phase 02-ingredient-library]: IngredientVerificationTest fixture reference corrected — source_id 'sample-001' had no fixture match; changed to alim_code '2001' with path tests/fixtures/ingredients/ciqual-sample.xml
-- [Phase 02-ingredient-library]: PerGramCostCalculator newed directly in controller — simple stateless calculator with no swappable dependencies; injection adds no value
-- [Phase 02-ingredient-library]: prices.unit normalized to {name, symbol} in IngredientDetailResource — consistent with conversions pattern, avoids leaking Unit model columns
-- [Phase 03-recipe-core-metrics]: Circular FK columns (recipes.current_version_id, recipe_ingredient_lines.sub_recipe_version_id) declared as plain unsignedBigInteger without constrained() to avoid chicken-and-egg ordering failure; deferred FK constraints added in migration 000010
-- [Phase 03-recipe-core-metrics]: Wave 0 test suite: 53 tests execute without parse errors, 12 pass (schema/model), 41 red (routes/services not yet built) — correct RED state
-- [Phase 03-recipe-core-metrics]: Calculators return plain arrays (not typed result objects) — Wave 0 tests use array-key access and are authoritative over plan's behavior block
-- [Phase 03-recipe-core-metrics]: Scale-10 intermediate for per-line nutrition contributions prevents drift when summing many lines; multiply-before-divide for shrinkage_pct preserves full precision into scale-4 final result
-- [Phase 03-recipe-core-metrics]: AllergenRollupService.compute(Recipe) returns {contains, may_contain} arrays to match test contract
-- [Phase 03-recipe-core-metrics]: MetricsRollupService created separately from MetricsAggregator to match MetricsRollupTest computeForLine contract
-- [Phase 03-recipe-core-metrics]: DraftSequenceMismatchException extends RuntimeException; Plan 04 controller maps it to 409 Conflict
-- [Phase 03-recipe-core-metrics]: RecipeVersionController gains a show method and recipes.versions.show route — Wave 0 test references this route which was not in the plan spec
-- [Phase 03-recipe-core-metrics]: Draft-augmented BFS cycle detection — circular reference detector traverses both committed recipe_ingredient_lines AND draft JSON, so draft-only sub-recipe additions are caught
-- [Phase 03-recipe-core-metrics]: Circular reference validation returns JSON directly not ValidationException — PUT request without Accept:application/json would redirect instead of returning 422 JSON
-- [Phase 03-recipe-core-metrics]: Auto-save hook uses router.put with only:['draft','metrics'] and 600ms debounce per UI-SPEC; Saved indicator clears after 2s
-- [Phase 03-recipe-core-metrics]: metrics-panel-mount div reserved as data-slot attribute so Plan 06 can slot in metrics panel without modifying show.tsx layout
-- [Phase 03-recipe-core-metrics]: RecipeMetrics TS types corrected to match PHP service output: allergens as slug arrays, bakers as percentages map, missing_data as string[], selling_price added to RecipeBuilderData
-- [Phase 03-recipe-core-metrics]: Allergen display names resolved client-side via slugToName() — no extra server call needed; Apply to Draft uses integer rational (numerator/denominator=1000) not pre-rounded float
-- [Phase 03-recipe-core-metrics]: Sub-recipe update badge is a clickable button element wrapping a Badge for keyboard accessibility
-- [Phase 03-recipe-core-metrics]: edit_sequence added to RecipeBuilderData TS type to support Recall sequence guard client-side
-- [Phase 03-recipe-core-metrics]: MetricsAggregator reworked post-Task-2: PHP service output shape corrected to match TS types — per-portion not per-100g default, allergens as slug arrays, bakers as percentages map, missing_data as string[]
-- [Phase 03-recipe-core-metrics]: Draft metrics exposed via RecipeDraftController save response — avoids extra round-trip for live metrics panel update
-- [Phase 03-recipe-core-metrics]: show.tsx builder fully null-safe via safeStr() sanitizing wrapper — all t() calls guard against null section/ingredient names
-- [Phase 04-recipe-tests]: Wave 0 test suite writes real assertions (no skip/markTestIncomplete) — 13 tests RED because routes/controller not yet built; gives plan 04-02 a concrete GREEN target
-- [Phase 04-recipe-tests]: RecipeTestPhoto.url() accessor uses Storage::disk(config('filesystems.default', 'public')) so disk is configurable and tests can use Storage::fake()
-- [Phase 04-recipe-tests]: recipe_version_id FK uses restrictOnDelete (not cascadeOnDelete) to prevent accidental test data loss when recipe versions are retained for historical tracking
-- [Phase 04-recipe-tests]: UpdateRecipeTestRequest uses sometimes modifier — Wave 0 test only sends subset of fields for update; required without sometimes fails partial updates
-- [Phase 04-recipe-tests]: Stub recipes/tests/index.tsx created (deviation Rule 3) — Inertia assertInertia() triggers Vite manifest lookup; page must exist in build for GET index test to pass
-- [Phase 04-recipe-tests]: abort_unless scope-check on nested resource before Gate::authorize — returns 404 before revealing ownership info
-- [Phase 04-recipe-tests]: Separate deletedPhotoIds state (not in form.data) — avoids serialization issues and keeps form.transform() clean for the _method: PUT injection on edit
-- [Phase 04-recipe-tests]: TestPhotoGrid dual-mode via discriminated union (mode: upload|display) — single component, two distinct behaviors, no prop collision
-- [Phase 04-recipe-tests]: test_summary passed as sibling Inertia prop (not nested in RecipeBuilderResource) — consistent with metrics/versions/can sibling-prop pattern, keeps resource clean
-- [Phase 04-recipe-tests]: setLayoutProps() pattern required for dynamic breadcrumbs — layout.breadcrumbs = function causes React error #31 in production build; use setLayoutProps() inside useEffect as established by two-factor-challenge.tsx
-- [Phase 05-ai-agent]: No default AI provider baked in — AI_PROVIDER env must be set by deployer; empty string hides the AI feature (ai_enabled prop)
-- [Phase 05-ai-agent]: proposal_state JSON column stores {action, data, status, summary, kind} — status is pending|applied|dismissed|failed, kind is edit|variant
-- [Phase 05-ai-agent]: AgentContextBuilderTest uses TestCase+RefreshDatabase via uses() — Unit tests that use factories/IoC need Laravel app context even in Unit/ directory
-- [Phase 05-ai-agent]: buildMessages returns plain arrays not Prism objects — Wave 0 test toMatchArray(['role']) requires role key; AgentOrchestrator converts to UserMessage/AssistantMessage
-- [Phase 05-ai-agent]: Stream collects AI response synchronously before returning StreamedResponse — Laravel test infrastructure never executes stream callback; synchronous collection ensures DB persistence within HTTP lifecycle
-- [Phase 05-ai-agent]: SuggestionApplier merges recipeDraftDataRules and recipeMetadataRules for proposal validation — metadata rules prefixed with data. and required stripped to allow partial updates
-- [Phase 05-ai-agent]: Builder holds the draft in local React state — external mutations (AI Apply, Recall) must resync it explicitly via the partial-reload onSuccess; a useState initializer runs only at mount (discovered at 05-04 human-verify checkpoint)
-- [Phase 05-ai-agent]: Agent edits apply as deltas via DraftActionApplier, never a full-draft replace — preserves unrelated fields, keeps each Apply to one Recall step
-- [Phase 05-ai-agent]: Agent has a search_ingredients tool with tokenized name matching and a mandatory-search instruction so it links real catalog ingredients instead of inventing free-text duplicates; valid unit symbols embedded in the propose_recipe_edit contract
-- [Phase 05-ai-agent]: Prism::fake() Wave 0 tests cannot exercise SSE framing, the XSRF cookie, real streaming, or live tool-call ergonomics — those bugs only surfaced at the live human-verify checkpoint
-- [Phase 06-publishing-public-library]: RecipePolicy::view uses ?User (nullable) so Laravel invokes the policy for guests and allows published recipe access — non-nullable User causes Laravel to skip policy for unauthenticated requests
-- [Phase 06-publishing-public-library]: published_version_id declared as plain unsignedBigInteger without FK constraint — follows Phase 3 deferred-FK pattern for nullable circular FKs
-- [Phase 06-publishing-public-library]: RecipeFactory default includes is_published => false so in-memory model reflects DB default immediately — avoids null vs false comparison failures in tests
-- [Phase 06-publishing-public-library]: Library stub pages (index.tsx, show.tsx) created before routes to prevent Vite manifest errors when Plan 02 routes are tested — established Phase 4 lesson
-- [Phase 06-publishing-public-library]: Sub-recipe validation throws HttpResponseException with JSON 422 — matches admin AssignRoleRequest pattern and ensures assertStatus(422) test passes regardless of request content-type
-- [Phase 06-publishing-public-library]: Wave 0 publish test assertions fixed from assertSuccessful()->orStatus(302) to assertRedirect() — publish/unpublish return 302 Inertia-style redirects, not 2xx responses
-- [Phase 06-publishing-public-library]: LibraryController has no Gate::authorize — where('is_published', true) scope IS the access control; adding Gate would cause false 403s for guests
-- [Phase 06-publishing-public-library]: PublicRecipeResource and PublicRecipeListResource read only publishedVersion cached columns — never re-resolve ingredient_id against live ingredients table per RESEARCH Anti-Patterns
-- [Phase 06-publishing-public-library]: PublicRecipeResource resolves snapshot unit_id to a unit symbol via a Unit id=>symbol lookup map — snapshot ingredient lines store unit_id (numeric) not a unit string, and the public page receives no units list, so resolution must happen server-side (fix surfaced at the 06-03 human-verify checkpoint)
-- [Phase 06-publishing-public-library]: PublicRecipeResource.mapSection defensively reads both `lines` (draft shape) and `ingredient_lines` (resource shape) snapshot keys
-- [Phase 06-publishing-public-library]: Public pages (library index + show) use a dedicated GuestPublicLayout, not AppSidebarLayout — guest browse must never depend on the auth-only sidebar; assigned via the Inertia static `layout` page property
-- [Phase 06-publishing-public-library]: Library index excludes the ingredient filter from its reload data payload per UI-SPEC — the ingredient filter is a private-recipe planning tool, not a public-browse signal
-- [Phase 06-publishing-public-library]: Update-to-current version push is a one-click action with no confirmation dialog — intentional asymmetry per CONTEXT.md (publish/unpublish confirm; version update does not)
-- [Phase 07-ingredient-moderation]: Withdrawn case added to SubmissionStatus enum so withdrawal events are recorded as history rows (not soft-deleted), preserving full audit trail while reverting ingredient to Private status
-- [Phase 07-ingredient-moderation]: submit() policy uses in_array([Private, Rejected], strict: true) with separate early-return ownership guard — fixes operator-precedence bug in RESEARCH draft and makes the logic explicit
-- [Phase 07-ingredient-moderation]: RejectIngredientRequest.failedValidation() throws HttpResponseException 422 — required because test asserts assertStatus(422) on plain HTTP POST; standard FormRequest redirects 302 in non-Inertia context
-- [Phase 07-ingredient-moderation]: Contracts\Validation\Validator interface required in failedValidation() type hint — concrete class causes PHP Fatal Error (signature incompatible with parent FormRequest)
-- [Phase 07-ingredient-moderation]: notify() dispatched AFTER DB::transaction closes — inside transaction the submission row may not yet be committed; notifying inside risks sending notification that gets rolled back
-- [Phase 07-ingredient-moderation]: getAllPermissions()->pluck('name') used instead of getPermissionNames() in HandleInertiaRequests — spatie/laravel-permission getPermissionNames() returns only directly-assigned permissions, not role-derived ones; since all permissions flow through roles, auth.permissions was always empty until this fix (surfaced at 07-03 human-verify checkpoint)
+Strategic decisions and their outcomes are logged in PROJECT.md Key Decisions.
+~80 phase-level implementation decisions from v1.0 are archived in the phase
+summaries (`.planning/phases/*/`) and `milestones/v1.0-ROADMAP.md`.
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-None yet.
+None blocking. Carried tech debt (see PROJECT.md → Known Tech Debt):
+- Unenforced `create-recipes` / `manage-own-ingredients` permissions (Phase 1).
+- `nullOnDelete()` on `recipe_ingredient_lines.ingredient_id` (Phase 7, out of scope).
+- Nyquist validation partial for phases 1, 2, 4, 6, 7.
 
 ## Session Continuity
 
-Last session: 2026-05-18T15:10:00.000Z
-Stopped at: Completed 07-ingredient-moderation-03-PLAN.md
+Last session: 2026-05-18 — v1.0 milestone completion
+Stopped at: v1.0 MVP shipped and archived
 Resume file: None
