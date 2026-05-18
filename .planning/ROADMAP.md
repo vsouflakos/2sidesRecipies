@@ -129,7 +129,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. User can submit a private ingredient for review; its visibility changes to "submitted" and it remains usable by the submitting user
   2. A moderator can open the review queue, inspect a submitted ingredient's data, and approve or reject it with notes
   3. An approved submission is promoted to the official library and becomes visible to all users; a rejected submission reverts to private
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 07-01-PLAN.md — Schema foundation: SubmissionStatus enum, submissions + notifications tables, submission_status column, policy guards, Wave 0 RED test suite
+- [ ] 07-02-PLAN.md — Moderation backend: submit/withdraw + duplicate-check, FIFO review queue, approve/reject with convert-in-place promotion, decision notification, shared props
+- [ ] 07-03-PLAN.md — Moderation frontend: submit/withdraw CTA + status badge, review queue + per-submission screen, pending-count nav badge, notifications, EN/EL copy, end-to-end checkpoint
 
 ## Progress
 
@@ -145,4 +148,4 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 | 4. Recipe Tests | 4/4 | Complete   | 2026-05-17 |
 | 5. AI Agent | 4/4 | Complete   | 2026-05-18 |
 | 6. Publishing & Public Library | 3/3 | Complete   | 2026-05-18 |
-| 7. Ingredient Moderation | 0/TBD | Not started | - |
+| 7. Ingredient Moderation | 0/3 | Not started | - |
