@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\SubmissionStatus;
 use Database\Factories\IngredientFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ingredient extends Model
@@ -74,6 +76,7 @@ class Ingredient extends Model
         'de_value',
         'brix',
         'ingredient_class',
+        'submission_status',
     ];
 
     /**
@@ -127,6 +130,7 @@ class Ingredient extends Model
             'pod_coefficient' => 'decimal:4',
             'de_value' => 'decimal:4',
             'brix' => 'decimal:4',
+            'submission_status' => SubmissionStatus::class,
         ];
     }
 
@@ -168,6 +172,32 @@ class Ingredient extends Model
     }
 
     /**
+     * The submission history records for this ingredient.
+     */
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(IngredientSubmission::class);
+    }
+
+    /**
+     * The most recent submission record for this ingredient.
+     */
+    public function latestSubmission(): HasOne
+    {
+        return $this->hasOne(IngredientSubmission::class)->latestOfMany();
+    }
+
+    /**
+     * The full per-100g nutrient set, beyond the 29 flat nutrition columns.
+     */
+    public function nutrients(): BelongsToMany
+    {
+        return $this->belongsToMany(Nutrient::class, 'ingredient_nutrients')
+            ->withPivot('amount')
+            ->withTimestamps();
+    }
+
+    /**
      * Get the ingredient name for the given locale, falling back to English then a dash.
      */
     public function nameFor(string $locale): string
@@ -191,5 +221,13 @@ class Ingredient extends Model
     public function isPrivate(): bool
     {
         return $this->user_id !== null;
+    }
+
+    /**
+     * Determine if this ingredient is currently pending moderator review.
+     */
+    public function isPendingReview(): bool
+    {
+        return $this->submission_status === SubmissionStatus::Submitted;
     }
 }

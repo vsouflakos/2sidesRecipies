@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\SubmissionStatus;
 use App\Models\Ingredient;
 use App\Models\IngredientCategory;
 use App\Models\User;
@@ -57,6 +58,26 @@ class IngredientFactory extends Factory
             'verified' => true,
             'verified_by' => $verifier->id,
             'verified_at' => now(),
+        ]);
+    }
+
+    /**
+     * Mark the ingredient as submitted for review.
+     */
+    public function submitted(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'submission_status' => SubmissionStatus::Submitted->value,
+        ]);
+    }
+
+    /**
+     * Mark the ingredient as rejected.
+     */
+    public function rejected(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'submission_status' => SubmissionStatus::Rejected->value,
         ]);
     }
 }
