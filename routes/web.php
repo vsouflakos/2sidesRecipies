@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\StyleguideController;
 use App\Http\Controllers\Ingredients\IngredientController;
 use App\Http\Controllers\Ingredients\IngredientPriceController;
+use App\Http\Controllers\Ingredients\IngredientSubmissionController;
 use App\Http\Controllers\Ingredients\PrivateIngredientController;
 use App\Http\Controllers\Library\LibraryController;
 use App\Http\Controllers\Recipes\PublishRecipeController;
@@ -37,6 +38,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('ingredients/{ingredient}', [PrivateIngredientController::class, 'update'])->name('ingredients.update');
     Route::delete('ingredients/{ingredient}', [PrivateIngredientController::class, 'destroy'])->name('ingredients.destroy');
     Route::post('ingredients/{ingredient}/prices', [IngredientPriceController::class, 'store'])->name('ingredients.prices.store');
+    Route::get('ingredients/{ingredient}/duplicate-check', [IngredientSubmissionController::class, 'duplicateCheck'])->name('ingredients.duplicate-check');
+    Route::post('ingredients/{ingredient}/submit', [IngredientSubmissionController::class, 'store'])->name('ingredients.submit');
+    Route::delete('ingredients/{ingredient}/submit', [IngredientSubmissionController::class, 'destroy'])->name('ingredients.withdraw');
     Route::get('ingredients/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
 
     // Recipe routes — static segments before the {recipe} wildcard
