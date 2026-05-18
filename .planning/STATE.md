@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 07-ingredient-moderation-02-PLAN.md
-last_updated: "2026-05-18T13:38:40.801Z"
-last_activity: 2026-05-18 — Phase 6 Plan 3 complete
+stopped_at: Completed 07-ingredient-moderation-03-PLAN.md
+last_updated: "2026-05-18T15:10:00.000Z"
+last_activity: 2026-05-18 — Phase 7 Plan 3 complete (all 3 plans — phase complete)
 progress:
   total_phases: 7
   completed_phases: 6
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 
 ## Current Position
 
-Phase: 6 of 7 (Publishing & Public Library) — IN PROGRESS
-Plan: 3 of 4 complete
-Status: Phase 6 Plan 3 complete — publishing & public library UI (publish/unpublish dialogs, builder header controls, My Recipes card menu, public library browse page, public recipe page, guest layout, Library nav, EN/EL copy)
-Last activity: 2026-05-18 — Phase 6 Plan 3 complete
+Phase: 7 of 7 (Ingredient Moderation) — COMPLETE
+Plan: 3 of 3 complete
+Status: Phase 7 Plan 3 complete — full ingredient moderation frontend (submit/withdraw CTA, frozen banner, review queue with completeness signal + pending-count nav badge, per-submission review screen with approve/reject, in-app notification bell, contributed-by credit, EN/EL copy); auth.permissions bug fixed (role-derived permissions now correctly shared)
+Last activity: 2026-05-18 — Phase 7 Plan 3 complete (all 3 plans — phase complete)
 
 Progress: [██████████] 100%
 
@@ -178,6 +178,7 @@ Recent decisions affecting current work:
 - [Phase 07-ingredient-moderation]: RejectIngredientRequest.failedValidation() throws HttpResponseException 422 — required because test asserts assertStatus(422) on plain HTTP POST; standard FormRequest redirects 302 in non-Inertia context
 - [Phase 07-ingredient-moderation]: Contracts\Validation\Validator interface required in failedValidation() type hint — concrete class causes PHP Fatal Error (signature incompatible with parent FormRequest)
 - [Phase 07-ingredient-moderation]: notify() dispatched AFTER DB::transaction closes — inside transaction the submission row may not yet be committed; notifying inside risks sending notification that gets rolled back
+- [Phase 07-ingredient-moderation]: getAllPermissions()->pluck('name') used instead of getPermissionNames() in HandleInertiaRequests — spatie/laravel-permission getPermissionNames() returns only directly-assigned permissions, not role-derived ones; since all permissions flow through roles, auth.permissions was always empty until this fix (surfaced at 07-03 human-verify checkpoint)
 
 ### Pending Todos
 
@@ -189,6 +190,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-18T13:38:40.796Z
-Stopped at: Completed 07-ingredient-moderation-02-PLAN.md
+Last session: 2026-05-18T15:10:00.000Z
+Stopped at: Completed 07-ingredient-moderation-03-PLAN.md
 Resume file: None

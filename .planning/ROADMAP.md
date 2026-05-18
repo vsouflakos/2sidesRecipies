@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Recipe Tests** - Trial run and structured experiment recording against recipe versions (completed 2026-05-17)
 - [x] **Phase 5: AI Agent** - Per-recipe conversational AI agent with scoped draft-editing tools (completed 2026-05-18)
 - [x] **Phase 6: Publishing & Public Library** - Publish/unpublish recipes and browse the public library (completed 2026-05-18)
-- [ ] **Phase 7: Ingredient Moderation** - User ingredient submission and moderator review/promote workflow
+- [x] **Phase 7: Ingredient Moderation** - User ingredient submission and moderator review/promote workflow (completed 2026-05-18)
 
 ## Phase Details
 
@@ -148,4 +148,4 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 | 4. Recipe Tests | 4/4 | Complete   | 2026-05-17 |
 | 5. AI Agent | 4/4 | Complete   | 2026-05-18 |
 | 6. Publishing & Public Library | 3/3 | Complete   | 2026-05-18 |
-| 7. Ingredient Moderation | 2/3 | In Progress|  |
+| 7. Ingredient Moderation | 3/3 | Complete   | 2026-05-18 |
