@@ -1,8 +1,9 @@
 import { usePage } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Carrot, ChefHat, FolderGit2, Globe, LayoutGrid, Users } from 'lucide-react';
+import { BookOpen, Carrot, ChefHat, ClipboardList, FolderGit2, Globe, LayoutGrid, Users } from 'lucide-react';
 import { useLaravelReactI18n } from 'laravel-react-i18n';
 import AppLogo from '@/components/app-logo';
+import { IngredientNotifications } from '@/components/ingredient-notifications';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -21,6 +22,7 @@ import { index as ingredientsIndex } from '@/routes/ingredients';
 import { index as libraryIndex } from '@/routes/library';
 import { index as recipesIndex } from '@/routes/recipes';
 import { index as adminUsersIndex } from '@/routes/admin/users';
+import { index as adminIngredientsIndex } from '@/routes/admin/ingredients';
 import type { Auth, NavItem } from '@/types';
 
 const footerNavItems: NavItem[] = [
@@ -41,6 +43,8 @@ export function AppSidebar() {
     const auth = usePage().props.auth as Auth;
     const permissions = auth.permissions ?? [];
     const canManageUsers = permissions.includes('manage-users');
+    const canReviewIngredients = permissions.includes('review-ingredients');
+    const pendingIngredientReviewCount = (usePage().props.pendingIngredientReviewCount as number | null) ?? null;
 
     const mainNavItems: NavItem[] = [
         {
@@ -72,6 +76,19 @@ export function AppSidebar() {
                   },
               ]
             : []),
+        ...(canReviewIngredients
+            ? [
+                  {
+                      title: t('app.nav.ingredient_review'),
+                      href: adminIngredientsIndex().url,
+                      icon: ClipboardList,
+                      badge:
+                          pendingIngredientReviewCount && pendingIngredientReviewCount > 0
+                              ? String(pendingIngredientReviewCount)
+                              : undefined,
+                  },
+              ]
+            : []),
     ];
 
     return (
@@ -95,6 +112,7 @@ export function AppSidebar() {
             <SidebarFooter>
                 <NavFooter items={footerNavItems} className="mt-auto" />
                 <LanguageSwitcher />
+                <IngredientNotifications />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
