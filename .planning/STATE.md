@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-stopped_at: "Phase 6 Plan 2 complete"
-last_updated: "2026-05-18T00:00:00.000Z"
-last_activity: 2026-05-18 — Phase 6 Plan 2 (Publish/Unpublish Backend + Library Controller) complete
+stopped_at: "Phase 6 Plan 3 complete"
+last_updated: "2026-05-18T17:18:00.000Z"
+last_activity: 2026-05-18 — Phase 6 Plan 3 (Publishing & Public Library UI) complete
 progress:
   total_phases: 7
   completed_phases: 5
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-05-16)
 ## Current Position
 
 Phase: 6 of 7 (Publishing & Public Library) — IN PROGRESS
-Plan: 2 of 4 complete
-Status: Phase 6 Plan 2 complete — publish/unpublish backend (PublishRecipeController, LibraryController, 2 public resources, routes, Wayfinder)
-Last activity: 2026-05-18 — Phase 6 Plan 2 complete
+Plan: 3 of 4 complete
+Status: Phase 6 Plan 3 complete — publishing & public library UI (publish/unpublish dialogs, builder header controls, My Recipes card menu, public library browse page, public recipe page, guest layout, Library nav, EN/EL copy)
+Last activity: 2026-05-18 — Phase 6 Plan 3 complete
 
 Progress: [██████████] 100%
 
@@ -78,6 +78,7 @@ Progress: [██████████] 100%
 | Phase 05-ai-agent PP03 | 20 | 2 tasks | 3 files |
 | Phase 05-ai-agent P04 | — | 4 tasks | 17 files |
 | Phase 06-publishing-public-library P02 | 16 | 3 tasks | 7 files |
+| Phase 06-publishing-public-library P03 | 45 | 3 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -165,6 +166,11 @@ Recent decisions affecting current work:
 - [Phase 06-publishing-public-library]: Wave 0 publish test assertions fixed from assertSuccessful()->orStatus(302) to assertRedirect() — publish/unpublish return 302 Inertia-style redirects, not 2xx responses
 - [Phase 06-publishing-public-library]: LibraryController has no Gate::authorize — where('is_published', true) scope IS the access control; adding Gate would cause false 403s for guests
 - [Phase 06-publishing-public-library]: PublicRecipeResource and PublicRecipeListResource read only publishedVersion cached columns — never re-resolve ingredient_id against live ingredients table per RESEARCH Anti-Patterns
+- [Phase 06-publishing-public-library]: PublicRecipeResource resolves snapshot unit_id to a unit symbol via a Unit id=>symbol lookup map — snapshot ingredient lines store unit_id (numeric) not a unit string, and the public page receives no units list, so resolution must happen server-side (fix surfaced at the 06-03 human-verify checkpoint)
+- [Phase 06-publishing-public-library]: PublicRecipeResource.mapSection defensively reads both `lines` (draft shape) and `ingredient_lines` (resource shape) snapshot keys
+- [Phase 06-publishing-public-library]: Public pages (library index + show) use a dedicated GuestPublicLayout, not AppSidebarLayout — guest browse must never depend on the auth-only sidebar; assigned via the Inertia static `layout` page property
+- [Phase 06-publishing-public-library]: Library index excludes the ingredient filter from its reload data payload per UI-SPEC — the ingredient filter is a private-recipe planning tool, not a public-browse signal
+- [Phase 06-publishing-public-library]: Update-to-current version push is a one-click action with no confirmation dialog — intentional asymmetry per CONTEXT.md (publish/unpublish confirm; version update does not)
 
 ### Pending Todos
 
@@ -176,6 +182,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-17T23:47:51Z
-Stopped at: Completed 06-02-PLAN.md
-Resume file: .planning/phases/06-publishing-public-library/06-02-SUMMARY.md
+Last session: 2026-05-18T17:18:00Z
+Stopped at: Completed 06-03-PLAN.md
+Resume file: .planning/phases/06-publishing-public-library/06-03-SUMMARY.md

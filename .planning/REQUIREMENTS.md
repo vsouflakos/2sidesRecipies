@@ -92,7 +92,7 @@ including the AI agent. Each maps to a roadmap phase.
 
 ### Publishing & Public Library
 
-- [ ] **PUB-01**: Recipes are private by default
+- [x] **PUB-01**: Recipes are private by default
 - [x] **PUB-02**: User can publish a recipe to the public library
 - [x] **PUB-03**: User can unpublish a previously published recipe
 - [x] **PUB-04**: Users can browse and search the public library of published recipes
@@ -223,7 +223,7 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | AI-05 | Phase 5 | Complete |
 | AI-06 | Phase 5 | Complete |
 | AI-07 | Phase 5 | Complete |
-| PUB-01 | Phase 6 | Pending |
+| PUB-01 | Phase 6 | Complete |
 | PUB-02 | Phase 6 | Complete |
 | PUB-03 | Phase 6 | Complete |
 | PUB-04 | Phase 6 | Complete |
