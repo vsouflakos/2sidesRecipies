@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\IngredientReviewController;
+use App\Http\Controllers\Admin\IngredientSubmissionController as AdminIngredientSubmissionController;
 use App\Http\Controllers\Admin\IngredientVerificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dev\StyleguideController;
@@ -89,6 +90,9 @@ Route::middleware(['auth', 'verified', 'permission:review-ingredients'])
     ->name('admin.')
     ->group(function () {
         Route::get('ingredients', [IngredientReviewController::class, 'index'])->name('ingredients.index');
+        Route::get('ingredient-submissions/{submission}', [IngredientReviewController::class, 'show'])->name('ingredient-submissions.show');
+        Route::post('ingredient-submissions/{submission}/approve', [AdminIngredientSubmissionController::class, 'approve'])->name('ingredient-submissions.approve');
+        Route::post('ingredient-submissions/{submission}/reject', [AdminIngredientSubmissionController::class, 'reject'])->name('ingredient-submissions.reject');
     });
 
 Route::middleware(['auth', 'verified', 'permission:verify-ingredients'])
