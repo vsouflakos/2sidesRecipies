@@ -148,4 +148,4 @@ Note: Phase 6 depends on Phase 3 (not 5), so Phases 6 and 7 may be worked after 
 | 4. Recipe Tests | 4/4 | Complete   | 2026-05-17 |
 | 5. AI Agent | 4/4 | Complete   | 2026-05-18 |
 | 6. Publishing & Public Library | 3/3 | Complete   | 2026-05-18 |
-| 7. Ingredient Moderation | 1/3 | In Progress|  |
+| 7. Ingredient Moderation | 2/3 | In Progress|  |

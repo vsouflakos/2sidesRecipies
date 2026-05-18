@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 07-ingredient-moderation-01-PLAN.md
-last_updated: "2026-05-18T13:18:27.843Z"
+stopped_at: Completed 07-ingredient-moderation-02-PLAN.md
+last_updated: "2026-05-18T13:38:40.801Z"
 last_activity: 2026-05-18 — Phase 6 Plan 3 complete
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 34
-  completed_plans: 32
+  completed_plans: 33
   percent: 100
 ---
 
@@ -80,6 +80,7 @@ Progress: [██████████] 100%
 | Phase 06-publishing-public-library P02 | 16 | 3 tasks | 7 files |
 | Phase 06-publishing-public-library P03 | 45 | 3 tasks | 16 files |
 | Phase 07-ingredient-moderation P01 | 40 | 3 tasks | 14 files |
+| Phase 07-ingredient-moderation P02 | 16 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -174,6 +175,9 @@ Recent decisions affecting current work:
 - [Phase 06-publishing-public-library]: Update-to-current version push is a one-click action with no confirmation dialog — intentional asymmetry per CONTEXT.md (publish/unpublish confirm; version update does not)
 - [Phase 07-ingredient-moderation]: Withdrawn case added to SubmissionStatus enum so withdrawal events are recorded as history rows (not soft-deleted), preserving full audit trail while reverting ingredient to Private status
 - [Phase 07-ingredient-moderation]: submit() policy uses in_array([Private, Rejected], strict: true) with separate early-return ownership guard — fixes operator-precedence bug in RESEARCH draft and makes the logic explicit
+- [Phase 07-ingredient-moderation]: RejectIngredientRequest.failedValidation() throws HttpResponseException 422 — required because test asserts assertStatus(422) on plain HTTP POST; standard FormRequest redirects 302 in non-Inertia context
+- [Phase 07-ingredient-moderation]: Contracts\Validation\Validator interface required in failedValidation() type hint — concrete class causes PHP Fatal Error (signature incompatible with parent FormRequest)
+- [Phase 07-ingredient-moderation]: notify() dispatched AFTER DB::transaction closes — inside transaction the submission row may not yet be committed; notifying inside risks sending notification that gets rolled back
 
 ### Pending Todos
 
@@ -185,6 +189,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-18T13:18:27.838Z
-Stopped at: Completed 07-ingredient-moderation-01-PLAN.md
+Last session: 2026-05-18T13:38:40.796Z
+Stopped at: Completed 07-ingredient-moderation-02-PLAN.md
 Resume file: None
