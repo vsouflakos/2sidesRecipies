@@ -4,6 +4,7 @@ use App\Models\Cuisine;
 use App\Models\Recipe;
 use App\Models\RecipeVersion;
 use App\Models\Tag;
+use App\Models\Unit;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -245,6 +246,67 @@ test('public recipe page omits cost data and private fields from Inertia props',
         $page->missing('recipe.notes');
         $page->missing('recipe.tests');
         $page->missing('recipe.conversation');
+    });
+});
+
+// PUB-04: Public recipe page Inertia props include the section ingredient lines
+test('public recipe page includes ingredient lines with name, quantity, and unit', function () {
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $gram = Unit::create([
+        'name' => 'gram',
+        'symbol' => 'g',
+        'type' => 'weight',
+        'base_factor' => '1',
+    ]);
+
+    $recipe = Recipe::factory()->create([
+        'user_id' => $owner->id,
+        'slug' => 'ingredient-recipe-abc',
+        'is_published' => true,
+    ]);
+
+    // Snapshot mirrors the builder draft shape: lines carry unit_id, not unit.
+    $version = RecipeVersion::factory()->create([
+        'recipe_id' => $recipe->id,
+        'version_number' => 1,
+        'committed_by' => $owner->id,
+        'snapshot' => [
+            'sections' => [
+                [
+                    'name' => 'Main',
+                    'order' => 1,
+                    'lines' => [
+                        [
+                            'id' => -1,
+                            'ingredient_id' => 9,
+                            'name' => 'Flour',
+                            'quantity' => '500',
+                            'unit_id' => $gram->id,
+                            'order' => 0,
+                        ],
+                    ],
+                    'steps' => [
+                        ['id' => -2, 'instruction' => 'Mix the flour.', 'order' => 0],
+                    ],
+                ],
+            ],
+        ],
+    ]);
+    $recipe->update(['published_version_id' => $version->id]);
+
+    $response = $this->get(route('library.show', $recipe->slug));
+
+    $response->assertOk();
+    $response->assertInertia(function ($page) {
+        $page->component('library/show');
+        // The section ingredient line must be present with its three public fields
+        $page->where('recipe.sections.0.lines.0.name', 'Flour');
+        $page->where('recipe.sections.0.lines.0.quantity', '500');
+        $page->where('recipe.sections.0.lines.0.unit', 'g');
+        // The section step must also be present
+        $page->where('recipe.sections.0.steps.0.instruction', 'Mix the flour.');
     });
 });
 
