@@ -46,7 +46,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $user,
                 'permissions' => $user
-                    ? $user->getPermissionNames()
+                    ? $user->getAllPermissions()->pluck('name')
                     : [],
             ],
             'locale' => app()->getLocale(),

@@ -42,8 +42,21 @@ class RolesAndPermissionsSeeder extends Seeder
                 ['email' => 'admin@twosides.test'],
                 ['name' => 'Admin', 'password' => Hash::make('password')]
             );
-
             $admin->assignRole('Admin');
+
+            $moderator = User::firstOrCreate(
+                ['email' => 'moderator@twosides.test'],
+                ['name' => 'Moderator', 'password' => Hash::make('password')]
+            );
+
+            $moderator->assignRole('Moderator');
+
+            $user = User::firstOrCreate(
+                ['email' => 'user@twosides.test'],
+                ['name' => 'User', 'password' => Hash::make('password')]
+            );
+
+            $user->assignRole('User');
         }
     }
 }
