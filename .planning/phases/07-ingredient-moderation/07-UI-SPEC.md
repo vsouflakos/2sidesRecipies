@@ -42,9 +42,10 @@ Declared values (multiples of 4 only — 8-point scale):
 | 3xl | 64px | Page-level top spacing |
 
 Exceptions:
-- Nav badge pill: 6px horizontal / 2px vertical (matches existing shadcn Badge `px-1.5 py-0.5` default — not a custom override)
 - Reject-note Textarea minimum height: 80px (to accommodate multi-line notes visually)
 - Touch targets (submit/withdraw buttons): minimum 44px height on mobile
+
+Note: The pending-count nav badge and all status badges use the inherited shadcn Badge default padding without any override — no custom spacing value is declared for them.
 
 ---
 
@@ -123,6 +124,15 @@ All components exist in the codebase. No new shadcn components are required beyo
 
 ---
 
+## Primary Visual Anchor
+
+| Screen | Visual Anchor |
+|--------|---------------|
+| Review Queue (`admin/ingredients.tsx`) | The FIFO submission Table is the single dominant element — full-width, oldest-first, the moderator's eye lands on the top row first; nothing competes for attention above it. |
+| Per-Submission Review Screen (`admin/ingredients/show.tsx`) | The moderation action panel (Approve / Reject buttons) is the visual anchor on desktop as a sticky right-side panel — it stays in view while the moderator scrolls the ingredient data, keeping the decision controls always reachable. |
+
+---
+
 ## Interaction Contracts
 
 ### 1. Submit for Inclusion (Owner — Ingredient Detail Page)
@@ -137,9 +147,10 @@ All components exist in the codebase. No new shadcn components are required beyo
 **Submit flow:**
 1. User clicks "Submit for Inclusion"
 2. System fires duplicate-check fetch against official ingredients by name
-3. If ≥1 match: Dialog opens showing up to 5 matching official ingredients as a list; user must click "Submit Anyway" or "Cancel". If no matches: skip directly to step 4.
-4. Confirmation Dialog: "Submit [Ingredient Name] for inclusion in the official library?" with "Submit for Inclusion" confirm button and "Cancel" dismiss.
+3. If ≥1 match: Dialog opens showing up to 5 matching official ingredients as a list; user must click "Submit Anyway" or "Keep Editing". If no matches: skip directly to step 4.
+4. Confirmation Dialog: "Submit [Ingredient Name] for inclusion in the official library?" with "Submit for Inclusion" confirm button and "Keep Editing" dismiss.
 5. On success: toast "Your ingredient has been submitted for review.", badge updates to Submitted, edit/delete buttons disabled by the frozen state (IngredientPolicy enforces this server-side; UI reflects via `can` flags).
+6. On failure: toast "Could not submit your ingredient. Please try again or contact support."
 
 **Withdraw flow:**
 1. User clicks "Withdraw Submission"
@@ -187,20 +198,20 @@ All components exist in the codebase. No new shadcn components are required beyo
 **Moderation panel contents:**
 1. Submission metadata: "Submitted by [Name] on [Date]" — `text-sm text-muted-foreground`
 2. Submission number: shown only if `submission_number > 1` — Alert with prior rejection notes from all previous submissions in chronological order
-3. "Approve" button (`variant="default"`, accent fill, full-width)
-4. "Reject" button (`variant="destructive"`, full-width)
+3. "Approve Ingredient" button (`variant="default"`, accent fill, full-width)
+4. "Reject Ingredient" button (`variant="destructive"`, full-width)
 5. Optional note field for approval (collapsed by default; "Add a note (optional)" link expands a Textarea)
 
 **Prior rejection history (resubmission context):** Rendered as a list of `Alert` blocks above the approve/reject buttons when `submission_number > 1`. Each block shows: "Rejected on [date] by [moderator]: [note text]". Uses `variant="default"` (neutral grey tone, not red — the rejection is history, not a current warning).
 
 **Approve flow:**
-1. Moderator clicks "Approve"
-2. Dialog: "Approve [Ingredient Name] for the official library? This action is permanent. Approval also marks the ingredient as Verified." Optional notes textarea pre-expanded. Confirm: "Approve & Promote". Dismiss: "Cancel".
+1. Moderator clicks "Approve Ingredient"
+2. Dialog: "Approve [Ingredient Name] for the official library? This action is permanent. Approval also marks the ingredient as Verified." Optional notes textarea pre-expanded. Confirm: "Approve & Promote". Dismiss: "Keep Reviewing".
 3. On success: redirect to queue (`/admin/ingredients`); toast "Ingredient approved and promoted to the official library."
 
 **Reject flow:**
-1. Moderator clicks "Reject"
-2. Dialog: "Reject [Ingredient Name]? Please provide feedback so the submitter knows what to fix." Notes Textarea is required (server enforced; client shows inline error "Rejection notes are required" if submitted empty). Confirm: "Reject with Notes". Dismiss: "Cancel".
+1. Moderator clicks "Reject Ingredient"
+2. Dialog: "Reject [Ingredient Name]? Please provide feedback so the submitter knows what to fix." Notes Textarea is required (server enforced; client shows inline error "Rejection notes are required" if submitted empty). Confirm: "Reject with Notes". Dismiss: "Keep Reviewing".
 3. On success: redirect to queue; toast "Ingredient rejected. The submitter has been notified."
 
 ### 4. In-App Notification (Submitter)
@@ -234,15 +245,17 @@ All copy exists in both EN and EL. Keys follow the existing `app.ingredients.*` 
 | Submit dialog body (no duplicates) | Submit [name] for inclusion in the official library. A moderator will review your submission. | Υποβάλετε [name] για ένταξη στην επίσημη βιβλιοθήκη. Ένας συντονιστής θα εξετάσει την υποβολή σας. |
 | Submit dialog body (duplicates found) | Similar ingredients already exist in the official library. Review them before submitting. | Παρόμοια συστατικά υπάρχουν ήδη στην επίσημη βιβλιοθήκη. Ελέγξτε τα πριν υποβάλετε. |
 | Submit dialog confirm | Submit for Inclusion | Υποβολή για Ένταξη |
-| Submit dialog cancel | Cancel | Άκυρο |
+| Submit dialog dismiss | Keep Editing | Συνέχεια Επεξεργασίας |
 | Submit dialog submit-anyway | Submit Anyway | Υποβολή Ούτως ή Άλλως |
 | Submit success toast | Your ingredient has been submitted for review. | Το συστατικό σας υποβλήθηκε για έλεγχο. |
+| Submit error toast | Could not submit your ingredient. Please try again or contact support. | Δεν ήταν δυνατή η υποβολή του συστατικού σας. Δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. |
 | Withdraw CTA | Withdraw Submission | Ανάκληση Υποβολής |
 | Withdraw dialog title | Withdraw submission? | Ανάκληση υποβολής; |
 | Withdraw dialog body | [name] will return to private. You can update it and submit again. | Το [name] θα επιστρέψει σε ιδιωτικό. Μπορείτε να το ενημερώσετε και να το υποβάλετε ξανά. |
 | Withdraw dialog confirm | Withdraw | Ανάκληση |
-| Withdraw dialog cancel | Keep Submitted | Διατήρηση Υποβολής |
+| Withdraw dialog dismiss | Keep Submitted | Διατήρηση Υποβολής |
 | Withdraw success toast | Submission withdrawn. | Η υποβολή ανακλήθηκε. |
+| Withdraw error toast | Could not withdraw your submission. Please try again or contact support. | Δεν ήταν δυνατή η ανάκληση της υποβολής σας. Δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. |
 | Frozen banner | This ingredient is under review. Data is locked until a moderator decides. | Αυτό το συστατικό βρίσκεται υπό έλεγχο. Τα δεδομένα είναι κλειδωμένα έως ότου αποφανθεί συντονιστής. |
 | Status badge: submitted | Under Review | Υπό Έλεγχο |
 | Status badge: rejected | Rejected | Απορρίφθηκε |
@@ -252,21 +265,23 @@ All copy exists in both EN and EL. Keys follow the existing `app.ingredients.*` 
 | Queue page heading | Ingredient Review Queue | Ουρά Ελέγχου Συστατικών |
 | Queue empty state heading | No pending submissions | Δεν υπάρχουν εκκρεμείς υποβολές |
 | Queue empty state body | All ingredient submissions have been reviewed. Check back later. | Όλες οι υποβολές συστατικών έχουν εξεταστεί. Ελέγξτε ξανά αργότερα. |
-| Approve CTA | Approve | Έγκριση |
+| Approve CTA | Approve Ingredient | Έγκριση Συστατικού |
 | Approve dialog title | Approve for official library? | Έγκριση για επίσημη βιβλιοθήκη; |
 | Approve dialog body | This action is permanent. The ingredient will be promoted to the official library and marked as verified. | Αυτή η ενέργεια είναι μόνιμη. Το συστατικό θα προαχθεί στην επίσημη βιβλιοθήκη και θα επισημανθεί ως επαληθευμένο. |
 | Approve dialog confirm | Approve & Promote | Έγκριση & Προαγωγή |
-| Approve dialog cancel | Cancel | Άκυρο |
+| Approve dialog dismiss | Keep Reviewing | Συνέχεια Ελέγχου |
 | Approve optional note label | Add a note (optional) | Προσθήκη σημείωσης (προαιρετικό) |
 | Approve success toast | Ingredient approved and promoted to the official library. | Το συστατικό εγκρίθηκε και προήχθη στην επίσημη βιβλιοθήκη. |
-| Reject CTA | Reject | Απόρριψη |
+| Approve error toast | Could not approve this submission. Please try again or contact support. | Δεν ήταν δυνατή η έγκριση αυτής της υποβολής. Δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. |
+| Reject CTA | Reject Ingredient | Απόρριψη Συστατικού |
 | Reject dialog title | Reject submission? | Απόρριψη υποβολής; |
 | Reject dialog body | Provide feedback so the submitter knows what to fix before resubmitting. | Παρέχετε σχόλια ώστε ο υποβάλλων να γνωρίζει τι να διορθώσει πριν υποβάλει εκ νέου. |
 | Reject note label | Rejection notes (required) | Σημειώσεις απόρριψης (υποχρεωτικό) |
 | Reject note validation error | Rejection notes are required. | Οι σημειώσεις απόρριψης είναι υποχρεωτικές. |
 | Reject dialog confirm | Reject with Notes | Απόρριψη με Σημειώσεις |
-| Reject dialog cancel | Cancel | Άκυρο |
+| Reject dialog dismiss | Keep Reviewing | Συνέχεια Ελέγχου |
 | Reject success toast | Ingredient rejected. The submitter has been notified. | Το συστατικό απορρίφθηκε. Ο υποβάλλων ενημερώθηκε. |
+| Reject error toast | Could not reject this submission. Please try again or contact support. | Δεν ήταν δυνατή η απόρριψη αυτής της υποβολής. Δοκιμάστε ξανά ή επικοινωνήστε με την υποστήριξη. |
 | Notification — approved | [name] was approved and is now in the official library. | Το [name] εγκρίθηκε και είναι πλέον στην επίσημη βιβλιοθήκη. |
 | Notification — rejected | [name] was rejected. [note]. You can update it and resubmit. | Το [name] απορρίφθηκε. [note]. Μπορείτε να το ενημερώσετε και να το υποβάλετε εκ νέου. |
 | Nav badge tooltip | N ingredients awaiting review | N συστατικά αναμένουν έλεγχο |
@@ -277,9 +292,9 @@ All copy exists in both EN and EL. Keys follow the existing `app.ingredients.*` 
 
 | Action | Actor | Confirmation | Notes |
 |--------|-------|-------------|-------|
-| Withdraw Submission | Owner (submitter) | Dialog — requires explicit "Withdraw" click | Reversible: user can resubmit |
-| Reject Submission | Moderator | Dialog — requires non-empty notes before confirm | Not permanently destructive for ingredient data; ingredient reverts to private |
-| Approve & Promote | Moderator | Dialog — warns "permanent" | Irreversible in-app; only admin data-fix out of band |
+| Withdraw Submission | Owner (submitter) | Dialog — requires explicit "Withdraw" click; dismiss is "Keep Submitted" | Reversible: user can resubmit |
+| Reject Ingredient | Moderator | Dialog — requires non-empty notes before confirm; dismiss is "Keep Reviewing" | Not permanently destructive for ingredient data; ingredient reverts to private |
+| Approve & Promote | Moderator | Dialog — warns "permanent"; dismiss is "Keep Reviewing" | Irreversible in-app; only admin data-fix out of band |
 
 Note: The existing "Delete Ingredient" action (`variant="destructive"` button on detail page) is blocked server-side while `submission_status: submitted` — no UI change needed beyond the frozen Alert already specified above. The delete button remains hidden (controlled by the `can.delete` flag which IngredientPolicy now returns false for submitted ingredients).
 
