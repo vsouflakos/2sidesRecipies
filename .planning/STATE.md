@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 7 context gathered
-last_updated: "2026-05-18T10:23:11.130Z"
+stopped_at: Completed 07-ingredient-moderation-01-PLAN.md
+last_updated: "2026-05-18T13:18:27.843Z"
 last_activity: 2026-05-18 — Phase 6 Plan 3 complete
 progress:
   total_phases: 7
   completed_phases: 6
-  total_plans: 31
-  completed_plans: 31
+  total_plans: 34
+  completed_plans: 32
   percent: 100
 ---
 
@@ -79,6 +79,7 @@ Progress: [██████████] 100%
 | Phase 05-ai-agent P04 | — | 4 tasks | 17 files |
 | Phase 06-publishing-public-library P02 | 16 | 3 tasks | 7 files |
 | Phase 06-publishing-public-library P03 | 45 | 3 tasks | 16 files |
+| Phase 07-ingredient-moderation P01 | 40 | 3 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -171,6 +172,8 @@ Recent decisions affecting current work:
 - [Phase 06-publishing-public-library]: Public pages (library index + show) use a dedicated GuestPublicLayout, not AppSidebarLayout — guest browse must never depend on the auth-only sidebar; assigned via the Inertia static `layout` page property
 - [Phase 06-publishing-public-library]: Library index excludes the ingredient filter from its reload data payload per UI-SPEC — the ingredient filter is a private-recipe planning tool, not a public-browse signal
 - [Phase 06-publishing-public-library]: Update-to-current version push is a one-click action with no confirmation dialog — intentional asymmetry per CONTEXT.md (publish/unpublish confirm; version update does not)
+- [Phase 07-ingredient-moderation]: Withdrawn case added to SubmissionStatus enum so withdrawal events are recorded as history rows (not soft-deleted), preserving full audit trail while reverting ingredient to Private status
+- [Phase 07-ingredient-moderation]: submit() policy uses in_array([Private, Rejected], strict: true) with separate early-return ownership guard — fixes operator-precedence bug in RESEARCH draft and makes the logic explicit
 
 ### Pending Todos
 
@@ -182,6 +185,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-18T10:23:11.124Z
-Stopped at: Phase 7 context gathered
-Resume file: .planning/phases/07-ingredient-moderation/07-CONTEXT.md
+Last session: 2026-05-18T13:18:27.838Z
+Stopped at: Completed 07-ingredient-moderation-01-PLAN.md
+Resume file: None

@@ -25,9 +25,9 @@ including the AI agent. Each maps to a roadmap phase.
 - [x] **INGR-06**: Ingredient names are stored and displayed in multiple languages (Greek and English at minimum)
 - [x] **INGR-07**: User can create a private ingredient when the official library lacks one
 - [x] **INGR-08**: User can record a price for an ingredient with date and currency
-- [ ] **INGR-09**: User can submit a private ingredient for inclusion in the official library
-- [ ] **INGR-10**: Moderator can review a submitted ingredient and approve or reject it
-- [ ] **INGR-11**: An approved submitted ingredient is promoted into the official library
+- [x] **INGR-09**: User can submit a private ingredient for inclusion in the official library
+- [x] **INGR-10**: Moderator can review a submitted ingredient and approve or reject it
+- [x] **INGR-11**: An approved submitted ingredient is promoted into the official library
 
 ### Recipes
 
@@ -227,9 +227,9 @@ Maps requirements to roadmap phases. Populated during roadmap creation.
 | PUB-02 | Phase 6 | Complete |
 | PUB-03 | Phase 6 | Complete |
 | PUB-04 | Phase 6 | Complete |
-| INGR-09 | Phase 7 | Pending |
-| INGR-10 | Phase 7 | Pending |
-| INGR-11 | Phase 7 | Pending |
+| INGR-09 | Phase 7 | Complete |
+| INGR-10 | Phase 7 | Complete |
+| INGR-11 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 67 total
