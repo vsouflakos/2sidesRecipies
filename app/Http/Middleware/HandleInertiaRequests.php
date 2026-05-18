@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\SubmissionStatus;
+use App\Models\Ingredient;
+use App\Notifications\IngredientDecisionNotification;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,17 +38,35 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
-                'permissions' => $request->user()
-                    ? $request->user()->getPermissionNames()
+                'user' => $user,
+                'permissions' => $user
+                    ? $user->getPermissionNames()
                     : [],
             ],
             'locale' => app()->getLocale(),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'pendingIngredientReviewCount' => $user && $user->can('review-ingredients')
+                ? Ingredient::where('submission_status', SubmissionStatus::Submitted->value)->count()
+                : null,
+            'ingredientNotifications' => $user
+                ? $user->unreadNotifications()
+                    ->where('type', IngredientDecisionNotification::class)
+                    ->latest()
+                    ->take(5)
+                    ->get(['id', 'data', 'created_at'])
+                    ->map(fn ($n) => [
+                        'id' => $n->id,
+                        'data' => $n->data,
+                        'created_at' => $n->created_at?->toISOString(),
+                    ])
+                    ->values()
+                : null,
         ];
     }
 }
