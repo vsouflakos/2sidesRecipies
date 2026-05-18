@@ -73,6 +73,7 @@ class IngredientController extends Controller
             'conversions.unit',
             'category.parent',
             'verifiedBy',
+            'latestSubmission.submittedBy',
             'prices' => fn ($q) => $q->where('user_id', auth()->id())->orderByDesc('recorded_at'),
         ]);
 
@@ -81,6 +82,8 @@ class IngredientController extends Controller
             'can' => [
                 'verify' => $request->user()->can('verify-ingredients'),
                 'manage' => $request->user()->can('update', $ingredient),
+                'submit' => $request->user()->can('submit', $ingredient),
+                'withdraw' => $request->user()->can('withdraw', $ingredient),
             ],
             'units' => Unit::orderBy('type')->orderBy('name')->get(['id', 'name', 'symbol', 'type']),
         ]);

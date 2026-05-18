@@ -217,6 +217,9 @@ export interface IngredientDetail {
     verified: boolean;
     verified_at: string | null;
     verified_by: string | null;
+    // Submission moderation
+    submission_status?: 'private' | 'submitted' | 'approved' | 'rejected' | null;
+    contributed_by?: string | null;
     // Prices (scoped to current user)
     prices: IngredientPrice[];
 }
@@ -224,4 +227,6 @@ export interface IngredientDetail {
 export interface CanFlags {
     verify: boolean;
     manage: boolean;
+    submit?: boolean;
+    withdraw?: boolean;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\SubmissionStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -77,6 +78,11 @@ class IngredientDetailResource extends JsonResource
             'verified' => (bool) $this->verified,
             'verified_at' => $this->verified_at?->toISOString(),
             'verified_by' => $this->verifiedBy?->name,
+            // Submission moderation
+            'submission_status' => $this->submission_status?->value,
+            'contributed_by' => $this->submission_status === SubmissionStatus::Approved
+                ? $this->latestSubmission?->submittedBy?->name
+                : null,
             // Prices (scoped to current user in controller)
             'prices' => $this->prices->map(fn ($p) => [
                 'id' => $p->id,

@@ -6,7 +6,9 @@ import { AllergenPanel } from '@/components/ingredients/allergen-panel';
 import { NutritionPanel } from '@/components/ingredients/nutrition-panel';
 import { PriceForm } from '@/components/ingredients/price-form';
 import { PriceHistory } from '@/components/ingredients/price-history';
+import { SubmitAction } from '@/components/ingredients/submit-action';
 import { VerifyAction } from '@/components/ingredients/verify-action';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import {
     Breadcrumb,
@@ -94,12 +96,21 @@ export default function IngredientShow({ ingredient, can, units }: IngredientSho
 
                 {/* Page header */}
                 <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="flex flex-wrap items-center gap-3">
-                        <h1 className="text-[28px] font-semibold leading-[1.2]">
-                            {ingredient.name}
-                        </h1>
+                    <div className="flex flex-wrap items-start gap-3">
+                        <div>
+                            <h1 className="text-[28px] font-semibold leading-[1.2]">
+                                {ingredient.name}
+                            </h1>
+                            {ingredient.submission_status === 'approved' && ingredient.contributed_by && (
+                                <p className="text-sm text-muted-foreground mt-1">
+                                    {t('app.ingredients.contributed_by', {
+                                        name: ingredient.contributed_by,
+                                    })}
+                                </p>
+                            )}
+                        </div>
                         {ingredient.verified && (
-                            <Badge className="bg-accent text-accent-foreground">
+                            <Badge className="bg-accent text-accent-foreground mt-1">
                                 {t('app.ingredients.badge_verified')}
                             </Badge>
                         )}
@@ -109,6 +120,9 @@ export default function IngredientShow({ ingredient, can, units }: IngredientSho
                     <div className="flex flex-wrap items-center gap-2">
                         {/* Verify action for Mod/Admin */}
                         <VerifyAction ingredient={ingredient} can={can} />
+
+                        {/* Submit/Withdraw action for ingredient owner */}
+                        <SubmitAction ingredient={ingredient} can={can} />
 
                         {/* Edit/Delete for private ingredient owner */}
                         {can.manage && (
@@ -128,6 +142,15 @@ export default function IngredientShow({ ingredient, can, units }: IngredientSho
                         )}
                     </div>
                 </div>
+
+                {/* Frozen banner — shown when ingredient is under review */}
+                {ingredient.submission_status === 'submitted' && (
+                    <Alert variant="default">
+                        <AlertDescription>
+                            {t('app.ingredients.frozen_banner')}
+                        </AlertDescription>
+                    </Alert>
+                )}
 
                 {/* Tabs: Nutrition / Allergens / Conversions — Prices slot reserved for Plan 02-06 */}
                 <Tabs defaultValue="nutrition">
