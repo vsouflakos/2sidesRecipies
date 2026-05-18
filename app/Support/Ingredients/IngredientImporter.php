@@ -222,6 +222,60 @@ class IngredientImporter
     }
 
     /**
+     * Upsert nutrient definitions keyed on usda_nutrient_id.
+     *
+     * Each $row is an array with keys: usda_nutrient_id, name, unit,
+     * nutrient_nbr, rank, created_at, updated_at.
+     *
+     * @param  array<int, array<string, mixed>>  $rows
+     */
+    public function upsertNutrientDefinitions(array $rows): int
+    {
+        if ($rows === []) {
+            return 0;
+        }
+
+        foreach (array_chunk($rows, 500) as $chunk) {
+            DB::transaction(function () use ($chunk): void {
+                DB::table('nutrients')->upsert(
+                    $chunk,
+                    uniqueBy: ['usda_nutrient_id'],
+                    update: ['name', 'unit', 'nutrient_nbr', 'rank', 'updated_at'],
+                );
+            });
+        }
+
+        return count($rows);
+    }
+
+    /**
+     * Upsert ingredient_nutrients pivot rows keyed on (ingredient_id, nutrient_id).
+     *
+     * Each $row is an array with keys: ingredient_id, nutrient_id, amount,
+     * created_at, updated_at. Idempotent: re-imports update the amount in place.
+     *
+     * @param  array<int, array<string, mixed>>  $rows
+     */
+    public function upsertIngredientNutrients(array $rows): int
+    {
+        if ($rows === []) {
+            return 0;
+        }
+
+        foreach (array_chunk($rows, 500) as $chunk) {
+            DB::transaction(function () use ($chunk): void {
+                DB::table('ingredient_nutrients')->upsert(
+                    $chunk,
+                    uniqueBy: ['ingredient_id', 'nutrient_id'],
+                    update: ['amount', 'updated_at'],
+                );
+            });
+        }
+
+        return count($rows);
+    }
+
+    /**
      * Compute the md5 data hash from a nutrition payload array.
      *
      * @param  array<string, mixed>  $nutritionValues

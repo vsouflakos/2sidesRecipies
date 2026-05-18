@@ -1,0 +1,7 @@
+"fdc_id","data_type","description","food_category_id","publication_date"
+"167512","sr_legacy_food","Wheat, hard red winter","20","2019-04-01"
+"173168","foundation_food","Chicken, broilers or fryers, breast, meat only, raw","5","2019-04-01"
+"169291","foundation_food","Tomatoes, red, ripe, raw, year round average","11","2019-04-01"
+"168917","foundation_food","Olive oil","4","2019-04-01"
+"174215","foundation_food","Salmon, Atlantic, farmed, raw","15","2019-04-01"
+"900001","sub_sample_food","Provenance sub-sample - must be excluded by the data_type filter","16","2019-04-01"

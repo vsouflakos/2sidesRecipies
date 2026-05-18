@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(node *)",
+      "WebSearch",
+      "WebFetch(domain:fdc.nal.usda.gov)",
+      "WebFetch(domain:spoonacular.com)",
+      "WebFetch(domain:www.nutritionix.com)",
+      "WebFetch(domain:platform.fatsecret.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:icecreamcalc.com)",
+      "Skill(gsd:new-project)",
+      "Bash([ -f \"$HOME/.gsd/defaults.json\" ])",
+      "WebFetch(domain:packagist.org)",
+      "WebFetch(domain:npmjs.com)",
+      "WebFetch(domain:prismphp.com)"
+    ]
+  }
+}
