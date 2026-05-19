@@ -1,7 +1,7 @@
+import { SendIcon, SparklesIcon } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
-import { MessageCircleIcon, SendIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import {
     Sheet,
     SheetContent,
@@ -13,6 +13,8 @@ import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { useAiChat } from '@/hooks/use-ai-chat';
 import { useTranslations } from '@/hooks/use-translations';
+import { cn } from '@/lib/utils';
+import { AiAvatar } from './ai-avatar';
 import { MessageList } from './message-list';
 
 interface AiChatSheetProps {
@@ -24,7 +26,7 @@ interface AiChatSheetProps {
 /**
  * AI chat slide-over sheet for the recipe builder.
  * Opens on the right (desktop) or full-screen (mobile).
- * Loads conversation history on open, supports streaming agent replies,
+ * Loads conversation history on open, polls a queued agent turn for progress,
  * starter prompts, proposal apply/dismiss, and builder refresh on apply.
  */
 export function AiChatSheet({ recipeId, onDraftRefresh }: AiChatSheetProps) {
@@ -32,11 +34,21 @@ export function AiChatSheet({ recipeId, onDraftRefresh }: AiChatSheetProps) {
     const [open, setOpen] = useState(false);
     const [inputText, setInputText] = useState('');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const { messages, status, sendMessage, applyProposal, applyVariant, dismissProposal, retry, loadHistory } =
-        useAiChat(recipeId);
+    const {
+        messages,
+        status,
+        error,
+        sendMessage,
+        applyProposal,
+        applyVariant,
+        dismissProposal,
+        retry,
+        loadHistory,
+    } = useAiChat(recipeId);
 
-    const isStreaming = status === 'streaming';
+    const isGenerating = status === 'generating';
     const isLoading = status === 'loading-history';
+    const canSend = inputText.trim().length > 0 && !isGenerating && !isLoading;
 
     /** Load history when the sheet opens. */
     useEffect(() => {
@@ -48,7 +60,7 @@ export function AiChatSheet({ recipeId, onDraftRefresh }: AiChatSheetProps) {
     async function handleSend() {
         const text = inputText.trim();
 
-        if (!text || isStreaming) {
+        if (!text || isGenerating) {
             return;
         }
 
@@ -92,28 +104,49 @@ export function AiChatSheet({ recipeId, onDraftRefresh }: AiChatSheetProps) {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button type="button" variant="outline" size="sm" className="gap-2">
-                    <MessageCircleIcon className="size-4" />
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 border-violet-300/70 text-foreground hover:border-violet-400 hover:bg-violet-50/70 dark:border-violet-800/70 dark:hover:bg-violet-950/30"
+                >
+                    <SparklesIcon className="size-4 text-violet-500" />
                     {t('app.ai.trigger')}
                 </Button>
             </SheetTrigger>
 
-            {/* Desktop: 400px side panel; Mobile: full-screen bottom sheet */}
+            {/* Desktop: 400px side panel; Mobile: full-screen sheet */}
             <SheetContent
                 side="right"
-                className="flex w-full flex-col p-0 sm:w-[400px] sm:max-w-[400px]"
+                className="flex w-full flex-col gap-0 p-0 sm:w-[400px] sm:max-w-[400px]"
             >
-                <SheetHeader className="px-4 pt-4 pb-2">
-                    <SheetTitle>{t('app.ai.sheet_title')}</SheetTitle>
+                {/* Branded header */}
+                <SheetHeader className="flex-row items-center gap-3 border-b border-border bg-gradient-to-r from-violet-50/80 to-card px-4 py-3.5 dark:from-violet-950/30">
+                    <AiAvatar size="md" active={isGenerating} />
+                    <div className="flex min-w-0 flex-col">
+                        <SheetTitle className="text-[15px] leading-tight">
+                            {t('app.ai.sheet_title')}
+                        </SheetTitle>
+                        <span className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
+                            <span
+                                className={cn(
+                                    'size-1.5 rounded-full bg-emerald-500',
+                                    isGenerating && 'animate-pulse',
+                                )}
+                            />
+                            {isGenerating
+                                ? t('app.ai.typing')
+                                : t('app.ai.subtitle')}
+                        </span>
+                    </div>
                 </SheetHeader>
 
-                <Separator />
-
                 {/* Message list — fills available space */}
-                <div className="flex min-h-0 flex-1 flex-col">
+                <div className="flex min-h-0 flex-1 flex-col bg-gradient-to-b from-background to-muted/30">
                     <MessageList
                         messages={messages}
                         status={isLoading ? 'loading-history' : status}
+                        error={error}
                         onSelectPrompt={handleSelectPrompt}
                         onApply={handleApplyProposal}
                         onDismiss={dismissProposal}
@@ -123,32 +156,44 @@ export function AiChatSheet({ recipeId, onDraftRefresh }: AiChatSheetProps) {
                 </div>
 
                 {/* Fixed bottom input area */}
-                <div className="flex items-end gap-2 border-t border-border p-4">
-                    <Textarea
-                        ref={textareaRef}
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder={t('app.ai.input_placeholder')}
-                        disabled={isStreaming || isLoading}
-                        className="min-h-[44px] max-h-[120px] resize-none flex-1"
-                        rows={1}
-                    />
-                    <Button
-                        type="button"
-                        variant="default"
-                        size="icon"
-                        className="size-11 shrink-0"
-                        aria-label={t('app.ai.send')}
-                        disabled={!inputText.trim() || isStreaming || isLoading}
-                        onClick={() => void handleSend()}
-                    >
-                        {isStreaming ? (
-                            <Spinner />
-                        ) : (
-                            <SendIcon className="size-4" />
-                        )}
-                    </Button>
+                <div className="border-t border-border bg-background p-3">
+                    <div className="flex items-end gap-2 rounded-2xl border border-input bg-card p-1.5 shadow-sm transition-[box-shadow,border-color] focus-within:border-violet-400/70 focus-within:shadow-md focus-within:ring-2 focus-within:ring-violet-400/20">
+                        <Textarea
+                            ref={textareaRef}
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            placeholder={t('app.ai.input_placeholder')}
+                            disabled={isGenerating || isLoading}
+                            className="max-h-[120px] min-h-[40px] flex-1 resize-none self-center border-0 bg-transparent px-2.5 py-2 shadow-none focus-visible:border-0 focus-visible:ring-0"
+                            rows={1}
+                        />
+                        <motion.button
+                            type="button"
+                            whileHover={canSend ? { scale: 1.06 } : undefined}
+                            whileTap={canSend ? { scale: 0.9 } : undefined}
+                            transition={{
+                                type: 'spring',
+                                stiffness: 500,
+                                damping: 22,
+                            }}
+                            className={cn(
+                                'flex size-9 shrink-0 items-center justify-center rounded-xl text-white transition-colors',
+                                canSend
+                                    ? 'bg-gradient-to-br from-indigo-500 to-violet-500 shadow-sm shadow-violet-500/30'
+                                    : 'cursor-not-allowed bg-muted text-muted-foreground',
+                            )}
+                            aria-label={t('app.ai.send')}
+                            disabled={!canSend}
+                            onClick={() => void handleSend()}
+                        >
+                            {isGenerating ? (
+                                <Spinner className="size-4" />
+                            ) : (
+                                <SendIcon className="size-4" />
+                            )}
+                        </motion.button>
+                    </div>
                 </div>
             </SheetContent>
         </Sheet>

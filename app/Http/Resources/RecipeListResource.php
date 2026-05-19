@@ -34,22 +34,55 @@ class RecipeListResource extends JsonResource
     }
 
     /**
+     * Extract the per-portion nutrition block from cached nutrition JSON.
+     *
+     * Prefers the per_portion block; falls back to totals so a single-portion
+     * recipe still surfaces values.
+     *
+     * @return array<string, mixed>
+     */
+    private function perPortionNutrition(mixed $raw): array
+    {
+        if (! is_array($raw)) {
+            return [];
+        }
+
+        if (is_array($raw['per_portion'] ?? null)) {
+            return $raw['per_portion'];
+        }
+
+        return is_array($raw['totals'] ?? null) ? $raw['totals'] : [];
+    }
+
+    /**
+     * Pull a single numeric nutrition value as a string, or null when absent.
+     */
+    private function nutritionValue(array $perPortion, string $key): ?string
+    {
+        $value = $perPortion[$key] ?? null;
+
+        return $value !== null ? (string) $value : null;
+    }
+
+    /**
      * Transform the resource into an array for the recipe list card.
      *
-     * Cost data reads from the current_version's cached_cost_per_portion column —
-     * never recomputed in the resource (Warning 4: authoritative cached value only).
+     * Metrics prefer the owner's live draft cache (refreshed on every autosave)
+     * so the card stays in sync with the recipe builder. The committed version
+     * is the fallback for drafts that have not been recomputed yet.
      *
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
     {
+        $draft = $this->draft;
         $version = $this->currentVersion;
 
-        // Safely extract calories_per_portion from the cached nutrition JSON
-        $nutritionJson = $version?->cached_nutrition_json ?? [];
-        $caloriesPerPortion = $nutritionJson['per_portion']['energy_kcal']
-            ?? $nutritionJson['totals']['energy_kcal']
-            ?? null;
+        $nutritionRaw = $draft?->cached_nutrition_json ?? $version?->cached_nutrition_json;
+        $costPerPortion = $draft?->cached_cost_per_portion ?? $version?->cached_cost_per_portion;
+        $allergenRaw = $draft?->cached_allergen_slugs ?? $version?->cached_allergen_slugs;
+
+        $perPortion = $this->perPortionNutrition($nutritionRaw);
 
         $totalTime = null;
         $prep = $this->prep_time_minutes;
@@ -66,14 +99,14 @@ class RecipeListResource extends JsonResource
             'hero_image_path' => $this->hero_image_path,
             'cuisine' => $this->cuisine?->name,
             'total_time' => $totalTime,
+            'portions' => $this->portions !== null ? (int) $this->portions : null,
             'difficulty' => $this->difficulty?->value,
-            'cost_per_portion' => $version?->cached_cost_per_portion !== null
-                ? (string) $version->cached_cost_per_portion
-                : null,
-            'calories_per_portion' => $caloriesPerPortion !== null
-                ? (string) $caloriesPerPortion
-                : null,
-            'allergen_slugs' => $this->flattenAllergenSlugs($version?->cached_allergen_slugs),
+            'cost_per_portion' => $costPerPortion !== null ? (string) $costPerPortion : null,
+            'calories_per_portion' => $this->nutritionValue($perPortion, 'energy_kcal'),
+            'protein_per_portion' => $this->nutritionValue($perPortion, 'protein_g'),
+            'carbs_per_portion' => $this->nutritionValue($perPortion, 'carbs_g'),
+            'fat_per_portion' => $this->nutritionValue($perPortion, 'fat_g'),
+            'allergen_slugs' => $this->flattenAllergenSlugs($allergenRaw),
             'is_published' => (bool) $this->is_published,
         ];
     }

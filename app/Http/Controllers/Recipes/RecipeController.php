@@ -46,7 +46,7 @@ class RecipeController extends Controller
 
         $recipes = Recipe::query()
             ->where('user_id', auth()->id())
-            ->with(['currentVersion', 'cuisine', 'tags'])
+            ->with(['currentVersion', 'cuisine', 'tags', 'draft'])
             ->when($search, fn ($q) => $q->where('name', 'like', "%{$search}%"))
             ->when($tag, fn ($q) => $q->whereHas('tags', fn ($t) => $t->where('tags.id', $tag)))
             ->when($cuisine, fn ($q) => $q->where('cuisine_id', $cuisine))

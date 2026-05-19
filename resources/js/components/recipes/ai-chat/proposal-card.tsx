@@ -1,10 +1,10 @@
+import { CheckIcon, SparklesIcon, WandSparklesIcon } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useState } from 'react';
-import { PencilIcon } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslations } from '@/hooks/use-translations';
+import { cn } from '@/lib/utils';
 import type { ConversationMessage } from '@/types/ai-chat';
 
 interface ProposalCardProps {
@@ -15,10 +15,16 @@ interface ProposalCardProps {
 }
 
 /**
- * Structured proposal card rendered inside an agent message.
- * Supports pending, applied, dismissed, and failed states.
+ * Structured proposal card rendered inside (or beside) an agent message.
+ * Supports pending, applied, dismissed, and failed states with an animated
+ * confirmation when the change is applied to the recipe.
  */
-export function ProposalCard({ message, onApply, onDismiss, onApplyVariant }: ProposalCardProps) {
+export function ProposalCard({
+    message,
+    onApply,
+    onDismiss,
+    onApplyVariant,
+}: ProposalCardProps) {
     const { t } = useTranslations();
     const [isApplying, setIsApplying] = useState(false);
 
@@ -30,6 +36,9 @@ export function ProposalCard({ message, onApply, onDismiss, onApplyVariant }: Pr
 
     const isVariant = proposal.kind === 'variant';
     const status = proposal.status;
+    const isApplied = status === 'applied';
+    const isDismissed = status === 'dismissed';
+    const isFailed = status === 'failed';
 
     async function handleApply() {
         setIsApplying(true);
@@ -49,24 +58,36 @@ export function ProposalCard({ message, onApply, onDismiss, onApplyVariant }: Pr
         onDismiss(message.id);
     }
 
-    const isApplied = status === 'applied';
-    const isDismissed = status === 'dismissed';
-    const isFailed = status === 'failed';
-
     return (
-        <Card
-            className={[
-                'mt-2 rounded-md border p-4',
-                isApplied ? 'border-accent/30 pointer-events-none' : 'border-border',
-                isDismissed ? 'opacity-60 pointer-events-none' : '',
-            ]
-                .filter(Boolean)
-                .join(' ')}
+        <motion.div
+            initial={{ opacity: 0, y: 12, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+            className={cn(
+                'mt-2 ml-[2.375rem] shrink-0 overflow-hidden rounded-xl border shadow-sm',
+                isApplied
+                    ? 'border-emerald-500/40 bg-emerald-50/40 dark:bg-emerald-950/20'
+                    : 'border-violet-400/45 bg-gradient-to-b from-violet-50/70 to-card dark:from-violet-950/25',
+                isDismissed && 'opacity-55',
+            )}
         >
-            {/* Heading */}
-            <div className="mb-2 flex items-center gap-2 text-[20px] font-semibold leading-[1.2]">
-                <PencilIcon className="size-4 shrink-0" />
-                <span>
+            {/* Header */}
+            <div className="flex items-center gap-2 border-b border-border/60 px-3.5 py-2.5">
+                <div
+                    className={cn(
+                        'flex size-6 shrink-0 items-center justify-center rounded-md text-white shadow-sm',
+                        isApplied
+                            ? 'bg-emerald-500'
+                            : 'bg-gradient-to-br from-indigo-500 to-violet-500',
+                    )}
+                >
+                    {isVariant ? (
+                        <WandSparklesIcon className="size-3.5" />
+                    ) : (
+                        <SparklesIcon className="size-3.5" />
+                    )}
+                </div>
+                <span className="text-[12px] font-semibold tracking-wide text-foreground/80 uppercase">
                     {isVariant
                         ? t('app.ai.variant_heading')
                         : t('app.ai.proposal_heading')}
@@ -74,67 +95,85 @@ export function ProposalCard({ message, onApply, onDismiss, onApplyVariant }: Pr
             </div>
 
             {/* Body */}
-            <p className="mb-4 text-[16px] leading-[1.5] text-muted-foreground">
-                {message.content}
-            </p>
+            <div className="px-3.5 py-3">
+                <p className="text-[14px] leading-[1.55] text-foreground/90">
+                    {message.content}
+                </p>
 
-            {/* Action row */}
-            {isApplied ? (
-                <div className="flex items-center gap-2">
-                    <Badge
-                        variant="outline"
-                        className="border-accent/30 text-accent-foreground"
-                    >
-                        {isVariant
-                            ? t('app.ai.variant_applied_badge')
-                            : t('app.ai.applied_badge')}
-                    </Badge>
-                    {isVariant && proposal.variant_url && (
-                        <a
-                            href={proposal.variant_url}
-                            className="text-[16px] text-primary underline"
+                {/* Action area */}
+                <div className="mt-3">
+                    {isApplied ? (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="flex items-center gap-2"
                         >
-                            {t('app.ai.open_variant')}
-                        </a>
+                            <motion.span
+                                initial={{ scale: 0, rotate: -30 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{
+                                    type: 'spring',
+                                    stiffness: 500,
+                                    damping: 16,
+                                }}
+                                className="flex size-5 items-center justify-center rounded-full bg-emerald-500 text-white"
+                            >
+                                <CheckIcon className="size-3" strokeWidth={3} />
+                            </motion.span>
+                            <span className="text-[13px] font-medium text-emerald-600 dark:text-emerald-400">
+                                {isVariant
+                                    ? t('app.ai.variant_applied_badge')
+                                    : t('app.ai.applied_badge')}
+                            </span>
+                            {isVariant && proposal.variant_url && (
+                                <a
+                                    href={proposal.variant_url}
+                                    className="ml-auto text-[13px] font-medium text-violet-600 underline-offset-2 hover:underline dark:text-violet-400"
+                                >
+                                    {t('app.ai.open_variant')}
+                                </a>
+                            )}
+                        </motion.div>
+                    ) : isDismissed ? (
+                        <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-[12px] font-medium text-muted-foreground">
+                            {t('app.ai.dismissed_badge')}
+                        </span>
+                    ) : (
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-end gap-2">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="min-h-[40px] w-full active:scale-[0.98] sm:w-auto"
+                                    disabled={isApplying}
+                                    onClick={handleDismiss}
+                                >
+                                    {t('app.ai.dismiss')}
+                                </Button>
+                                <Button
+                                    type="button"
+                                    className="min-h-[40px] w-full border-0 bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-sm transition-[transform,box-shadow] hover:from-indigo-600 hover:to-violet-600 hover:text-white active:scale-[0.98] sm:w-auto"
+                                    aria-label={`Apply proposed change: ${message.content}`}
+                                    disabled={isApplying}
+                                    onClick={() => void handleApply()}
+                                >
+                                    {isApplying ? (
+                                        <Spinner className="mr-1" />
+                                    ) : null}
+                                    {t('app.ai.apply')}
+                                </Button>
+                            </div>
+                            {isFailed && proposal.failure_reason && (
+                                <p className="text-[13px] text-destructive">
+                                    {t('app.ai.apply_failure', {
+                                        reason: proposal.failure_reason,
+                                    })}
+                                </p>
+                            )}
+                        </div>
                     )}
                 </div>
-            ) : isDismissed ? (
-                <Badge variant="outline" className="text-muted-foreground">
-                    {t('app.ai.dismissed_badge')}
-                </Badge>
-            ) : (
-                <div className="flex flex-col gap-2">
-                    <div className="flex justify-end gap-2 sm:flex-row">
-                        <Button
-                            type="button"
-                            variant="default"
-                            className="min-h-[44px] sm:w-auto w-full"
-                            aria-label={`Apply proposed change: ${message.content}`}
-                            disabled={isApplying}
-                            onClick={() => void handleApply()}
-                        >
-                            {isApplying ? (
-                                <Spinner className="mr-2" />
-                            ) : null}
-                            {t('app.ai.apply')}
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            className="min-h-[44px] sm:w-auto w-full"
-                            disabled={isApplying}
-                            onClick={handleDismiss}
-                        >
-                            {t('app.ai.dismiss')}
-                        </Button>
-                    </div>
-                    {isFailed && proposal.failure_reason && (
-                        <p className="text-[14px] text-destructive">
-                            {t('app.ai.apply_failure', { reason: proposal.failure_reason })}
-                        </p>
-                    )}
-                </div>
-            )}
-        </Card>
+            </div>
+        </motion.div>
     );
 }

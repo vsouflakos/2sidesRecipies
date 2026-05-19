@@ -6,14 +6,20 @@ use App\Exceptions\DraftSequenceMismatchException;
 use App\Models\RecipeDraft;
 use App\Models\RecipeDraftEdit;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class RecipeDraftManager
 {
+    public function __construct(
+        private readonly RecipeMetricsService $metricsService,
+    ) {}
+
     /**
      * Apply an edit to the draft: log the before-state, update draft data, increment sequence.
      *
      * All changes are wrapped in a DB transaction so the edit log and draft row
-     * are always consistent.
+     * are always consistent. Once the edit is committed the draft's cached metrics
+     * are refreshed so list cards reflect the live recipe without a version commit.
      *
      * @param  array<string, mixed>  $newData  The new draft data to persist.
      */
@@ -31,6 +37,28 @@ class RecipeDraftManager
             $draft->edit_sequence += 1;
             $draft->save();
         });
+
+        $this->refreshMetricsCache($draft);
+    }
+
+    /**
+     * Recompute and persist the draft's cached metrics from its current data.
+     *
+     * Best-effort: a metrics computation failure must never block or roll back a
+     * draft edit, so the error is reported and the cache is left untouched.
+     */
+    public function refreshMetricsCache(RecipeDraft $draft): void
+    {
+        try {
+            $metrics = $this->metricsService->computeFor($draft);
+
+            $draft->cached_nutrition_json = $metrics['_raw_nutrition'] ?? null;
+            $draft->cached_cost_per_portion = $metrics['cost']['cost_per_portion'] ?? null;
+            $draft->cached_allergen_slugs = $metrics['_raw_allergen_slugs'] ?? null;
+            $draft->save();
+        } catch (Throwable $e) {
+            report($e);
+        }
     }
 
     /**
@@ -63,6 +91,8 @@ class RecipeDraftManager
 
             $lastEdit->delete();
         });
+
+        $this->refreshMetricsCache($draft);
 
         return $draft->data;
     }

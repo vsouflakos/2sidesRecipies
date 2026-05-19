@@ -18,7 +18,17 @@ class RecipeConversation extends Model
      *
      * @var list<string>
      */
-    protected $fillable = ['recipe_id'];
+    protected $fillable = ['recipe_id', 'agent_status', 'agent_error', 'agent_started_at'];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return ['agent_started_at' => 'datetime'];
+    }
 
     public function recipe(): BelongsTo
     {

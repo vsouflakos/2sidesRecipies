@@ -202,8 +202,8 @@ export default function RecipesIndex({ recipes, filters, cuisines, allergens, ta
                     {isLoading ? (
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                             {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-                                <div key={i} className="flex flex-col gap-2 rounded-xl border p-0 overflow-hidden">
-                                    <Skeleton className="aspect-video w-full rounded-none" />
+                                <div key={i} className="flex flex-col gap-2 rounded-2xl border p-0 overflow-hidden">
+                                    <Skeleton className="aspect-[4/3] w-full rounded-none" />
                                     <div className="flex flex-col gap-2 p-4">
                                         <Skeleton className="h-5 w-3/4" />
                                         <Skeleton className="h-4 w-1/3" />

@@ -18,5 +18,19 @@ export interface ConversationMessage {
     proposal_state: ProposalState | null;
 }
 
-/** Current status of the AI chat. */
-export type ChatStatus = 'idle' | 'loading-history' | 'streaming' | 'error';
+/** Server-side lifecycle of a queued agent turn. */
+export type AgentStatus = 'idle' | 'generating' | 'failed';
+
+/**
+ * Current status of the AI chat.
+ * 'generating' means a turn is in progress (queued job running) — the client
+ * polls until the server reports the turn idle or failed.
+ */
+export type ChatStatus = 'idle' | 'loading-history' | 'generating' | 'error';
+
+/** Shape of the GET conversation endpoint response. */
+export interface ConversationResponse {
+    messages: ConversationMessage[];
+    agent_status: AgentStatus;
+    agent_error: string | null;
+}

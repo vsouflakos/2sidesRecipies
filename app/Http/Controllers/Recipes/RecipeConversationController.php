@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Recipes;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Recipes\SendConversationMessageRequest;
+use App\Jobs\GenerateAgentReplyJob;
 use App\Models\Recipe;
 use App\Models\RecipeConversation;
 use App\Models\RecipeConversationMessage;
 use App\Models\RecipeDraft;
 use App\Models\RecipeSection;
-use App\Support\Recipes\AgentOrchestrator;
 use App\Support\Recipes\RecipeDraftManager;
 use App\Support\Recipes\RecipeVersionService;
 use App\Support\Recipes\SuggestionApplier;
@@ -17,23 +17,24 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Prism\Prism\Streaming\Events\TextDeltaEvent;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RecipeConversationController extends Controller
 {
     public function __construct(
-        private readonly AgentOrchestrator $orchestrator,
         private readonly SuggestionApplier $suggestionApplier,
         private readonly RecipeVersionService $versionService,
         private readonly RecipeDraftManager $draftManager,
     ) {}
 
     /**
-     * Return the conversation history for a recipe as JSON.
+     * Return the conversation history and agent-turn status for a recipe as JSON.
+     *
+     * The frontend polls this endpoint while a turn is in progress: each call
+     * returns the full message list (including any `tool_proposal` messages the
+     * agent's tools have persisted so far) plus `agent_status` so the client
+     * knows when the turn has finished (idle) or failed.
      */
     public function show(Recipe $recipe): JsonResponse
     {
@@ -42,7 +43,11 @@ class RecipeConversationController extends Controller
         $conversation = $recipe->conversation;
 
         if ($conversation === null) {
-            return response()->json(['messages' => []]);
+            return response()->json([
+                'messages' => [],
+                'agent_status' => 'idle',
+                'agent_error' => null,
+            ]);
         }
 
         $messages = $conversation->messages()
@@ -57,91 +62,56 @@ class RecipeConversationController extends Controller
             ->values()
             ->toArray();
 
-        return response()->json(['messages' => $messages]);
+        return response()->json([
+            'messages' => $messages,
+            'agent_status' => $conversation->agent_status,
+            'agent_error' => $conversation->agent_error,
+        ]);
     }
 
     /**
-     * Stream an AI response to the user's chat message via Server-Sent Events.
+     * Queue an AI response to the user's chat message.
      *
-     * Auth, conversation resolution, and user-message persistence happen
-     * synchronously before the StreamedResponse closure, so auth/validation
-     * failures still produce normal HTTP error responses.
+     * The agentic turn runs in {@see GenerateAgentReplyJob} on the queue rather
+     * than on this request: a multi-step turn can run for minutes, and holding
+     * the HTTP connection open for that long has it severed by Herd's nginx
+     * proxy timeout. This action returns immediately; the frontend polls
+     * {@see self::show()} for progress.
      *
-     * Prism iteration happens INSIDE the closure so PHP's max_execution_time
-     * does not kill long AI generations. `set_time_limit(0)` inside the closure
-     * removes the time cap for the streamed portion of the request. Each
-     * TextDeltaEvent is echoed immediately as an `event: token` SSE frame
-     * followed by flush(), giving the client real incremental output.
-     *
-     * The assistant message is persisted only after a successful full iteration
-     * (failed turns never persist partial output, per CONTEXT.md). Tools inside
-     * the orchestrator persist `tool_proposal` messages themselves during
-     * iteration — that behaviour is unchanged.
-     *
-     * SSE frames use literal "\n" line endings (never PHP_EOL) to satisfy the
-     * SSE spec on all platforms.
+     * One turn per conversation: a second message posted while a turn is still
+     * generating is rejected with 409 so two jobs cannot race the same thread.
      */
-    public function stream(SendConversationMessageRequest $request, Recipe $recipe): StreamedResponse
+    public function store(SendConversationMessageRequest $request, Recipe $recipe): JsonResponse
     {
         Gate::authorize('view', $recipe);
 
         $conversation = $recipe->conversation
             ?? RecipeConversation::create(['recipe_id' => $recipe->id]);
 
+        if ($conversation->agent_status === 'generating') {
+            return response()->json([
+                'status' => 'busy',
+                'message' => 'A reply is already being generated for this conversation.',
+            ], 409);
+        }
+
         $conversation->messages()->create([
             'role' => 'user',
             'content' => $request->string('message')->toString(),
         ]);
 
-        return response()->stream(function () use ($recipe, $conversation) {
-            // Remove PHP's execution time cap for the streamed portion — long AI
-            // generations (multi-step tool use) must not be killed at 30 seconds.
-            set_time_limit(0);
-
-            // Disable PHP output buffering so each token reaches the client
-            // immediately rather than accumulating in a buffer.
-            @ini_set('output_buffering', 'off');
-            ob_implicit_flush(true);
-
-            // SSE spec requires LF ("\n") line endings, NOT PHP_EOL (which is
-            // "\r\n" on Windows). Using PHP_EOL here would produce CRLF-delimited
-            // frames that the browser SSE parser and the frontend hook cannot
-            // split on "\n\n".
-            $full = '';
-
-            try {
-                foreach ($this->orchestrator->buildStream($recipe, $conversation) as $event) {
-                    if ($event instanceof TextDeltaEvent) {
-                        $full .= $event->delta;
-                        echo "event: token\n";
-                        echo 'data: '.json_encode(['text' => $event->delta])."\n\n";
-                        flush();
-                    }
-                }
-
-                // Persist the assistant message only after a successful iteration.
-                $conversation->messages()->create([
-                    'role' => 'assistant',
-                    'content' => $full,
-                ]);
-
-                echo "event: done\n";
-                echo 'data: '.json_encode(['finished' => true])."\n\n";
-                flush();
-            } catch (\Throwable $e) {
-                // Do NOT persist a partial assistant message on failure.
-                Log::error('AI stream error for recipe '.$recipe->id, [
-                    'exception' => $e,
-                ]);
-                echo "event: error\n";
-                echo 'data: '.json_encode(['message' => $e->getMessage()])."\n\n";
-                flush();
-            }
-        }, 200, [
-            'Content-Type' => 'text/event-stream; charset=utf-8',
-            'Cache-Control' => 'no-cache, no-transform',
-            'X-Accel-Buffering' => 'no',
+        // Mark the turn in progress before dispatch so the guard above and the
+        // polling client both see 'generating' immediately — without waiting
+        // for the queue worker to pick the job up.
+        $conversation->update([
+            'agent_status' => 'generating',
+            'agent_error' => null,
+            'agent_started_at' => now(),
         ]);
+
+        GenerateAgentReplyJob::dispatch($recipe, $conversation);
+
+        return response()->json(['status' => 'queued'], 202);
     }
 
     /**

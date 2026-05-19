@@ -1,9 +1,18 @@
-import { useState } from 'react';
 import { Link } from '@inertiajs/react';
-import { GlobeIcon, UtensilsCrossedIcon, EllipsisVerticalIcon } from 'lucide-react';
-import { useTranslations } from '@/hooks/use-translations';
+import {
+    ClockIcon,
+    EllipsisVerticalIcon,
+    FlameIcon,
+    GlobeIcon,
+    UsersIcon,
+    UtensilsCrossedIcon,
+    WalletIcon,
+} from 'lucide-react';
+import { useState } from 'react';
 import { AllergenIcons } from '@/components/ingredients/allergen-icons';
-import { Badge } from '@/components/ui/badge';
+import { PublishRecipeDialog } from '@/components/recipes/publish-recipe-dialog';
+import { RecipeMacroBar } from '@/components/recipes/recipe-macro-bar';
+import { UnpublishRecipeDialog } from '@/components/recipes/unpublish-recipe-dialog';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -19,8 +28,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { PublishRecipeDialog } from '@/components/recipes/publish-recipe-dialog';
-import { UnpublishRecipeDialog } from '@/components/recipes/unpublish-recipe-dialog';
+import { useTranslations } from '@/hooks/use-translations';
 import { cn } from '@/lib/utils';
 import { show as recipesShow } from '@/routes/recipes';
 import type { RecipeCardData, RecipeVersion } from '@/types/recipe';
@@ -32,20 +40,43 @@ type RecipeCardProps = {
     className?: string;
 };
 
+/** Difficulty-coded dot colours for the hero meta row. */
+const DIFFICULTY_DOT: Record<NonNullable<RecipeCardData['difficulty']>, string> = {
+    easy: 'bg-emerald-400',
+    medium: 'bg-amber-400',
+    hard: 'bg-orange-500',
+    expert: 'bg-rose-500',
+};
+
+/** Format a total minute count into a compact "1h 20m" / "45 min" label. */
+function formatTime(totalTime: number | null): string | null {
+    if (!totalTime || totalTime <= 0) {
+        return null;
+    }
+
+    if (totalTime >= 60) {
+        const remainder = totalTime % 60;
+
+        return `${Math.floor(totalTime / 60)}h ${remainder > 0 ? `${remainder}m` : ''}`.trim();
+    }
+
+    return `${totalTime} min`;
+}
+
+/** Parse an API numeric string into a non-negative number. */
+function toNumber(value: string | null): number {
+    const parsed = Number.parseFloat(value ?? '');
+
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
 export function RecipeCard({ recipe, versions = [], className }: RecipeCardProps) {
     const { t } = useTranslations();
     const [publishOpen, setPublishOpen] = useState(false);
     const [unpublishOpen, setUnpublishOpen] = useState(false);
 
-    const totalTime =
-        (recipe.prep_time_minutes ?? 0) + (recipe.cook_time_minutes ?? 0);
-
-    const formattedTime =
-        totalTime > 0
-            ? totalTime >= 60
-                ? `${Math.floor(totalTime / 60)}h ${totalTime % 60 > 0 ? `${totalTime % 60}m` : ''}`.trim()
-                : `${totalTime} min`
-            : null;
+    const formattedTime = formatTime(recipe.total_time);
+    const servings = recipe.portions !== null && recipe.portions > 0 ? recipe.portions : null;
 
     const allergenItems = (Array.isArray(recipe.allergen_slugs) ? recipe.allergen_slugs : []).map((slug) => ({
         slug,
@@ -53,35 +84,54 @@ export function RecipeCard({ recipe, versions = [], className }: RecipeCardProps
         state: 'contains' as const,
     }));
 
+    const hasCost = recipe.cost_per_portion !== null;
+    const hasCalories = recipe.calories_per_portion !== null;
+    const hasMacros =
+        toNumber(recipe.protein_per_portion) +
+            toNumber(recipe.carbs_per_portion) +
+            toNumber(recipe.fat_per_portion) >
+        0;
+    const hasBody = hasMacros || hasCost || hasCalories || allergenItems.length > 0;
+
     return (
         <>
             <Link href={recipesShow(recipe).url} className={cn('group block', className)}>
-                <Card className="overflow-hidden gap-0 py-0 transition-shadow hover:shadow-md">
-                    {/* Hero image */}
-                    <div className="aspect-video w-full overflow-hidden bg-muted">
+                <Card className="gap-0 overflow-hidden rounded-2xl border-border/70 py-0 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:border-amber-300/70 group-hover:shadow-xl">
+                    {/* Hero image with overlaid title + meta */}
+                    <div className="relative aspect-[4/3] w-full overflow-hidden">
                         {recipe.hero_image_path ? (
                             <img
                                 src={recipe.hero_image_path}
                                 alt={recipe.name}
-                                className="h-full w-full object-cover"
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
                             />
                         ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-muted">
+                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-100 via-orange-100 to-rose-100 dark:from-amber-950/60 dark:via-orange-950/50 dark:to-rose-950/60">
                                 <UtensilsCrossedIcon
-                                    className="size-8 text-muted-foreground"
+                                    className="size-12 text-orange-400/70 dark:text-orange-700/70"
                                     aria-label={t('app.recipes.card_no_image')}
                                 />
                             </div>
                         )}
-                    </div>
 
-                    {/* Card body */}
-                    <div className="flex flex-col gap-2 p-4">
-                        {/* Card header row: name + actions menu */}
-                        <div className="flex items-start justify-between gap-2">
-                            <h3 className="line-clamp-1 text-[20px] font-semibold leading-tight group-hover:underline flex-1">
-                                {recipe.name}
-                            </h3>
+                        {/* Legibility gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/5" />
+
+                        {/* Top row: cuisine + published pills (left), actions menu (right) */}
+                        <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
+                            <div className="flex flex-col items-start gap-1.5">
+                                {recipe.cuisine && (
+                                    <span className="rounded-full bg-black/55 px-2.5 py-1 text-[12px] font-medium text-white backdrop-blur-sm">
+                                        {recipe.cuisine}
+                                    </span>
+                                )}
+                                {recipe.is_published && (
+                                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/95 px-2.5 py-1 text-[12px] font-medium text-white backdrop-blur-sm">
+                                        <GlobeIcon className="size-3" />
+                                        {t('app.recipes.published_badge')}
+                                    </span>
+                                )}
+                            </div>
 
                             {/* Card actions menu */}
                             <DropdownMenu>
@@ -90,7 +140,7 @@ export function RecipeCard({ recipe, versions = [], className }: RecipeCardProps
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-7 w-7 shrink-0"
+                                        className="size-8 shrink-0 rounded-full bg-black/45 text-white backdrop-blur-sm hover:bg-black/65 hover:text-white"
                                         onClick={(e) => {
                                             e.preventDefault();
                                             e.stopPropagation();
@@ -149,60 +199,77 @@ export function RecipeCard({ recipe, versions = [], className }: RecipeCardProps
                             </DropdownMenu>
                         </div>
 
-                        {/* Published badge */}
-                        {recipe.is_published && (
-                            <Badge variant="secondary" className="flex w-fit items-center gap-1 whitespace-nowrap text-[14px]">
-                                <GlobeIcon className="size-3" />
-                                {t('app.recipes.published_badge')}
-                            </Badge>
-                        )}
+                        {/* Bottom: title + time/difficulty/servings meta */}
+                        <div className="absolute inset-x-0 bottom-0 p-4">
+                            <h3 className="line-clamp-2 text-[19px] font-bold leading-snug text-white drop-shadow-md">
+                                {recipe.name}
+                            </h3>
 
-                        {/* Cuisine badge */}
-                        {recipe.cuisine && (
-                            <Badge variant="secondary" className="w-fit text-[14px]">
-                                {recipe.cuisine}
-                            </Badge>
-                        )}
-
-                        {/* Metadata row: time + difficulty */}
-                        <div className="flex items-center gap-2 text-[14px] text-muted-foreground">
-                            {formattedTime && <span>{formattedTime}</span>}
-                            {formattedTime && recipe.difficulty && (
-                                <span aria-hidden="true">·</span>
-                            )}
-                            {recipe.difficulty && (
-                                <Badge variant="outline" className="text-[14px] font-normal text-muted-foreground">
-                                    {t(`app.recipes.difficulty_${recipe.difficulty}`)}
-                                </Badge>
-                            )}
-                        </div>
-
-                        {/* Metrics row: cost + calories (kcal per portion) */}
-                        <div className="flex items-center gap-3 text-[14px] text-muted-foreground">
-                            {recipe.cost_per_portion !== null && (
-                                <span>
-                                    {t('app.recipes.card_cost', {
-                                        currency: '€',
-                                        amount: recipe.cost_per_portion ?? '',
-                                    })}
-                                </span>
-                            )}
-                            {recipe.calories_per_portion !== null && (
-                                <span>
-                                    {t('app.recipes.card_calories', {
-                                        n: recipe.calories_per_portion ?? '',
-                                    })}
-                                </span>
+                            {(formattedTime || recipe.difficulty || servings !== null) && (
+                                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] font-medium text-white/90">
+                                    {formattedTime && (
+                                        <span className="inline-flex items-center gap-1">
+                                            <ClockIcon className="size-3.5" />
+                                            {formattedTime}
+                                        </span>
+                                    )}
+                                    {recipe.difficulty && (
+                                        <span className="inline-flex items-center gap-1.5">
+                                            <span className={cn('size-2 rounded-full', DIFFICULTY_DOT[recipe.difficulty])} />
+                                            {t(`app.recipes.difficulty_${recipe.difficulty}`)}
+                                        </span>
+                                    )}
+                                    {servings !== null && (
+                                        <span className="inline-flex items-center gap-1">
+                                            <UsersIcon className="size-3.5" />
+                                            {t('app.recipes.card_serves', { n: servings })}
+                                        </span>
+                                    )}
+                                </div>
                             )}
                         </div>
-
-                        {/* Allergen icons */}
-                        {allergenItems.length > 0 && (
-                            <div className="flex flex-wrap items-center gap-1">
-                                <AllergenIcons allergens={allergenItems.slice(0, 14)} />
-                            </div>
-                        )}
                     </div>
+
+                    {/* Card body: macro breakdown + metric chips + allergens */}
+                    {hasBody && (
+                        <div className="flex flex-col gap-3 p-4">
+                            {hasMacros && (
+                                <RecipeMacroBar
+                                    protein={recipe.protein_per_portion}
+                                    carbs={recipe.carbs_per_portion}
+                                    fat={recipe.fat_per_portion}
+                                />
+                            )}
+
+                            {(hasCost || hasCalories) && (
+                                <div className="flex flex-wrap items-center gap-2">
+                                    {hasCalories && (
+                                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-muted px-2.5 py-1.5 text-[13px] font-medium">
+                                            <FlameIcon className="size-3.5 text-orange-500" />
+                                            {t('app.recipes.card_calories', {
+                                                n: recipe.calories_per_portion ?? '',
+                                            })}
+                                        </span>
+                                    )}
+                                    {hasCost && (
+                                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-muted px-2.5 py-1.5 text-[13px] font-medium">
+                                            <WalletIcon className="size-3.5 text-amber-600" />
+                                            {t('app.recipes.card_cost', {
+                                                currency: '€',
+                                                amount: recipe.cost_per_portion ?? '',
+                                            })}
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+
+                            {allergenItems.length > 0 && (
+                                <div className="flex flex-wrap items-center gap-1">
+                                    <AllergenIcons allergens={allergenItems.slice(0, 14)} />
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </Card>
             </Link>
 

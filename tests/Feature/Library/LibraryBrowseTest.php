@@ -188,6 +188,50 @@ test('library index filters recipes by max total time', function () {
     $response->assertDontSee('Slow Braise');
 });
 
+// Library cards expose per-portion nutrition + serving metrics.
+test('the library index exposes per-portion nutrition and serving metrics on each card', function () {
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $recipe = Recipe::factory()->create([
+        'user_id' => $owner->id,
+        'name' => 'Nutritious Bowl',
+        'is_published' => true,
+        'portions' => 2,
+        'prep_time_minutes' => 10,
+        'cook_time_minutes' => 20,
+    ]);
+
+    $version = RecipeVersion::factory()->create([
+        'recipe_id' => $recipe->id,
+        'committed_by' => $owner->id,
+        'cached_nutrition_json' => [
+            'per_portion' => [
+                'energy_kcal' => '450.0000',
+                'protein_g' => '20.0000',
+                'carbs_g' => '40.0000',
+                'fat_g' => '15.0000',
+            ],
+        ],
+    ]);
+
+    $recipe->published_version_id = $version->id;
+    $recipe->save();
+
+    $response = $this->get(route('library.index'));
+
+    $response->assertOk();
+    $response->assertInertia(fn ($page) => $page
+        ->has('recipes.data', 1)
+        ->where('recipes.data.0.total_time', 30)
+        ->where('recipes.data.0.portions', 2)
+        ->where('recipes.data.0.calories_per_portion', '450.0000')
+        ->where('recipes.data.0.protein_per_portion', '20.0000')
+        ->where('recipes.data.0.carbs_per_portion', '40.0000')
+        ->where('recipes.data.0.fat_per_portion', '15.0000')
+    );
+});
+
 // PUB-04: A guest can view a published recipe page by slug (200)
 test('a guest can GET the public recipe page by slug', function () {
     $owner = User::factory()->create();

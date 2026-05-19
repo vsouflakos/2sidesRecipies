@@ -52,7 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('recipes/{recipe}/versions/{version}', [RecipeVersionController::class, 'show'])->name('recipes.versions.show');
     Route::get('recipes/{recipe}/tests', [RecipeTestController::class, 'index'])->name('recipes.tests.index');
     Route::get('recipes/{recipe}/conversation', [RecipeConversationController::class, 'show'])->name('recipes.conversation.show');
-    Route::post('recipes/{recipe}/conversation/stream', [RecipeConversationController::class, 'stream'])->name('recipes.conversation.stream');
+    Route::post('recipes/{recipe}/conversation', [RecipeConversationController::class, 'store'])->name('recipes.conversation.store');
     Route::post('recipes/{recipe}/conversation/messages/{message}/apply', [RecipeConversationController::class, 'apply'])->name('recipes.conversation.apply');
     Route::post('recipes/{recipe}/conversation/messages/{message}/variant', [RecipeConversationController::class, 'variant'])->name('recipes.conversation.variant');
     Route::post('recipes/{recipe}/tests', [RecipeTestController::class, 'store'])->name('recipes.tests.store');

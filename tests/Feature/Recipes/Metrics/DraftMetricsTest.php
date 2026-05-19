@@ -90,6 +90,63 @@ test('builder metrics resolve nutrition, cost and allergens from a draft ingredi
     });
 });
 
+test('builder metrics resolve saturated fat, fibre and sodium from a draft ingredient line', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    $gram = Unit::where('name', 'gram')->firstOrFail();
+
+    // Per-100g values for the secondary nutrients that previously resolved to zero.
+    $ingredient = Ingredient::factory()->create([
+        'energy_kcal' => 200,
+        'saturated_fat_g' => '8.0000',
+        'fibre_g' => '5.0000',
+        'sodium_mg' => '400.0000',
+    ]);
+
+    $recipe = Recipe::factory()->create(['user_id' => $user->id]);
+
+    RecipeDraft::factory()->create([
+        'recipe_id' => $recipe->id,
+        'user_id' => $user->id,
+        'data' => [
+            'name' => 'Secondary Nutrients Recipe',
+            'portions' => 1,
+            'selling_price' => null,
+            'sections' => [
+                [
+                    'id' => -1,
+                    'name' => 'Main',
+                    'order' => 1,
+                    'steps' => [],
+                    'lines' => [
+                        [
+                            'id' => -1,
+                            'ingredient_id' => $ingredient->id,
+                            'sub_recipe_version_id' => null,
+                            'quantity' => '100',
+                            'unit_id' => $gram->id,
+                            'yield_pct' => '100',
+                            'is_flour_base' => false,
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'edit_sequence' => 0,
+    ]);
+
+    $response = $this->actingAs($user)->get("/recipes/{$recipe->id}");
+
+    $response->assertOk();
+    $response->assertInertia(function ($page) {
+        // 100 g of a per-100g ingredient at 1 portion → per-portion equals the source value.
+        $page->where('metrics.nutrition.per_portion.saturated_fat_g', '8.0000');
+        $page->where('metrics.nutrition.per_portion.fibre_g', '5.0000');
+        $page->where('metrics.nutrition.per_portion.sodium_mg', '400.0000');
+    });
+});
+
 test('a draft ingredient line with no nutrition or price data flags a data gap', function () {
     $user = User::factory()->create();
     $user->assignRole('User');

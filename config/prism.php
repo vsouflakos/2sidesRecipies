@@ -6,7 +6,10 @@ return [
         'middleware' => [],
         'enabled' => env('PRISM_SERVER_ENABLED', false),
     ],
-    'request_timeout' => env('PRISM_REQUEST_TIMEOUT', 30), // The timeout for requests in seconds.
+    // Streaming agentic turns (multi-step tool use, esp. against hosted providers
+    // like Ollama Cloud) routinely run past 30s. This caps the whole streamed
+    // request, so it must be generous or the read aborts mid-stream.
+    'request_timeout' => env('PRISM_REQUEST_TIMEOUT', 180), // The timeout for requests in seconds.
     'providers' => [
         'openai' => [
             'url' => env('OPENAI_URL', 'https://api.openai.com/v1'),
@@ -23,7 +26,8 @@ return [
             'anthropic_beta' => env('ANTHROPIC_BETA', null),
         ],
         'ollama' => [
-            'url' => env('OLLAMA_URL', 'http://localhost:11434'),
+            // Prism appends `api/chat` to this base, so it must NOT include `/api`.
+            'url' => env('OLLAMA_URL', 'https://ollama.com'),
             'api_key' => env('OLLAMA_API_KEY', ''),
         ],
         'mistral' => [

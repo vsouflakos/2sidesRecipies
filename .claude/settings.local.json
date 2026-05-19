@@ -16,7 +16,21 @@
       "Bash([ -f \"$HOME/.gsd/defaults.json\" ])",
       "WebFetch(domain:packagist.org)",
       "WebFetch(domain:npmjs.com)",
-      "WebFetch(domain:prismphp.com)"
+      "WebFetch(domain:prismphp.com)",
+      "mcp__laravel-boost__database-query",
+      "PowerShell(vendor/bin/pint --dirty --format agent 2>&1 | Select-Object -Last 15)",
+      "Bash(npx eslint *)",
+      "PowerShell(php artisan test --compact --filter=\"RecipeSearchTest|LibraryBrowseTest\" 2>&1 | Select-Object -Last 20)",
+      "PowerShell(php artisan test --compact tests/Feature/Recipes/RecipeSearchTest.php tests/Feature/Library/LibraryBrowseTest.php 2>&1 | Select-Object -Last 20)",
+      "PowerShell(npm run *)",
+      "mcp__laravel-boost__database-schema",
+      "PowerShell(php artisan make:migration add_cached_metrics_to_recipe_drafts --no-interaction; php artisan make:command RecacheDraftMetrics --no-interaction)",
+      "PowerShell(vendor/bin/pint --dirty --format agent 2>&1 | Select-Object -Last 5; php artisan migrate --no-interaction 2>&1 | Select-Object -Last 8)",
+      "PowerShell(php artisan recipes:recache-draft-metrics 2>&1 | Select-Object -Last 5)",
+      "PowerShell(vendor/bin/pint --dirty --format agent 2>&1 | Select-Object -Last 4; php artisan test --compact tests/Feature/Recipes/Metrics/DraftCardMetricsTest.php tests/Feature/Recipes/Metrics/DraftMetricsTest.php tests/Feature/Recipes/RecipeSearchTest.php tests/Feature/Recipes/RecipeDraftTest.php 2>&1 | Select-Object -Last 20)",
+      "PowerShell(php artisan test --compact tests/Feature/Recipes tests/Feature/Library 2>&1 | Select-Object -Last 20)",
+      "Bash(php artisan *)",
+      "PowerShell(php artisan tinker --execute 'echo implode\\(\\\\\",\\\\\", \\\\Illuminate\\\\Support\\\\Facades\\\\Schema::getColumnListing\\(\\\\\"ingredients\\\\\"\\)\\);')"
     ]
   }
 }

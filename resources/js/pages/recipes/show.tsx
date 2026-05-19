@@ -1,6 +1,6 @@
 import { Head, router } from '@inertiajs/react';
 import { useTranslations } from '@/hooks/use-translations';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     EllipsisVerticalIcon,
     GlobeIcon,
@@ -127,6 +127,31 @@ function normalizeDraft(draft: RecipeDraft): RecipeDraft {
     };
 }
 
+/** Content signature of a section, ignoring all `id` keys (temp ids are unstable). */
+function sectionSignature(section: RecipeSection): string {
+    return JSON.stringify(section, (key, value) => (key === 'id' ? undefined : value));
+}
+
+/**
+ * Compare two drafts and return the indexes of sections whose content changed
+ * (or were newly added). Used to spotlight exactly what an AI proposal edited.
+ */
+function changedSectionIndexes(before: RecipeDraft, after: RecipeDraft): Set<number> {
+    const beforeSections = before.sections ?? [];
+    const afterSections = after.sections ?? [];
+    const changed = new Set<number>();
+
+    afterSections.forEach((section, index) => {
+        const previous = beforeSections[index];
+
+        if (!previous || sectionSignature(previous) !== sectionSignature(section)) {
+            changed.add(index);
+        }
+    });
+
+    return changed;
+}
+
 /** Multiply a string quantity by a rational factor, formatted to 6 decimals. */
 function scaleQuantity(quantity: string, numerator: number, denominator: number): string {
     const value = parseFloat(quantity);
@@ -218,15 +243,59 @@ export default function RecipeShow({
     );
 
     /**
+     * Mirror of the live draft, synced after every render so the AI refresh
+     * callback can diff the pre-edit draft without re-creating itself.
+     */
+    const draftRef = useRef<RecipeDraft>(draft);
+
+    useEffect(() => {
+        draftRef.current = draft;
+    });
+
+    /** Section indexes the AI just edited — drives the "Updated by AI" spotlight. */
+    const [aiHighlights, setAiHighlights] = useState<Set<number>>(() => new Set());
+    const highlightTimerRef = useRef<number | null>(null);
+
+    /** Clear the highlight timer if the page unmounts mid-spotlight. */
+    useEffect(() => {
+        return () => {
+            if (highlightTimerRef.current !== null) {
+                window.clearTimeout(highlightTimerRef.current);
+            }
+        };
+    }, []);
+
+    /**
      * Reload draft + metrics from the server and resync builder state.
      * Invoked by the AI chat sheet after a proposal is applied so the builder
-     * behind the sheet reflects the AI's edit.
+     * behind the sheet reflects the AI's edit. Diffs the pre/post draft to
+     * spotlight the section(s) the agent changed for ~4s.
      */
     const handleAiDraftRefresh = useCallback((): void => {
+        const before = draftRef.current;
+
         router.reload({
             only: ['draft', 'metrics'],
             onSuccess: (page) => {
-                syncDraftFromServer(page.props.draft as RecipeDraft);
+                const fresh = page.props.draft as RecipeDraft;
+                syncDraftFromServer(fresh);
+
+                const changed = changedSectionIndexes(before, fresh);
+
+                if (changed.size === 0) {
+                    return;
+                }
+
+                setAiHighlights(changed);
+
+                if (highlightTimerRef.current !== null) {
+                    window.clearTimeout(highlightTimerRef.current);
+                }
+
+                highlightTimerRef.current = window.setTimeout(() => {
+                    setAiHighlights(new Set());
+                    highlightTimerRef.current = null;
+                }, 4000);
             },
         });
     }, [syncDraftFromServer]);
@@ -810,6 +879,7 @@ export default function RecipeShow({
                                     onMoveUp={() => handleMoveSection(section.id, 'up')}
                                     onMoveDown={() => handleMoveSection(section.id, 'down')}
                                     onDelete={() => handleDeleteSection(section.id)}
+                                    highlighted={aiHighlights.has(idx)}
                                 />
                             ))}
                         </div>

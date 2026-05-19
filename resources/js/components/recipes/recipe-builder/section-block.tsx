@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { useTranslations } from '@/hooks/use-translations';
-import { ChevronDownIcon, ChevronUpIcon, PlusIcon, Trash2Icon } from 'lucide-react';
+import {
+    ChevronDownIcon,
+    ChevronUpIcon,
+    PlusIcon,
+    SparklesIcon,
+    Trash2Icon,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -54,6 +61,8 @@ interface SectionBlockProps {
     onMoveDown: () => void;
     /** Called to delete this section. */
     onDelete: () => void;
+    /** Pulse a ring and show an "Updated by AI" badge after the agent edits this section. */
+    highlighted?: boolean;
     className?: string;
 }
 
@@ -79,6 +88,7 @@ export function SectionBlock({
     onMoveUp,
     onMoveDown,
     onDelete,
+    highlighted = false,
     className,
 }: SectionBlockProps) {
     const { t } = useTranslations();
@@ -104,9 +114,26 @@ export function SectionBlock({
 
     return (
         <>
-            <div
+            <motion.div
+                animate={
+                    highlighted
+                        ? {
+                              boxShadow: [
+                                  '0 0 0 0 rgba(139,92,246,0)',
+                                  '0 0 0 4px rgba(139,92,246,0.38)',
+                                  '0 0 0 0 rgba(139,92,246,0)',
+                              ],
+                          }
+                        : { boxShadow: '0 0 0 0 rgba(139,92,246,0)' }
+                }
+                transition={
+                    highlighted
+                        ? { duration: 1.5, repeat: 1, ease: 'easeInOut' }
+                        : { duration: 0.3 }
+                }
                 className={cn(
-                    'rounded-lg border border-border bg-card',
+                    'rounded-lg border bg-card',
+                    highlighted ? 'border-violet-400/70' : 'border-border',
                     className,
                 )}
             >
@@ -124,6 +151,22 @@ export function SectionBlock({
                         placeholder={t('app.recipes.builder_section_name_placeholder')}
                         className="h-auto flex-1 border-0 bg-transparent p-0 text-[20px] font-semibold leading-[1.2] shadow-none focus-visible:ring-0"
                     />
+
+                    {/* "Updated by AI" badge — appears after an agent edit, then fades */}
+                    <AnimatePresence>
+                        {highlighted && (
+                            <motion.span
+                                initial={{ opacity: 0, scale: 0.8, x: 6 }}
+                                animate={{ opacity: 1, scale: 1, x: 0 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+                                className="inline-flex shrink-0 items-center gap-1 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-2 py-0.5 text-[11px] font-medium text-white shadow-sm"
+                            >
+                                <SparklesIcon className="size-3" />
+                                {t('app.ai.updated_by_ai')}
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
 
                     {/* Reorder / delete buttons — shown on hover */}
                     {headerHovered && (
@@ -217,7 +260,7 @@ export function SectionBlock({
                         {t('app.recipes.builder_add_step')}
                     </Button>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Delete confirmation dialog */}
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

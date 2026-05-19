@@ -231,3 +231,46 @@ test('GET /recipes filters by time range', function () {
         ->where('recipes.data.0.name', 'Quick Dish')
     );
 });
+
+// Recipe list cards expose per-portion nutrition + serving metrics.
+test('GET /recipes index exposes per-portion nutrition and serving metrics on each card', function () {
+    $user = User::factory()->create();
+    $user->assignRole('User');
+
+    $recipe = Recipe::factory()->create([
+        'user_id' => $user->id,
+        'name' => 'Macro Recipe',
+        'portions' => 4,
+        'prep_time_minutes' => 15,
+        'cook_time_minutes' => 30,
+    ]);
+
+    $version = RecipeVersion::factory()->create([
+        'recipe_id' => $recipe->id,
+        'committed_by' => $user->id,
+        'cached_nutrition_json' => [
+            'per_portion' => [
+                'energy_kcal' => '320.0000',
+                'protein_g' => '12.0000',
+                'carbs_g' => '34.0000',
+                'fat_g' => '8.0000',
+            ],
+        ],
+    ]);
+
+    $recipe->current_version_id = $version->id;
+    $recipe->save();
+
+    $response = $this->actingAs($user)->get('/recipes');
+
+    $response->assertSuccessful();
+    $response->assertInertia(fn ($page) => $page
+        ->has('recipes.data', 1)
+        ->where('recipes.data.0.total_time', 45)
+        ->where('recipes.data.0.portions', 4)
+        ->where('recipes.data.0.calories_per_portion', '320.0000')
+        ->where('recipes.data.0.protein_per_portion', '12.0000')
+        ->where('recipes.data.0.carbs_per_portion', '34.0000')
+        ->where('recipes.data.0.fat_per_portion', '8.0000')
+    );
+});

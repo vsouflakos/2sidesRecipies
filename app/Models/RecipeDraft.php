@@ -23,6 +23,9 @@ class RecipeDraft extends Model
         'user_id',
         'data',
         'edit_sequence',
+        'cached_nutrition_json',
+        'cached_cost_per_portion',
+        'cached_allergen_slugs',
     ];
 
     /**
@@ -35,6 +38,9 @@ class RecipeDraft extends Model
         return [
             'data' => 'array',
             'edit_sequence' => 'integer',
+            'cached_nutrition_json' => 'array',
+            'cached_cost_per_portion' => 'decimal:4',
+            'cached_allergen_slugs' => 'array',
         ];
     }
 

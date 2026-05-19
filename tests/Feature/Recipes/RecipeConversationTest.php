@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\GenerateAgentReplyJob;
 use App\Models\Recipe;
 use App\Models\RecipeConversation;
 use App\Models\RecipeConversationMessage;
@@ -7,14 +8,18 @@ use App\Models\RecipeDraft;
 use App\Models\User;
 use App\Support\Recipes\AgentOrchestrator;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Support\Facades\Queue;
 use Inertia\Testing\AssertableInertia as Assert;
 use Prism\Prism\Enums\FinishReason;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Testing\TextResponseFake;
 
 /**
- * Wave 0 RED test suite covering AI-01..AI-07.
- * Tests reference routes/services built in plans 05-02..05-04 — intentionally RED until then.
+ * Feature suite for the recipe AI chat (AI-01..AI-07).
+ *
+ * The agentic turn runs in {@see GenerateAgentReplyJob} on the queue rather
+ * than on the HTTP request — these tests cover dispatch, job execution, the
+ * failure path, and the polling status surfaced by the conversation endpoint.
  */
 beforeEach(function () {
     $this->seed(RolesAndPermissionsSeeder::class);
@@ -31,34 +36,142 @@ beforeEach(function () {
     ]);
 });
 
-it('streams an assistant response to a chat message', function () {
-    // AI-01, AI-03 — POST to stream route, assistant message persisted.
-    // The StreamedResponse closure runs lazily; consuming the body via
-    // streamedContent() triggers Prism iteration and DB persistence.
+it('queues an agent reply job when a chat message is posted', function () {
+    // AI-01 — posting a message persists the user message and dispatches the job.
+    Queue::fake();
+
     $owner = User::factory()->create();
     $owner->assignRole('User');
 
     $recipe = Recipe::factory()->for($owner, 'user')->create();
 
     $response = $this->actingAs($owner)
-        ->post(route('recipes.conversation.stream', $recipe), [
+        ->post(route('recipes.conversation.store', $recipe), [
             'message' => 'How do I improve this?',
         ]);
 
-    $response->assertOk();
+    $response->assertAccepted()
+        ->assertJson(['status' => 'queued']);
 
-    // Consume the stream so the closure executes and persists the assistant message.
-    $body = $response->streamedContent();
+    Queue::assertPushed(GenerateAgentReplyJob::class);
 
     $conversation = RecipeConversation::where('recipe_id', $recipe->id)->first();
     expect($conversation)->not->toBeNull();
-    expect(
-        $conversation->messages()->where('role', 'assistant')->count()
-    )->toBe(1);
+    expect($conversation->agent_status)->toBe('generating');
+    expect($conversation->messages()->where('role', 'user')->count())->toBe(1);
+});
 
-    // Verify SSE body contains token and done frames.
-    expect($body)->toContain('event: token')
-        ->and($body)->toContain('event: done');
+it('persists the assistant message and returns to idle when the job runs', function () {
+    // AI-03 — running the job consumes the agent stream and persists the reply.
+    // tool_proposal persistence is exercised in AgentOrchestratorToolMappingTest;
+    // the faked Prism provider emits text only, so this asserts the text path.
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+
+    $conversation = RecipeConversation::factory()->for($recipe)->create();
+    $conversation->messages()->create([
+        'role' => 'user',
+        'content' => 'How do I improve this?',
+    ]);
+
+    (new GenerateAgentReplyJob($recipe, $conversation))
+        ->handle(app(AgentOrchestrator::class));
+
+    $conversation->refresh();
+
+    expect($conversation->agent_status)->toBe('idle');
+    expect($conversation->agent_error)->toBeNull();
+
+    $assistant = $conversation->messages()->where('role', 'assistant')->get();
+    expect($assistant)->toHaveCount(1);
+    expect($assistant->first()->content)->toBe('Consider reducing the butter by 20%.');
+});
+
+it('completes a queued chat turn end to end', function () {
+    // The queue connection is `sync` under test, so dispatching runs the job
+    // inline — proving the route, controller, and job are wired together.
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+
+    $this->actingAs($owner)
+        ->post(route('recipes.conversation.store', $recipe), [
+            'message' => 'How do I improve this?',
+        ])
+        ->assertAccepted();
+
+    $conversation = RecipeConversation::where('recipe_id', $recipe->id)->first();
+    expect($conversation->agent_status)->toBe('idle');
+    expect($conversation->messages()->where('role', 'assistant')->count())->toBe(1);
+});
+
+it('marks the conversation failed when the agent job throws', function () {
+    // Error path: a failing turn sets agent_status='failed' with the reason and
+    // never persists a partial assistant message.
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+    $conversation = RecipeConversation::factory()->for($recipe)->create();
+
+    $this->mock(AgentOrchestrator::class, function ($mock) {
+        $mock->shouldReceive('buildStream')
+            ->andThrow(new RuntimeException('Provider unavailable'));
+    });
+
+    (new GenerateAgentReplyJob($recipe, $conversation))
+        ->handle(app(AgentOrchestrator::class));
+
+    $conversation->refresh();
+
+    expect($conversation->agent_status)->toBe('failed');
+    expect($conversation->agent_error)->toContain('Provider unavailable');
+    expect($conversation->messages()->where('role', 'assistant')->count())->toBe(0);
+});
+
+it('rejects a second chat message while a turn is in progress', function () {
+    // One turn per conversation — a message posted while generating is rejected.
+    Queue::fake();
+
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+    $conversation = RecipeConversation::factory()->for($recipe)->create([
+        'agent_status' => 'generating',
+    ]);
+
+    $this->actingAs($owner)
+        ->post(route('recipes.conversation.store', $recipe), [
+            'message' => 'Are you still there?',
+        ])
+        ->assertStatus(409);
+
+    Queue::assertNotPushed(GenerateAgentReplyJob::class);
+    expect($conversation->messages()->count())->toBe(0);
+});
+
+it('returns the agent status from the conversation endpoint', function () {
+    // The polling client reads agent_status/agent_error from show().
+    $owner = User::factory()->create();
+    $owner->assignRole('User');
+
+    $recipe = Recipe::factory()->for($owner, 'user')->create();
+    RecipeConversation::factory()->for($recipe)->create([
+        'agent_status' => 'failed',
+        'agent_error' => 'Provider unavailable',
+    ]);
+
+    $this->actingAs($owner)
+        ->get(route('recipes.conversation.show', $recipe))
+        ->assertOk()
+        ->assertJson([
+            'agent_status' => 'failed',
+            'agent_error' => 'Provider unavailable',
+        ]);
 });
 
 it('hides the AI feature when no provider is configured', function () {
@@ -179,61 +292,6 @@ it('creates a recipe variant as a new independent recipe', function () {
     expect(Recipe::where('user_id', $owner->id)->count())->toBe($recipeCountBefore + 1);
 });
 
-it('emits SSE frames with LF line endings, not CRLF', function () {
-    // SSE spec mandates LF ("\n") line endings. PHP_EOL on Windows is "\r\n",
-    // which would break stream parsing in the frontend hook. This test ensures
-    // the streamed body uses "\n\n" frame separators and contains no "\r\n".
-    $owner = User::factory()->create();
-    $owner->assignRole('User');
-
-    $recipe = Recipe::factory()->for($owner, 'user')->create();
-
-    $response = $this->actingAs($owner)
-        ->post(route('recipes.conversation.stream', $recipe), [
-            'message' => 'Check line endings please.',
-        ]);
-
-    $response->assertOk();
-
-    $body = $response->streamedContent();
-
-    expect($body)->toContain("\n\n")
-        ->and($body)->not->toContain("\r\n");
-});
-
-it('does not persist an assistant message when the AI stream throws', function () {
-    // Error path: a failing orchestrator call must not leave a partial assistant
-    // message in the DB, and must emit an event: error SSE frame instead.
-    $owner = User::factory()->create();
-    $owner->assignRole('User');
-
-    $recipe = Recipe::factory()->for($owner, 'user')->create();
-
-    // Bind a mock orchestrator that throws so the stream closure catches the error.
-    $this->mock(AgentOrchestrator::class, function ($mock) {
-        $mock->shouldReceive('buildStream')->andThrow(new RuntimeException('Provider unavailable'));
-    });
-
-    $response = $this->actingAs($owner)
-        ->post(route('recipes.conversation.stream', $recipe), [
-            'message' => 'This will fail.',
-        ]);
-
-    $response->assertOk();
-
-    $body = $response->streamedContent();
-
-    // The SSE body must carry an error event.
-    expect($body)->toContain('event: error');
-
-    // No assistant message must have been persisted.
-    $conversation = RecipeConversation::where('recipe_id', $recipe->id)->first();
-    expect($conversation)->not->toBeNull();
-    expect(
-        $conversation->messages()->where('role', 'assistant')->count()
-    )->toBe(0);
-});
-
 it('forbids accessing another user conversation', function () {
     // ACCESS — non-owner gets 403
     $owner = User::factory()->create();
@@ -245,7 +303,7 @@ it('forbids accessing another user conversation', function () {
     $recipe = Recipe::factory()->for($owner, 'user')->create();
 
     $this->actingAs($other)
-        ->post(route('recipes.conversation.stream', $recipe), [
+        ->post(route('recipes.conversation.store', $recipe), [
             'message' => 'Can I access this?',
         ])
         ->assertForbidden();

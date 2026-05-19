@@ -10,11 +10,13 @@ export interface RecipeCardData {
     hero_image_path: string | null;
     cuisine: string | null;
     total_time: number | null;
-    prep_time_minutes: number | null;
-    cook_time_minutes: number | null;
+    portions: number | null;
     difficulty: 'easy' | 'medium' | 'hard' | 'expert' | null;
     cost_per_portion: string | null;
     calories_per_portion: string | null;
+    protein_per_portion: string | null;
+    carbs_per_portion: string | null;
+    fat_per_portion: string | null;
     allergen_slugs: string[];
     is_published: boolean;
 }
@@ -27,10 +29,12 @@ export interface PublicRecipeCardData {
     hero_image_path: string | null;
     cuisine: string | null;
     total_time: number | null;
-    prep_time_minutes: number | null;
-    cook_time_minutes: number | null;
+    portions: number | null;
     difficulty: 'easy' | 'medium' | 'hard' | 'expert' | null;
     calories_per_portion: string | null;
+    protein_per_portion: string | null;
+    carbs_per_portion: string | null;
+    fat_per_portion: string | null;
     allergen_slugs: string[];
     author_name: string;
 }

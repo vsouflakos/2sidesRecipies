@@ -128,7 +128,10 @@ class RecipeMetricsService
             'energy_kcal' => $line['energy_kcal'] ?? null,
             'protein_g' => $line['protein_g'] ?? null,
             'fat_g' => $line['fat_g'] ?? null,
+            'saturated_fat_g' => $line['saturated_fat_g'] ?? null,
             'carbs_g' => $line['carbs_g'] ?? null,
+            'fibre_g' => $line['fibre_g'] ?? null,
+            'sodium_mg' => $line['sodium_mg'] ?? null,
             'name' => $line['name'] ?? null,
         ], $lines);
     }

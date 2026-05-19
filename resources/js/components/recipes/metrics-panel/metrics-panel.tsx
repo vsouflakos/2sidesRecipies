@@ -1,5 +1,11 @@
-import { useTranslations } from '@/hooks/use-translations';
-import { useState } from 'react';
+import { useState  } from 'react';
+import type {ReactNode} from 'react';
+import { AllergenSection } from '@/components/recipes/metrics-panel/allergen-section';
+import { BakersSection } from '@/components/recipes/metrics-panel/bakers-section';
+import { CostSection } from '@/components/recipes/metrics-panel/cost-section';
+import { DataGapBanner } from '@/components/recipes/metrics-panel/data-gap-banner';
+import { NutritionSection } from '@/components/recipes/metrics-panel/nutrition-section';
+import { ScalingControls } from '@/components/recipes/metrics-panel/scaling-controls';
 import { Button } from '@/components/ui/button';
 import {
     Sheet,
@@ -8,12 +14,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-import { AllergenSection } from '@/components/recipes/metrics-panel/allergen-section';
-import { BakersSection } from '@/components/recipes/metrics-panel/bakers-section';
-import { CostSection } from '@/components/recipes/metrics-panel/cost-section';
-import { DataGapBanner } from '@/components/recipes/metrics-panel/data-gap-banner';
-import { NutritionSection } from '@/components/recipes/metrics-panel/nutrition-section';
-import { ScalingControls } from '@/components/recipes/metrics-panel/scaling-controls';
+import { useTranslations } from '@/hooks/use-translations';
 import type { RecipeMetrics } from '@/types/recipe';
 
 interface MetricsPanelProps {
@@ -28,7 +29,16 @@ interface MetricsPanelProps {
     }) => void;
 }
 
-/** The full panel content — composed from all six section components. */
+/** A bordered surface that frames one metrics section as a standalone card. */
+function SectionCard({ children }: { children: ReactNode }) {
+    return (
+        <div className="rounded-2xl border bg-card p-4 shadow-sm">
+            {children}
+        </div>
+    );
+}
+
+/** The full panel content — a stack of cards composed from the section components. */
 function PanelContent({
     metrics,
     draftSellingPrice,
@@ -47,35 +57,40 @@ function PanelContent({
     }
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
+            {/* Self-carded centrepiece */}
             <NutritionSection nutrition={metrics.nutrition} />
-            <div className="border-t border-border" />
-            <CostSection
-                cost={metrics.cost}
-                draftSellingPrice={draftSellingPrice}
-                onSellingPriceChange={onSellingPriceChange}
-            />
-            <div className="border-t border-border" />
-            <AllergenSection
-                contains={metrics.allergens.contains}
-                mayContain={metrics.allergens.may_contain}
-            />
+
+            <SectionCard>
+                <CostSection
+                    cost={metrics.cost}
+                    draftSellingPrice={draftSellingPrice}
+                    onSellingPriceChange={onSellingPriceChange}
+                />
+            </SectionCard>
+
+            <SectionCard>
+                <AllergenSection
+                    contains={metrics.allergens.contains}
+                    mayContain={metrics.allergens.may_contain}
+                />
+            </SectionCard>
+
             {metrics.bakers !== null && (
-                <>
-                    <div className="border-t border-border" />
+                <SectionCard>
                     <BakersSection bakers={metrics.bakers} />
-                </>
+                </SectionCard>
             )}
-            <div className="border-t border-border" />
-            <ScalingControls
-                draftPortions={draftPortions}
-                onApplyScale={onApplyScale}
-            />
+
+            <SectionCard>
+                <ScalingControls
+                    draftPortions={draftPortions}
+                    onApplyScale={onApplyScale}
+                />
+            </SectionCard>
+
             {(Array.isArray(metrics.missing_data) ? metrics.missing_data : []).length > 0 && (
-                <>
-                    <div className="border-t border-border" />
-                    <DataGapBanner missingData={metrics.missing_data} />
-                </>
+                <DataGapBanner missingData={metrics.missing_data} />
             )}
         </div>
     );
@@ -103,8 +118,8 @@ export function MetricsPanel({
     return (
         <>
             {/* Desktop: sticky panel */}
-            <div className="hidden h-full overflow-y-auto p-4 lg:block">
-                <div className="sticky top-0 rounded-lg bg-muted p-4">
+            <div className="hidden h-full overflow-y-auto bg-muted/30 p-4 lg:block">
+                <div className="sticky top-0">
                     <PanelContent
                         metrics={metrics}
                         draftSellingPrice={draftSellingPrice}
